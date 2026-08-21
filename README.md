@@ -239,7 +239,7 @@ Top border, `padding:32px 24px 46px`, centred, 13px `#6B5850`. Cormorant italic 
   - Submit: full-width `#C9302A` pill, white, `padding:14px`, 15px/500, "Send our reply"; footnote 12.5px `#98857C` centred "Goes straight to the planning board — no email chains."
   - **Sent state** (replaces the form, `riseIn .4s`): white card `padding:34px 26px` centred — 46px `#F7E7E3` circle with `#C9302A` ✓; Cormorant 30px "Thank you, {name}"; summary line ("2 seats · Lake fish · shuttle from Como 13:45", or the regrets line when not attending); a `#EFE7E0` receipt card (radius 16, `padding:14px 16px`, 13px, left-aligned) with three confirmed rows (recorded on the board / caterer notified / shuttle list updated); buttons "Change our reply" (white) and "See it on the board" (`#C9302A`).
 - **Gifts / Questions:** max-width 900, two columns gap 32. Gifts: eyebrow + Cormorant 28px "Your presence, mostly" + 14.5px copy. Questions: FAQ accordion — each item a full-width text-left button (`padding:12px 0`, 14.5px) with a `#B9635A` `+`/`–` sign on the right and a bottom border; open answer 14px `#6B5850`, `max-width:52ch`, `margin-bottom:14px`. Only one item open at a time (first open by default). Items: children · parking · rain · photographs.
-- **Footer:** top border, centred, `padding:34px 24px 50px`; Cormorant italic 19px "Amélie & Jonas · 12.06.2027" + planner contact line (email, WhatsApp).
+- **Footer:** top border, centred, `padding:34px 24px 50px`; Cormorant italic 19px "Amélie & Jonas · 12.06.2027" + planner contact line — email plus Telegram and WhatsApp, each a live link (`mailto:`, `t.me`, `wa.me`).
 
 ---
 
