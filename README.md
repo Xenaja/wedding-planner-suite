@@ -15,6 +15,27 @@ without it, and it pulls React and Babel from unpkg at load time, so the page ne
 connection and takes a moment on first paint. None of this belongs in the production build;
 it is only what makes the reference viewable in a browser.
 
+## Motion and responsiveness
+
+Both live in the one `<style>` block in `<helmet>`, and both are CSS-only on purpose:
+the runtime compiles this template to React, so a `<script>` in the document would
+never run and an IntersectionObserver would have nowhere to live. Rebuild them with
+whatever your framework offers — the point is the behaviour, not the technique.
+
+**Motion.** Restrained: a slow 5.5% zoom-out on the cover, a five-step stagger on the
+hero copy (55–110 ms apart), a fade-and-rise reveal on each section as it scrolls in,
+a 2% lift on the photo tiles under the cursor, and a 2 px lift on primary buttons.
+Reveals ride `animation-timeline: view()` inside an `@supports` guard — where that is
+unsupported nothing animates and nothing is hidden, which is the correct fallback.
+`prefers-reduced-motion: reduce` collapses all of it, including smooth scrolling.
+
+**Narrow screens.** The layout was already fluid — `auto-fit` grids, `clamp()` type,
+wrapping pill rows — so the media queries only fix what actually broke: the three nav
+tabs overflowed the viewport below ~400 px (they now shrink and scroll inside their
+own pill), the planner board's two fixed columns collapse to one under 860 px, and
+vertical rhythm tightens under 640 px. Those overrides need `!important` because the
+markup is inline-styled; they are confined to media queries, so desktop is untouched.
+
 ## Overview
 A white-label wedding product for a **European wedding planner**. It has three parts, all driven by one data model:
 
