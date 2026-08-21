@@ -2,7 +2,11 @@
 
 ## Live prototype
 **https://xenaja.github.io/wedding-planner-suite/** — the current design (v2), fully interactive.
-The previous palette is at [`/v1.html`](https://xenaja.github.io/wedding-planner-suite/v1.html).
+The previous palette is at [`/v1.html`](https://xenaja.github.io/wedding-planner-suite/v1.html)
+(still on grey photo placeholders; only v2 carries imagery).
+
+The guest site's four photo slots are filled from `assets/` — see [CREDITS.md](CREDITS.md).
+All of it is demo content; a real wedding replaces it with the couple's photographer.
 
 The `.dc.html` files are the canonical sources; `index.html` and `v1.html` are copies of them
 produced by `build.sh`, because GitHub Pages needs an `index.html` and space-free URLs.
