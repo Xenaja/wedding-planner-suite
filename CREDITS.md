@@ -24,3 +24,15 @@ Each has had a light warm grade applied so the set reads with the cover.
 
 Candidates were found through the [Openverse](https://openverse.org) API, filtered
 to CC0/public-domain so the bundle carries no attribution obligations downstream.
+
+## Map
+
+The "Getting there" card embeds OpenStreetMap's own `export/embed.html` widget
+centred on Bellagio — no API key, no account, no tracking script. Map data is
+© OpenStreetMap contributors under the [ODbL](https://www.openstreetmap.org/copyright);
+the required credit is rendered by the widget itself, so the page needs no extra line.
+
+A CSS `filter` mutes the tiles into the page's palette. Two things follow from that:
+the map is a live third-party frame (it needs network, and it is the one element on
+the page that can be slow), and the venue is fictional — the pin marks Bellagio, not
+a real Villa Regina. In production, swap in the couple's actual venue coordinates.
