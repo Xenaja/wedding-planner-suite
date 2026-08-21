@@ -1,29 +1,25 @@
-# Image credits
+# Image and map credits
 
-Demo photography for the guest site. All of it is placeholder content — a real
-wedding replaces every one of these with the couple's own photographer.
+Demo content for the guest site. All of it is placeholder — a real wedding
+replaces every frame with the couple's own photographer.
 
-## Cover
+## Photography
 
-`assets/cover-villa.jpg` — an Italian lakeside villa terrace at golden hour.
-Supplied by the agency; generated imagery, not a photograph of a real venue.
-No attribution required, but it should not be presented to a couple as a picture
-of the actual property.
+| File | Slot |
+|---|---|
+| `assets/cover-villa.jpg` | Cover — the villa terrace above the lake at golden hour |
+| `assets/story-1.jpg` | Ceremony arch on the lawn above the lake |
+| `assets/story-2.jpg` | The couple on the terrace |
+| `assets/story-3.jpg` | The banquet table at dusk |
 
-## Story tiles
+All four are **supplied by the agency** and are **generated imagery, not photographs
+of a real place**. No attribution is required and no third party holds rights in them,
+but they must not be presented to a couple as pictures of an actual venue.
 
-All three are **CC0 1.0 (public domain dedication)** — free for commercial use,
-no attribution required. Credited here for traceability, not obligation.
-Each has had a light warm grade applied so the set reads with the cover.
-
-| File | Source | Licence |
-|---|---|---|
-| `assets/story-1.jpg` | [Wedding Reception, Bangkok Thailand](https://wordpress.org/photos/photo/256693d10a/) by pingjarupat, WordPress Photo Directory | CC0 1.0 |
-| `assets/story-2.jpg` | [Flower arrangement](https://www.rawpixel.com/image/5924490/photo-image-flower-public-domain-wedding), rawpixel | CC0 1.0 |
-| `assets/story-3.jpg` | [Chair setting, wedding destination](https://www.rawpixel.com/image/5912409/image-flower-public-domain-celebration), rawpixel | CC0 1.0 |
-
-Candidates were found through the [Openverse](https://openverse.org) API, filtered
-to CC0/public-domain so the bundle carries no attribution obligations downstream.
+They arrive already sharing one grade, so nothing is colour-corrected in the build —
+the frames are only resized and encoded to JPEG. The tiles are 4:3 in the source and
+render in a ~1.27 slot, so `object-fit: cover` trims the sides a little; the full
+height is always visible, which is what keeps the couple's heads in frame on tile 2.
 
 ## Map
 
