@@ -1,5 +1,16 @@
 # Handoff: Wedding Planning Suite (planner board + guest site + digital invitation)
 
+## Live prototype
+**https://xenaja.github.io/wedding-planner-suite/** — the current design (v2), fully interactive.
+The previous palette is at [`/v1.html`](https://xenaja.github.io/wedding-planner-suite/v1.html).
+
+The `.dc.html` files are the canonical sources; `index.html` and `v1.html` are copies of them
+produced by `build.sh`, because GitHub Pages needs an `index.html` and space-free URLs.
+`support.js` is the runtime that renders the `<x-dc>` template — the prototypes are blank
+without it, and it pulls React and Babel from unpkg at load time, so the page needs a network
+connection and takes a moment on first paint. None of this belongs in the production build;
+it is only what makes the reference viewable in a browser.
+
 ## Overview
 A white-label wedding product for a **European wedding planner**. It has three parts, all driven by one data model:
 

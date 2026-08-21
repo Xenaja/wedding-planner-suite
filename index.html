@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:wght@300..600&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:#EFE7E0; color:#33231F; font-family:'Jost',system-ui,sans-serif; font-weight:300; line-height:1.55; -webkit-font-smoothing:antialiased; text-wrap:pretty; }
+  * { box-sizing:border-box; }
+  a { color:#C9302A; text-decoration:none; }
+  a:hover { color:#B9635A; }
+  input, select, textarea, button { font:inherit; color:inherit; }
+  button { cursor:pointer; }
+  :focus-visible { outline:2px solid #C9302A; outline-offset:3px; border-radius:4px; }
+  @keyframes riseIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#EFE7E0">
+
+<header style="position:sticky;top:0;z-index:30;background:rgba(250,248,243,.92);backdrop-filter:blur(10px);border-bottom:1px solid #DED2C8">
+  <div style="max-width:1180px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
+    <div style="display:flex;align-items:baseline;gap:9px;margin-right:auto">
+      <span style="font-family:'Bodoni Moda',serif;font-weight:700;font-size:23px;color:#C9302A;letter-spacing:-.015em">{{ plannerName }}</span>
+      <span style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:#98857C">wedding suite</span>
+    </div>
+    <nav style="display:flex;gap:6px;background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:4px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <sc-if value="{{ t.active }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ t.onClick }}" style="border:none;border-radius:999px;padding:9px 18px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;background:#C9302A;color:#fff">{{ t.label }}</button>
+        </sc-if>
+        <sc-if value="{{ t.inactive }}">
+          <button onClick="{{ t.onClick }}" style="border:none;border-radius:999px;padding:9px 18px;font-size:11px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;background:transparent;color:#6B5850">{{ t.label }}</button>
+        </sc-if>
+      </sc-for>
+    </nav>
+    <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:6px 8px 6px 14px">
+      <span style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:#98857C">currency</span>
+      <sc-for list="{{ currencies }}" as="c" hint-placeholder-count="4">
+        <sc-if value="{{ c.active }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ c.onClick }}" style="border:1px solid #B9635A;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:500;background:#F5E9E4;color:#A0453D">{{ c.code }}</button>
+        </sc-if>
+        <sc-if value="{{ c.inactive }}">
+          <button onClick="{{ c.onClick }}" style="border:1px solid transparent;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:400;background:transparent;color:#98857C">{{ c.code }}</button>
+        </sc-if>
+      </sc-for>
+    </div>
+  </div>
+</header>
+
+<!-- ============ VIEW 1 · PLANNING BOARD ============ -->
+<sc-if value="{{ isBoard }}" hint-placeholder-val="{{ true }}">
+<div>
+  <section style="padding:52px 24px 38px;text-align:center;border-bottom:1px solid #DED2C8;background:radial-gradient(1100px 420px at 50% -210px,#F5E4DC,transparent 72%)">
+    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#C9302A;margin-bottom:16px">The wedding of</div>
+    <h1 style="font-family:'Bodoni Moda',serif;font-style:italic;font-weight:500;font-size:clamp(42px,7vw,70px);line-height:1.05;margin:0">Amélie <span style="color:#B9635A;font-size:.55em;vertical-align:.12em;padding:0 .18em">&amp;</span> Jonas</h1>
+    <div style="margin-top:12px;font-size:15px;color:#6B5850">12 June 2027 <span style="color:#B9635A;padding:0 10px">·</span> Villa Regina, Lake Como <span style="color:#B9635A;padding:0 10px">·</span> 92 guests</div>
+    <div style="margin:28px auto 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#C9302A"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ daysLeft }}</b> days to go</div>
+      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#B9635A"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ committedPct }}%</b> of budget committed</div>
+      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#C48F84"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ outstandingLabel }}</b> invoices outstanding</div>
+    </div>
+  </section>
+
+  <div style="max-width:1180px;margin:0 auto;padding:22px 24px 0;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
+    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C">Planning board · template</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:12px;color:#6B5850">Drag a block to reorder · hide it · or add one from the library</span>
+      </sc-if>
+      <sc-if value="{{ editing }}">
+        <button onClick="{{ toggleEdit }}" style="display:flex;align-items:center;gap:10px;border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;white-space:nowrap">Editing layout <span style="width:30px;height:16px;border-radius:999px;background:rgba(255,255,255,.35);position:relative;display:block"><span style="position:absolute;top:2px;left:16px;width:12px;height:12px;border-radius:50%;background:#fff;display:block"></span></span></button>
+      </sc-if>
+      <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ toggleEdit }}" style="display:flex;align-items:center;gap:10px;border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;white-space:nowrap">Customise blocks <span style="width:30px;height:16px;border-radius:999px;background:#DED2C8;position:relative;display:block"><span style="position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;display:block"></span></span></button>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1180px;margin:14px auto 0;padding:16px 20px;background:#F7E7E3;border:1px solid #E8D3CC;border-radius:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#C9302A">Block library</span>
+      <sc-for list="{{ library }}" as="l" hint-placeholder-count="4">
+        <button onClick="{{ l.onAdd }}" style="border:1px dashed #C9958B;background:#fff;color:#C9302A;border-radius:999px;padding:7px 15px;font-size:13px">+ {{ l.title }}</button>
+      </sc-for>
+      <sc-if value="{{ libraryEmpty }}">
+        <span style="font-size:13px;color:#6B5850">Every block is on the board. Hide one to put it back in the library.</span>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <main style="max-width:1180px;margin:0 auto;padding:20px 24px 30px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start">
+    <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+      <section style="{{ b.wrapStyle }}" draggable="{{ b.draggable }}" onDragStart="{{ b.onDragStart }}" onDragOver="{{ b.onDragOver }}" onDrop="{{ b.onDrop }}" onDragEnd="{{ b.onDragEnd }}">
+        <div style="{{ b.cardStyle }}">
+          <div style="display:flex;align-items:center;gap:12px;padding:20px 22px 0">
+            <sc-if value="{{ b.editing }}" hint-placeholder-val="{{ false }}">
+              <span style="color:#CDBCB1;font-size:13px;letter-spacing:-2px;line-height:1;cursor:grab">⋮⋮</span>
+            </sc-if>
+            <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:23px;margin:0">{{ b.title }}</h2>
+            <span style="margin-left:auto;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#C9302A;background:#F7E7E3;padding:4px 10px;border-radius:999px;white-space:nowrap">{{ b.tag }}</span>
+            <sc-if value="{{ b.editing }}">
+              <div style="display:flex;gap:5px">
+                <button onClick="{{ b.onUp }}" aria-label="Move up" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:12px">↑</button>
+                <button onClick="{{ b.onDown }}" aria-label="Move down" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:12px">↓</button>
+                <button onClick="{{ b.onHide }}" aria-label="Hide block" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:13px">×</button>
+              </div>
+            </sc-if>
+          </div>
+          <div style="padding:14px 22px 22px">
+
+            <!-- timeline -->
+            <sc-if value="{{ b.isTimeline }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:6px 44px">
+                <sc-for list="{{ timelineCols }}" as="col" hint-placeholder-count="2">
+                  <div style="position:relative;padding-left:26px">
+                    <div style="position:absolute;left:8px;top:6px;bottom:6px;width:1px;background:linear-gradient(#B9635A,#DED2C8)"></div>
+                    <sc-for list="{{ col.items }}" as="m" hint-placeholder-count="3">
+                      <div style="position:relative;padding:0 0 20px 18px">
+                        <div style="{{ m.dotStyle }}"></div>
+                        <div style="{{ m.whenStyle }}">{{ m.when }}</div>
+                        <h3 style="{{ m.titleStyle }}">{{ m.title }}</h3>
+                        <p style="font-size:14px;color:#6B5850;margin:2px 0 0;max-width:50ch">{{ m.text }}</p>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <!-- invoices -->
+            <sc-if value="{{ b.isInvoices }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px">
+                <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Paid</div>
+                  <div style="font-family:'Bodoni Moda',serif;font-size:26px;color:#6B5850">{{ paidLabel }}</div>
+                </div>
+                <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Outstanding</div>
+                  <div style="font-family:'Bodoni Moda',serif;font-size:26px;color:#B9635A">{{ outstandingLabel }}</div>
+                </div>
+                <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Drafts</div>
+                  <div style="font-family:'Bodoni Moda',serif;font-size:26px;color:#6B5850">{{ draftLabel }}</div>
+                </div>
+                <div style="background:#F5E9E4;border:1px solid #EBD8D2;border-radius:16px;padding:13px 15px">
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#A0453D">Rate today</div>
+                  <div style="font-size:14px;color:#A0453D;padding-top:5px">{{ rateLine }}</div>
+                </div>
+              </div>
+              <sc-for list="{{ invoices }}" as="i" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid #DED2C8;font-size:14px;flex-wrap:wrap">
+                  <div style="width:66px;font-variant-numeric:tabular-nums;font-size:12px;letter-spacing:.04em;color:#98857C">{{ i.id }}</div>
+                  <div style="min-width:190px;flex:1">
+                    <b style="display:block;font-weight:500;font-size:14.5px">{{ i.to }}</b>
+                    <span style="font-size:12.5px;color:#6B5850">{{ i.what }}</span>
+                  </div>
+                  <div style="text-align:right;min-width:110px">
+                    <b style="display:block;font-weight:500;font-variant-numeric:tabular-nums">{{ i.amount }}</b>
+                    <sc-if value="{{ i.showBase }}">
+                      <span style="font-size:12px;color:#98857C">invoiced {{ i.base }}</span>
+                    </sc-if>
+                  </div>
+                  <div style="min-width:96px;font-size:12.5px;color:#6B5850;text-align:right">due {{ i.due }}</div>
+                  <sc-if value="{{ i.isPaid }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#fff;border:1px solid #DED2C8;color:#6B5850;min-width:92px;text-align:center">✓ Paid</span></sc-if>
+                  <sc-if value="{{ i.isSent }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#F5E9E4;color:#A0453D;min-width:92px;text-align:center">Sent</span></sc-if>
+                  <sc-if value="{{ i.isOverdue }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#C9302A;color:#fff;min-width:92px;text-align:center">Overdue</span></sc-if>
+                  <sc-if value="{{ i.isDraft }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#F0EAE2;color:#98857C;min-width:92px;text-align:center">Draft</span></sc-if>
+                  <sc-if value="{{ i.hasAct }}">
+                    <button onClick="{{ i.onAct }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:6px 14px;font-size:12.5px">{{ i.actLabel }}</button>
+                  </sc-if>
+                  <sc-if value="{{ i.noAct }}">
+                    <span style="width:104px"></span>
+                  </sc-if>
+                </div>
+              </sc-for>
+              <p style="font-size:13px;color:#6B5850;margin:14px 0 0">Every invoice is issued in <b style="font-weight:500;color:#33231F">EUR</b> — VAT line, IBAN and payment terms included — and mirrored in the couple's currency at the ECB rate on the issue date. Paid invoices post straight into the budget block.</p>
+            </sc-if>
+
+            <!-- vendors -->
+            <sc-if value="{{ b.isVendors }}">
+              <sc-for list="{{ vendors }}" as="v" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+                  <div style="width:34px;height:34px;border-radius:12px;background:#F7E7E3;display:grid;place-items:center;font-size:15px;flex:none">{{ v.icon }}</div>
+                  <div>
+                    <b style="display:block;font-weight:500;font-size:15px">{{ v.name }}</b>
+                    <span style="color:#6B5850;font-size:13px">{{ v.role }}</span>
+                  </div>
+                  <div style="margin-left:auto;text-align:right">
+                    <div style="font-size:13.5px;font-variant-numeric:tabular-nums;color:#33231F">{{ v.fee }}</div>
+                    <sc-if value="{{ v.isBooked }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#6B5850">✓ Booked</span></sc-if>
+                    <sc-if value="{{ v.isWaiting }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#A0453D">Contract sent</span></sc-if>
+                    <sc-if value="{{ v.isOpen }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#C9302A">Not booked</span></sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <!-- budget -->
+            <sc-if value="{{ b.isBudget }}">
+              <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
+                <span style="font-family:'Bodoni Moda',serif;font-size:33px;font-weight:500">{{ committedLabel }}</span>
+                <span style="color:#6B5850;font-size:14px">of {{ totalLabel }} committed</span>
+              </div>
+              <div style="height:8px;border-radius:999px;background:#F7E7E3;overflow:hidden;margin:8px 0 18px">
+                <div style="{{ budgetBarStyle }}"></div>
+              </div>
+              <sc-for list="{{ categories }}" as="c" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:10px;font-size:14px;padding:7px 0">
+                  <span>{{ c.name }}</span>
+                  <span style="margin-left:auto;width:70px;height:4px;border-radius:99px;background:#F7E7E3;overflow:hidden;flex:none">
+                    <span style="{{ c.barStyle }}"></span>
+                  </span>
+                  <span style="color:#6B5850;font-variant-numeric:tabular-nums;min-width:80px;text-align:right">{{ c.amount }}</span>
+                </div>
+              </sc-for>
+              <p style="font-size:12.5px;color:#98857C;margin:14px 0 0">Stored in EUR · displayed in {{ currencyCode }}</p>
+            </sc-if>
+
+            <!-- checklist -->
+            <sc-if value="{{ b.isChecklist }}">
+              <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="5">
+                <div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+                  <sc-if value="{{ t.done }}">
+                    <button onClick="{{ t.onToggle }}" aria-label="Mark undone" style="width:19px;height:19px;border:1.5px solid #C9302A;background:#C9302A;color:#fff;border-radius:6px;flex:none;display:grid;place-items:center;font-size:11px;padding:0">✓</button>
+                    <span style="color:#98857C;text-decoration:line-through;text-decoration-color:#D3C4B9">{{ t.label }}</span>
+                  </sc-if>
+                  <sc-if value="{{ t.open }}">
+                    <button onClick="{{ t.onToggle }}" aria-label="Mark done" style="width:19px;height:19px;border:1.5px solid #DED2C8;background:#fff;border-radius:6px;flex:none;padding:0"></button>
+                    <span>{{ t.label }}</span>
+                  </sc-if>
+                  <span style="margin-left:auto;font-size:12px;color:#B9635A;white-space:nowrap">{{ t.due }}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <!-- guests -->
+            <sc-if value="{{ b.isGuests }}">
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
+                <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
+                  <b style="display:block;font-family:'Bodoni Moda',serif;font-size:27px;font-weight:500">92</b>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500">Invited</span>
+                </div>
+                <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
+                  <b style="display:block;font-family:'Bodoni Moda',serif;font-size:27px;font-weight:500;color:#C9302A">{{ confirmedCount }}</b>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500">Confirmed</span>
+                </div>
+                <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
+                  <b style="display:block;font-family:'Bodoni Moda',serif;font-size:27px;font-weight:500;color:#B9635A">{{ awaitingCount }}</b>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500">Awaiting</span>
+                </div>
+              </div>
+              <p style="font-size:13px;color:#6B5850;margin:0"><b style="font-weight:500;color:#33231F">7 guests</b> need the shuttle from Como station · <b style="font-weight:500;color:#33231F">{{ dietCount }}</b> dietary notes — every RSVP from the guest site lands here and syncs to the caterer.</p>
+            </sc-if>
+
+            <!-- documents -->
+            <sc-if value="{{ b.isDocs }}">
+              <sc-for list="{{ docs }}" as="d" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+                  <div style="width:32px;height:32px;border-radius:12px;background:#F5E9E4;display:grid;place-items:center;font-size:13px;flex:none">{{ d.icon }}</div>
+                  <div>
+                    <b style="display:block;font-weight:500;font-size:14px">{{ d.name }}</b>
+                    <span style="font-size:12px;color:#6B5850">{{ d.meta }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <!-- guest site status -->
+            <sc-if value="{{ b.isGuestSite }}">
+              <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+                <div style="flex:1;min-width:240px">
+                  <p style="font-size:14px;color:#6B5850;margin:0 0 14px">The couple's public page and the digital invitation run off this same board — change a time here and the guest site updates.</p>
+                  <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <button onClick="{{ goGuest }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Open guest site</button>
+                    <button onClick="{{ goInvite }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Open invitation</button>
+                  </div>
+                </div>
+                <div style="min-width:200px;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 16px">
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span style="color:#6B5850">Invitations delivered</span><b style="font-weight:500">92</b></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span style="color:#6B5850">Opened</span><b style="font-weight:500">71</b></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span style="color:#6B5850">Responded</span><b style="font-weight:500">{{ respondedCount }}</b></div>
+                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-top:1px solid #DED2C8;margin-top:6px"><span style="color:#6B5850">Languages live</span><b style="font-weight:500">EN · IT · DE</b></div>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- generic library blocks -->
+            <sc-if value="{{ b.isGeneric }}">
+              <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+                  <b style="font-weight:500">{{ r.a }}</b>
+                  <span style="margin-left:auto;color:#6B5850;font-size:13px;text-align:right">{{ r.b }}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+
+          </div>
+        </div>
+      </section>
+    </sc-for>
+  </main>
+
+  <footer style="border-top:1px solid #DED2C8;padding:32px 24px 46px;text-align:center;color:#6B5850;font-size:13px">
+    <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-size:18px;color:#33231F;margin-bottom:6px">A planning template by <b style="font-weight:500;color:#C9302A;font-style:normal">{{ plannerName }}</b></div>
+    Each couple gets their own board from this template — blocks reordered, hidden or added per wedding.<br />
+    Demo data. Custom code, no site builder.
+  </footer>
+</div>
+</sc-if>
+
+<!-- ============ VIEW 2 · GUEST SITE ============ -->
+<sc-if value="{{ isGuest }}">
+<div>
+  <div style="background:#C9302A;color:#F7E7E3;text-align:center;font-size:12px;letter-spacing:.06em;padding:7px 24px">Guest-facing page · amelie-and-jonas.com — what your couple's invitees see</div>
+
+  <section style="position:relative;padding:0 0 0;border-bottom:1px solid #DED2C8">
+    <div style="height:clamp(220px,34vw,380px);background:linear-gradient(#E9DCD3,#F7E7E3 60%,#F5E9E4);display:grid;place-items:center;border-bottom:1px solid #DED2C8">
+      <div style="text-align:center;color:#A8918A">
+        <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase">Cover photograph</div>
+        <div style="font-size:12.5px;margin-top:4px">Villa Regina at golden hour · 2400 × 1200</div>
+      </div>
+    </div>
+    <div style="max-width:820px;margin:0 auto;padding:44px 24px 52px;text-align:center">
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Saturday · 12 June 2027</div>
+      <h1 style="font-family:'Bodoni Moda',serif;font-style:italic;font-weight:500;font-size:clamp(46px,9vw,88px);line-height:1;margin:16px 0 0">Amélie <span style="color:#B9635A;font-size:.5em;vertical-align:.16em;padding:0 .16em">&amp;</span> Jonas</h1>
+      <p style="font-family:'Bodoni Moda',serif;font-size:20px;color:#6B5850;margin:14px 0 0">Villa Regina, Lake Como — Italy</p>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px">
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap"><b style="font-weight:600;color:#33231F;font-size:15px">{{ daysLeft }}</b> days to go</div>
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap">Ceremony <b style="font-weight:600;color:#33231F;font-size:15px">15:00</b></div>
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap">RSVP by <b style="font-weight:600;color:#33231F;font-size:15px">{{ rsvpDeadline }}</b></div>
+      </div>
+      <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px">
+        <a href="#gs-rsvp" style="background:#C9302A;color:#fff;border-radius:999px;padding:14px 30px;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase">RSVP</a>
+        <a href="#gs-day" style="background:#fff;border:1px solid #DED2C8;color:#C9302A;border-radius:999px;padding:14px 30px;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase">The day</a>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:34px;align-items:center">
+        <span style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#98857C">Read in</span>
+        <sc-for list="{{ langs }}" as="g" hint-placeholder-count="3">
+          <sc-if value="{{ g.active }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ g.onClick }}" style="border:1px solid #B9635A;background:#F5E9E4;color:#A0453D;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:500">{{ g.code }}</button>
+          </sc-if>
+          <sc-if value="{{ g.inactive }}">
+            <button onClick="{{ g.onClick }}" style="border:1px solid #DED2C8;background:#fff;color:#98857C;border-radius:999px;padding:4px 12px;font-size:12px">{{ g.code }}</button>
+          </sc-if>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="max-width:1000px;margin:0 auto;padding:60px 24px 10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
+    <div style="height:240px;background:linear-gradient(#F7E7E3,#E9DCD3);border-radius:20px;display:grid;place-items:center;color:#A8918A;font-size:12px;letter-spacing:.14em;text-transform:uppercase">Photo</div>
+    <div style="height:240px;background:linear-gradient(#F5E9E4,#EBDDD2);border-radius:20px;display:grid;place-items:center;color:#B08A80;font-size:12px;letter-spacing:.14em;text-transform:uppercase">Photo</div>
+    <div style="height:240px;background:linear-gradient(#F6E8E4,#EBD5CF);border-radius:20px;display:grid;place-items:center;color:#B08A80;font-size:12px;letter-spacing:.14em;text-transform:uppercase">Photo</div>
+  </section>
+
+  <section style="max-width:720px;margin:0 auto;padding:56px 24px;text-align:center">
+    <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Our story, briefly</div>
+    <p style="font-family:'Bodoni Moda',serif;font-size:clamp(20px,2.6vw,26px);line-height:1.5;color:#4A342E;margin:18px 0 0">We met on a delayed train to Bologna in 2021, argued about the best espresso in Emilia-Romagna for four hours, and have been settling that argument ever since. Six years later we would love you at the lake with us.</p>
+  </section>
+
+  <section id="gs-day" style="max-width:1000px;margin:0 auto;padding:20px 24px 60px">
+    <div style="text-align:center;margin-bottom:34px">
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">The day</div>
+      <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 0">Saturday, 12 June</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:8px 44px">
+      <sc-for list="{{ programmeCols }}" as="col" hint-placeholder-count="2">
+        <div style="position:relative;padding-left:24px">
+          <div style="position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:linear-gradient(#B9635A,#DED2C8)"></div>
+          <sc-for list="{{ col.items }}" as="p" hint-placeholder-count="3">
+            <div style="position:relative;padding:0 0 22px 18px">
+              <div style="position:absolute;left:-21px;top:7px;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid #B9635A"></div>
+              <div style="font-size:12px;letter-spacing:.14em;font-weight:500;color:#B9635A">{{ p.time }}</div>
+              <h3 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:20px;margin:2px 0 2px">{{ p.title }}</h3>
+              <p style="font-size:14px;color:#6B5850;margin:0;max-width:46ch">{{ p.text }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#fff;border-top:1px solid #DED2C8;border-bottom:1px solid #DED2C8">
+    <div style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:34px;align-items:center">
+      <div>
+        <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Getting there</div>
+        <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:29px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">Villa Regina</h2>
+        <p style="font-size:14.5px;color:#6B5850;margin:0 0 18px">Via Regina 42, 22021 Bellagio, Como — gates open at 14:15, the ceremony is on the lawn above the lake.</p>
+        <sc-for list="{{ travel }}" as="t" hint-placeholder-count="3">
+          <div style="display:flex;gap:12px;padding:9px 0;border-top:1px solid #DED2C8;font-size:14px">
+            <b style="font-weight:500;min-width:120px">{{ t.a }}</b>
+            <span style="color:#6B5850">{{ t.b }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="height:300px;border-radius:20px;background:linear-gradient(140deg,#E9DCD3,#F7E7E3 45%,#E4D6CD);border:1px solid #DED2C8;display:grid;place-items:center;color:#A8918A;font-size:12px;letter-spacing:.14em;text-transform:uppercase">Map · Bellagio</div>
+    </div>
+  </section>
+
+  <section style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px">
+    <div>
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Where to stay</div>
+      <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">Rooms held until 1 May</h2>
+      <sc-for list="{{ hotels }}" as="h" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+          <div>
+            <b style="font-weight:500;display:block">{{ h.name }}</b>
+            <span style="font-size:12.5px;color:#6B5850">{{ h.meta }}</span>
+          </div>
+          <span style="margin-left:auto;font-variant-numeric:tabular-nums;color:#6B5850">{{ h.price }}</span>
+        </div>
+      </sc-for>
+      <p style="font-size:12.5px;color:#98857C;margin:12px 0 0">Quote “Amélie &amp; Jonas” when booking · prices per night, shown in {{ currencyCode }}</p>
+    </div>
+    <div>
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Dress code</div>
+      <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">Garden formal</h2>
+      <p style="font-size:14.5px;color:#6B5850;margin:0 0 16px">Long dresses and linen suits. The lawn is grass and gravel — heels are welcome, a flat pair is wise. Evenings on the lake turn cool: bring a wrap.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <sc-for list="{{ palette }}" as="s" hint-placeholder-count="5">
+          <div style="text-align:center">
+            <div style="{{ s.swatchStyle }}"></div>
+            <div style="font-size:11px;color:#98857C;margin-top:6px">{{ s.name }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="gs-rsvp" style="background:#EAE0D8;border-top:1px solid #DED2C8">
+    <div style="max-width:640px;margin:0 auto;padding:60px 24px">
+      <sc-if value="{{ rsvpOpen }}" hint-placeholder-val="{{ true }}">
+        <div style="text-align:center;margin-bottom:26px">
+          <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">RSVP</div>
+          <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 6px">Will you join us?</h2>
+          <p style="font-size:14px;color:#6B5850;margin:0">Please reply by {{ rsvpDeadline }}. One form per invitation.</p>
+        </div>
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:24px">
+          <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:6px">Invitation</label>
+          <input value="{{ rsvpName }}" onChange="{{ onName }}" style="width:100%;border:1px solid #DED2C8;border-radius:12px;padding:11px 13px;font-size:15px;background:#EFE7E0;margin-bottom:18px" />
+          <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:8px">Attending</label>
+          <div style="display:flex;gap:8px;margin-bottom:18px">
+            <sc-for list="{{ goingOpts }}" as="o" hint-placeholder-count="2">
+              <sc-if value="{{ o.active }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ o.onClick }}" style="flex:1;border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:12px;padding:11px;font-size:14px;font-weight:500">{{ o.label }}</button>
+              </sc-if>
+              <sc-if value="{{ o.inactive }}">
+                <button onClick="{{ o.onClick }}" style="flex:1;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;border-radius:12px;padding:11px;font-size:14px">{{ o.label }}</button>
+              </sc-if>
+            </sc-for>
+          </div>
+          <sc-if value="{{ isComing }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px">
+                <div>
+                  <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:6px">Guests</label>
+                  <select value="{{ rsvpSeats }}" onChange="{{ onSeats }}" style="width:100%;border:1px solid #DED2C8;border-radius:12px;padding:11px 13px;font-size:15px;background:#EFE7E0">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:6px">Main course</label>
+                  <select value="{{ rsvpMenu }}" onChange="{{ onMenu }}" style="width:100%;border:1px solid #DED2C8;border-radius:12px;padding:11px 13px;font-size:15px;background:#EFE7E0">
+                    <option value="Lake fish">Lake fish</option>
+                    <option value="Veal">Veal</option>
+                    <option value="Vegetarian">Vegetarian</option>
+                    <option value="Vegan">Vegan</option>
+                  </select>
+                </div>
+              </div>
+              <button onClick="{{ onShuttle }}" style="width:100%;text-align:left;display:flex;align-items:center;gap:11px;border:1px solid #DED2C8;background:#EFE7E0;border-radius:12px;padding:12px 13px;font-size:14px;margin-bottom:18px">
+                <sc-if value="{{ rsvpShuttle }}" hint-placeholder-val="{{ true }}">
+                  <span style="width:19px;height:19px;border-radius:6px;background:#C9302A;color:#fff;display:grid;place-items:center;font-size:11px">✓</span>
+                </sc-if>
+                <sc-if value="{{ noShuttle }}">
+                  <span style="width:19px;height:19px;border-radius:6px;background:#fff;border:1.5px solid #DED2C8;display:block"></span>
+                </sc-if>
+                <span>We'll take the shuttle from Como, 13:45</span>
+              </button>
+            </div>
+          </sc-if>
+          <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:6px">Anything we should know</label>
+          <textarea rows="3" value="{{ rsvpNote }}" onChange="{{ onNote }}" placeholder="Allergies, a song you need to hear, arrival time…" style="width:100%;border:1px solid #DED2C8;border-radius:12px;padding:11px 13px;font-size:15px;background:#EFE7E0;resize:vertical;margin-bottom:20px;font-family:inherit"></textarea>
+          <button onClick="{{ onSubmit }}" style="width:100%;border:none;background:#C9302A;color:#fff;border-radius:999px;padding:15px;font-size:11.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase">Send our reply</button>
+          <p style="font-size:12.5px;color:#98857C;margin:12px 0 0;text-align:center">Goes straight to the planning board — no email chains.</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ rsvpSent }}">
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:34px 26px;text-align:center;animation:riseIn .4s ease both">
+          <div style="width:46px;height:46px;border-radius:50%;background:#F7E7E3;color:#C9302A;display:grid;place-items:center;font-size:19px;margin:0 auto 16px">✓</div>
+          <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:30px;margin:0 0 8px">Thank you, {{ rsvpName }}</h2>
+          <p style="font-size:14.5px;color:#6B5850;margin:0 0 18px">{{ rsvpSummary }}</p>
+          <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 16px;font-size:13px;color:#6B5850;text-align:left">
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span>Recorded on the planning board</span><b style="font-weight:500;color:#C9302A">✓</b></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span>Caterer notified of menu choice</span><b style="font-weight:500;color:#C9302A">✓</b></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span>Shuttle list updated</span><b style="font-weight:500;color:#C9302A">✓</b></div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px">
+            <button onClick="{{ onEditRsvp }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:10px 20px;font-size:13.5px">Change our reply</button>
+            <button onClick="{{ goBoard }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:10px 20px;font-size:13.5px;font-weight:500">See it on the board</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <section style="max-width:900px;margin:0 auto;padding:56px 24px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px">
+      <div>
+        <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Gifts</div>
+        <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">Your presence, mostly</h2>
+        <p style="font-size:14.5px;color:#6B5850;margin:0">You are travelling to a lake for us — that is plenty. If you would still like to give something, we are keeping a small fund for a fortnight in Puglia. Details on request from our planner.</p>
+      </div>
+      <div>
+        <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Good to know</div>
+        <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">Questions</h2>
+        <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="4">
+          <div style="border-bottom:1px solid #DED2C8">
+            <button onClick="{{ f.onClick }}" style="width:100%;text-align:left;background:none;border:none;padding:12px 0;font-size:14.5px;display:flex;gap:12px;align-items:center">
+              <span style="flex:1">{{ f.q }}</span>
+              <span style="color:#B9635A;font-size:15px">{{ f.sign }}</span>
+            </button>
+            <sc-if value="{{ f.open }}">
+              <p style="font-size:14px;color:#6B5850;margin:0 0 14px;max-width:52ch">{{ f.a }}</p>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #DED2C8;padding:34px 24px 50px;text-align:center;color:#6B5850;font-size:13px">
+    <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-size:19px;color:#33231F;margin-bottom:8px">Amélie &amp; Jonas · 12.06.2027</div>
+    Anything at all — ask <b style="font-weight:500;color:#C9302A">{{ plannerName }}</b>, our planner: hello@xenaja.studio · WhatsApp +39 02 4000 118
+  </footer>
+</div>
+</sc-if>
+
+<!-- ============ VIEW 3 · INVITATION ============ -->
+<sc-if value="{{ isInvite }}">
+<div style="min-height:calc(100vh - 60px);padding:44px 24px 60px">
+  <div style="max-width:1040px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:30px">
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Digital invitation</div>
+      <h1 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:clamp(30px,4.4vw,40px);margin:8px 0 8px">One personal link per guest</h1>
+      <p style="font-size:14.5px;color:#6B5850;max-width:56ch;margin:0 auto">Each invitation opens with the guest's own name, their own arrival details, and a reply that lands on the planning board. Three finishes ship with the template.</p>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap">
+        <sc-for list="{{ designs }}" as="d" hint-placeholder-count="3">
+          <sc-if value="{{ d.active }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ d.onClick }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:9px 18px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500">{{ d.name }}</button>
+          </sc-if>
+          <sc-if value="{{ d.inactive }}">
+            <button onClick="{{ d.onClick }}" style="border:1px solid #DED2C8;background:#fff;color:#6B5850;border-radius:999px;padding:9px 18px;font-size:11px;letter-spacing:.14em;text-transform:uppercase">{{ d.name }}</button>
+          </sc-if>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px;align-items:start">
+      <div style="display:grid;place-items:center;min-height:520px">
+        <sc-if value="{{ envelopeClosed }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ onOpen }}" style="width:100%;max-width:420px;aspect-ratio:1.5;border:1px solid #DED2C8;border-radius:20px;background:linear-gradient(160deg,#FDF9F5,#F2E7DF);box-shadow:0 1px 2px rgba(35,40,35,.04),0 26px 50px -30px rgba(35,40,35,.3);position:relative;display:grid;place-items:center;overflow:hidden;padding:0">
+            <div style="position:absolute;top:0;left:0;right:0;height:56%;background:linear-gradient(#F5EBE3,#EDE0D7);clip-path:polygon(0 0,100% 0,50% 100%);border-bottom:1px solid #DED2C8"></div>
+            <div style="position:relative;width:64px;height:64px;border-radius:50%;background:#C9302A;color:#fff;display:grid;place-items:center;font-family:'Bodoni Moda',serif;font-style:italic;font-size:22px;box-shadow:0 6px 14px -6px rgba(35,40,35,.5)">A&amp;J</div>
+            <div style="position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#98857C">Tap to open</div>
+          </button>
+        </sc-if>
+        <sc-if value="{{ envelopeOpen }}">
+          <div style="{{ cardStyle }}">
+            <div style="{{ cardEyebrowStyle }}">Together with their families</div>
+            <h2 style="{{ cardNamesStyle }}">Amélie <span style="{{ cardAmpStyle }}">&amp;</span> Jonas</h2>
+            <div style="{{ cardRuleStyle }}"></div>
+            <p style="{{ cardLineStyle }}">request the pleasure of the company of</p>
+            <p style="{{ cardGuestStyle }}">{{ rsvpName }}</p>
+            <p style="{{ cardLineStyle }}">at their marriage</p>
+            <p style="{{ cardDateStyle }}">Saturday 12 June 2027 · half past three</p>
+            <p style="{{ cardLineStyle }}">Villa Regina, Bellagio · Lake Como</p>
+            <p style="{{ cardSmallStyle }}">Garden formal · dinner and dancing to follow</p>
+            <button onClick="{{ goGuest }}" style="{{ cardBtnStyle }}">RSVP by {{ rsvpDeadline }}</button>
+            <button onClick="{{ onClose }}" style="{{ cardLinkStyle }}">Close the envelope</button>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="display:grid;gap:16px">
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:22px">
+          <h3 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:22px;margin:0 0 12px">Sending</h3>
+          <sc-for list="{{ sending }}" as="s" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+              <b style="font-weight:500">{{ s.a }}</b>
+              <span style="margin-left:auto;color:#6B5850;font-size:13px;text-align:right">{{ s.b }}</span>
+            </div>
+          </sc-for>
+          <p style="font-size:12.5px;color:#98857C;margin:12px 0 0">Print-ready PDF of the same card exports at 148 × 210 mm with 3 mm bleed.</p>
+        </div>
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:22px">
+          <h3 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:22px;margin:0 0 10px">What the planner controls</h3>
+          <p style="font-size:14px;color:#6B5850;margin:0 0 14px">Wording, finish, languages and the reply deadline are fields on the board — no developer needed per wedding.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button onClick="{{ goBoard }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Back to the board</button>
+            <button onClick="{{ goGuest }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Guest site</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;plannerName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Cherii&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;EUR&quot;,&quot;GBP&quot;,&quot;CHF&quot;,&quot;PLN&quot;],&quot;default&quot;:&quot;EUR&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;rsvpDeadline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;15 May&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Guest site&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'board',
+    currency: null,
+    editing: false,
+    order: ['timeline','invoices','vendors','budget','checklist','guests','documents','guestsite','seating','stay','honeymoon','weather'],
+    hidden: { seating:true, stay:true, honeymoon:true, weather:true },
+    done: { t1:true },
+    invStatus: {},
+    drag: null,
+    rsvp: { name:'Marta & Piotr Kowalski', going:'yes', seats:'2', menu:'Lake fish', shuttle:true, note:'' },
+    sent: false,
+    faq: 0,
+    lang: 'EN',
+    opened: false,
+    design: 'sage'
+  };
+
+  RATES = {
+    EUR: { code:'EUR', rate:1, pre:'€', post:'' },
+    GBP: { code:'GBP', rate:0.842, pre:'£', post:'' },
+    CHF: { code:'CHF', rate:0.938, pre:'CHF ', post:'' },
+    PLN: { code:'PLN', rate:4.26, pre:'', post:' zł' }
+  };
+
+  cur() { return this.RATES[this.state.currency || this.props.currency || 'EUR'] || this.RATES.EUR; }
+
+  fmt(eur, c) {
+    const cc = c || this.cur();
+    const v = Math.round(eur * cc.rate);
+    return cc.pre + v.toLocaleString('en-GB') + cc.post;
+  }
+
+  set(patch) { this.setState(patch); }
+
+  move(key, dir) {
+    const order = [...this.state.order];
+    const vis = order.filter(k => !this.state.hidden[k]);
+    const vi = vis.indexOf(key);
+    const swapWith = vis[vi + dir];
+    if (!swapWith) return;
+    const a = order.indexOf(key), b = order.indexOf(swapWith);
+    order[a] = swapWith; order[b] = key;
+    this.setState({ order });
+  }
+
+  reorder(from, to) {
+    if (!from || from === to) return;
+    const order = [...this.state.order];
+    order.splice(order.indexOf(from), 1);
+    order.splice(order.indexOf(to), 0, from);
+    this.setState({ order });
+  }
+
+  META = {
+    timeline:  { title:'Timeline', tag:'On track', wide:true, kind:'timeline' },
+    invoices:  { title:'Payments & invoices', tag:'2 to chase', wide:true, kind:'invoices' },
+    vendors:   { title:'Vendors', tag:'6 / 9 booked', kind:'vendors' },
+    budget:    { title:'Budget', tag:'58% committed', kind:'budget' },
+    checklist: { title:'Next steps', tag:'This month', kind:'checklist' },
+    guests:    { title:'Guests', tag:'RSVP open', kind:'guests' },
+    documents: { title:'Documents', tag:'All in one place', kind:'docs' },
+    guestsite: { title:'Guest site & invitations', tag:'Live', wide:true, kind:'guestsite' },
+    seating:   { title:'Seating plan', tag:'9 tables', kind:'generic', rows:[
+      { a:'Top table', b:'8 seats · confirmed' },
+      { a:'Tables 1–7', b:'8 per table · draft 3' },
+      { a:'Kids table', b:'4 seats · to confirm' }
+    ]},
+    stay:      { title:'Accommodation', tag:'Rooms held', kind:'generic', rows:[
+      { a:'Hotel Belvedere', b:'22 rooms held to 1 May' },
+      { a:'Villa annexe', b:'6 rooms · immediate family' },
+      { a:'B&B La Riva', b:'8 rooms · on the shuttle route' }
+    ]},
+    honeymoon: { title:'Honeymoon', tag:'Draft', kind:'generic', rows:[
+      { a:'Puglia · 14–24 June', b:'Flights on hold' },
+      { a:'Masseria Trulli', b:'Quote requested' },
+      { a:'Transfer Brindisi', b:'To book' }
+    ]},
+    weather:   { title:'Weather & rain plan', tag:'Plan B ready', kind:'generic', rows:[
+      { a:'Ceremony', b:'Loggia if rain risk > 40%' },
+      { a:'Dinner', b:'Orangery · seats 100' },
+      { a:'Decision', b:'Called 24h before' }
+    ]}
+  };
+
+  INVOICES = [
+    { id:'INV-2041', to:'Villa Regina', what:'Venue — deposit 2 of 3', eur:8400, due:'15 Mar 2027', status:'paid' },
+    { id:'INV-2042', to:'Studio Lumen', what:'Photography & film — final balance', eur:2300, due:'1 Apr 2027', status:'sent' },
+    { id:'INV-2043', to:'Fiori di Lina', what:'Florals & styling — deposit', eur:1200, due:'28 Feb 2027', status:'overdue' },
+    { id:'INV-2044', to:'Trio Belvedere', what:'Ceremony music — in full', eur:950, due:'10 Feb 2027', status:'paid' },
+    { id:'INV-2045', to:'Amélie & Jonas', what:'Planning fee — stage 2 of 4', eur:1500, due:'1 Mar 2027', status:'draft' }
+  ];
+
+  invoiceStatus(inv) { return this.state.invStatus[inv.id] || inv.status; }
+
+  advance(inv) {
+    const cur = this.invoiceStatus(inv);
+    const next = cur === 'draft' ? 'sent' : 'paid';
+    this.setState({ invStatus: { ...this.state.invStatus, [inv.id]: next } });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const c = this.cur();
+    const f = (v) => this.fmt(v, c);
+    const plannerName = this.props.plannerName ?? 'Cherii';
+    const rsvpDeadline = this.props.rsvpDeadline ?? '15 May';
+    const daysLeft = Math.max(0, Math.ceil((new Date('2027-06-12T00:00:00') - new Date()) / 86400000));
+
+    const tabDefs = [['board','Planning board'],['guest','Guest site'],['invite','Invitation']];
+    const tabs = tabDefs.map(([id, label]) => ({
+      label, active: s.view === id, inactive: s.view !== id,
+      onClick: () => this.set({ view: id })
+    }));
+
+    const currencies = Object.keys(this.RATES).map(code => ({
+      code, active: c.code === code, inactive: c.code !== code,
+      onClick: () => this.set({ currency: code })
+    }));
+
+    // invoices
+    const invoices = this.INVOICES.map(inv => {
+      const st = this.invoiceStatus(inv);
+      const hasAct = st === 'draft' || st === 'sent' || st === 'overdue';
+      return {
+        ...inv,
+        amount: f(inv.eur),
+        base: this.fmt(inv.eur, this.RATES.EUR),
+        showBase: c.code !== 'EUR',
+        isPaid: st === 'paid', isSent: st === 'sent', isOverdue: st === 'overdue', isDraft: st === 'draft',
+        hasAct, noAct: !hasAct,
+        actLabel: st === 'draft' ? 'Send' : 'Mark paid',
+        onAct: () => this.advance(inv)
+      };
+    });
+    const sum = (pred) => this.INVOICES.filter(i => pred(this.invoiceStatus(i))).reduce((t, i) => t + i.eur, 0);
+    const paidEur = sum(st => st === 'paid');
+    const outEur = sum(st => st === 'sent' || st === 'overdue');
+    const draftEur = sum(st => st === 'draft');
+
+    // budget
+    const cats = [
+      ['Venue & catering', 16800, 23000],
+      ['Photo & film', 4600, 4600],
+      ['Florals & décor', 2400, 6000],
+      ['Music', 1900, 2100],
+      ['Attire & rings', 1700, 5600]
+    ];
+    const committed = 27400, total = 47000;
+    const categories = cats.map(([name, spent, cap]) => ({
+      name, amount: f(spent),
+      barStyle: { display:'block', height:'100%', width: Math.round(spent / cap * 100) + '%', background:'#C9302A' }
+    }));
+
+    const milestones = [
+      ['October 2026','Venue confirmed','Villa Regina reserved, deposit paid, rain plan agreed with the estate.','done'],
+      ['December 2026','Photographer & celebrant booked','Contracts signed; engagement shoot scheduled for March.','done'],
+      ['Next · March 2027','Menu tasting in Como','Two caterers shortlisted — final choice after the tasting weekend.','next'],
+      ['April 2027','Invitations out & RSVPs open','Personal links per guest; replies close ' + rsvpDeadline + '.',''],
+      ['May 2027','Final numbers & seating plan','Guest count locked, floor plan sent to venue and caterer.',''],
+      ['11–12 June 2027','Rehearsal & the day itself','Run-through Friday evening; day-of schedule shared with all vendors.','']
+    ].map(([when, title, text, st]) => ({
+      when, title, text,
+      dotStyle: {
+        position:'absolute', left:'-22px', top:'5px', width:'11px', height:'11px', borderRadius:'50%',
+        background: st === 'done' ? '#C9302A' : '#fff',
+        border: '2px solid ' + (st === 'done' ? '#C9302A' : st === 'next' ? '#B9635A' : '#DED2C8'),
+        boxShadow: st === 'next' ? '0 0 0 4px #F5E9E4' : 'none'
+      },
+      whenStyle: { fontSize:'11px', letterSpacing:'.16em', textTransform:'uppercase', fontWeight:500, color: st === 'next' ? '#B9635A' : '#98857C' },
+      titleStyle: { fontFamily:"'Bodoni Moda',serif", fontWeight:500, fontSize:'19px', margin:'2px 0', color: st === 'done' ? '#98857C' : '#33231F' }
+    }));
+    const timelineCols = [{ items: milestones.slice(0, 3) }, { items: milestones.slice(3) }];
+
+    const vendors = [
+      ['🏛','Villa Regina','Venue · Bellagio',14200,'booked'],
+      ['📷','Studio Lumen','Photography & film',4600,'booked'],
+      ['🌸','Fiori di Lina','Florals & styling',3900,'waiting'],
+      ['🍽','Catering — tasting March','Two quotes in',9800,'open'],
+      ['🎻','Trio Belvedere','Ceremony music',950,'booked'],
+      ['🚐','Guest transfers','Como ↔ villa shuttles',1400,'open']
+    ].map(([icon, name, role, fee, st]) => ({
+      icon, name, role, fee: f(fee),
+      isBooked: st === 'booked', isWaiting: st === 'waiting', isOpen: st === 'open'
+    }));
+
+    const tasks = [
+      ['t1','Confirm engagement shoot location','Done'],
+      ['t2','Sign florals contract & pay deposit','28 Feb'],
+      ['t3','Chase INV-2043 with Fiori di Lina','1 Mar'],
+      ['t4','Book flights to Como for the tasting','5 Mar'],
+      ['t5','Send invitation finish for approval','20 Mar']
+    ].map(([id, label, due]) => ({
+      label, due, done: !!s.done[id], open: !s.done[id],
+      onToggle: () => this.setState({ done: { ...s.done, [id]: !s.done[id] } })
+    }));
+
+    const docs = [
+      ['📄','Venue contract — Villa Regina','Signed · 14 Oct 2026'],
+      ['📄','Photography agreement','Signed · 2 Dec 2026'],
+      ['✍️','Florals contract','Awaiting signature'],
+      ['🗓','Day-of schedule v2','Draft · updates live for all vendors']
+    ].map(([icon, name, meta]) => ({ icon, name, meta }));
+
+    const blocks = s.order.filter(k => !s.hidden[k]).map(key => {
+      const m = this.META[key];
+      return {
+        title: m.title, tag: m.tag, rows: m.rows || [],
+        editing: s.editing, draggable: s.editing,
+        wrapStyle: { gridColumn: m.wide ? '1 / -1' : 'auto', opacity: s.drag === key ? 0.5 : 1 },
+        cardStyle: {
+          background:'#fff', border:'1px solid ' + (s.drag && s.drag !== key ? '#E8D3CC' : '#DED2C8'),
+          borderRadius:'20px', boxShadow:'0 1px 2px rgba(35,40,35,.04),0 10px 30px -18px rgba(35,40,35,.18)',
+          cursor: s.editing ? 'grab' : 'default'
+        },
+        isTimeline: m.kind === 'timeline', isInvoices: m.kind === 'invoices', isVendors: m.kind === 'vendors',
+        isBudget: m.kind === 'budget', isChecklist: m.kind === 'checklist', isGuests: m.kind === 'guests',
+        isDocs: m.kind === 'docs', isGuestSite: m.kind === 'guestsite', isGeneric: m.kind === 'generic',
+        onUp: () => this.move(key, -1),
+        onDown: () => this.move(key, 1),
+        onHide: () => this.setState({ hidden: { ...s.hidden, [key]: true } }),
+        onDragStart: () => this.setState({ drag: key }),
+        onDragOver: (e) => { if (s.drag) e.preventDefault(); },
+        onDrop: (e) => { e.preventDefault(); this.reorder(s.drag, key); this.setState({ drag: null }); },
+        onDragEnd: () => this.setState({ drag: null })
+      };
+    });
+
+    const library = s.order.filter(k => s.hidden[k]).map(key => ({
+      title: this.META[key].title,
+      onAdd: () => { const h = { ...s.hidden }; delete h[key]; this.setState({ hidden: h }); }
+    }));
+
+    // guest site
+    const programme = [
+      ['14:15','Gates open','Arrive through the lower garden; a drink waits on the terrace.'],
+      ['15:30','Ceremony','On the lawn above the lake, about thirty minutes.'],
+      ['16:15','Aperitivo','Spritz, lake fish crostini, and the long view.'],
+      ['18:30','Dinner','Seated in the orangery. Speeches between courses.'],
+      ['21:30','First dance','Then the Trio hands over to a rather louder band.'],
+      ['01:00','Shuttles home','Last coach to Como and Bellagio hotels.']
+    ].map(([time, title, text]) => ({ time, title, text }));
+
+    const travel = [
+      ['Milan Malpensa','1 h 20 by car · transfers can be shared, ask the planner'],
+      ['Milan Centrale','Train to Varenna, then the ferry — 1 h 40, and worth it'],
+      ['Wedding shuttle','Como station 13:45 · Bellagio hotels 14:00 · free']
+    ].map(([a, b]) => ({ a, b }));
+
+    const hotels = [
+      ['Hotel Belvedere','5 min walk · 22 rooms held', 180],
+      ['Albergo Silvio','10 min by shuttle · lake view', 140],
+      ['B&B La Riva','On the shuttle route · 8 rooms', 95]
+    ].map(([name, meta, eur]) => ({ name, meta, price: f(eur) }));
+
+    const palette = [
+      ['Terracotta','#C9302A'], ['Clay','#B9635A'], ['Oat','#EFE7E0'], ['Blush','#E8CFC7'], ['Ink','#33231F']
+    ].map(([name, hex]) => ({ name, swatchStyle: { width:'44px', height:'44px', borderRadius:'50%', background:hex, border:'1px solid rgba(35,40,35,.08)' } }));
+
+    const faqData = [
+      ['Can we bring the children?','Yes — there is a kids table at dinner and a sitter from 21:00. Tell us names on the RSVP.'],
+      ['Is there parking at the villa?','Twelve spaces, first come. The shuttle is easier and means nobody drives the lake road at night.'],
+      ['What if it rains?','The ceremony moves to the loggia and dinner stays in the orangery. Nothing else changes.'],
+      ['Can we take photographs?','During the ceremony, please leave it to Studio Lumen. Afterwards, everything.']
+    ];
+    const faqs = faqData.map(([q, a], i) => ({
+      q, a, open: s.faq === i, sign: s.faq === i ? '–' : '+',
+      onClick: () => this.setState({ faq: s.faq === i ? null : i })
+    }));
+
+    const goingOpts = [
+      { label:'Joyfully yes', v:'yes' },
+      { label:'Sadly no', v:'no' }
+    ].map(o => ({
+      label: o.label, active: s.rsvp.going === o.v, inactive: s.rsvp.going !== o.v,
+      onClick: () => this.setState({ rsvp: { ...s.rsvp, going: o.v } })
+    }));
+
+    const seats = parseInt(s.rsvp.seats, 10) || 1;
+    const summary = s.rsvp.going === 'yes'
+      ? seats + (seats === 1 ? ' seat' : ' seats') + ' · ' + s.rsvp.menu + (s.rsvp.shuttle ? ' · shuttle from Como 13:45' : ' · own transport')
+      : 'We are sorry you cannot make it — we will raise a glass to you anyway.';
+
+    // invitation finishes
+    const D = {
+      sage:    { bg:'linear-gradient(170deg,#FBF3EF,#F5E4DC)', ink:'#33231F', soft:'#6B5850', rule:'#B9635A', btn:'#C9302A', btnInk:'#fff' },
+      ivory:   { bg:'linear-gradient(170deg,#FFFDF8,#F3EADA)', ink:'#33231F', soft:'#6B5850', rule:'#B9635A', btn:'#A0453D', btnInk:'#fff' },
+      nocturne:{ bg:'linear-gradient(170deg,#2E2320,#1E1614)', ink:'#F5EEE8', soft:'#C2ADA4', rule:'#E0BFB6', btn:'#E0BFB6', btnInk:'#241A17' }
+    };
+    const d = D[s.design];
+    const designs = [['sage','Terracotta'],['ivory','Ivory'],['nocturne','Nocturne']].map(([id, name]) => ({
+      name, active: s.design === id, inactive: s.design !== id,
+      onClick: () => this.setState({ design: id })
+    }));
+
+    const sending = [
+      ['Delivered','92 of 92 · WhatsApp & email'],
+      ['Opened','71 · reminder queued for the rest'],
+      ['Responded', (34 + (s.sent && s.rsvp.going === 'yes' ? seats : 0)) + ' guests'],
+      ['Languages','English · Italiano · Deutsch']
+    ].map(([a, b]) => ({ a, b }));
+
+    const confirmed = 34 + (s.sent && s.rsvp.going === 'yes' ? seats : 0);
+
+    return {
+      plannerName, rsvpDeadline, daysLeft,
+      tabs, currencies, currencyCode: c.code,
+      isBoard: s.view === 'board', isGuest: s.view === 'guest', isInvite: s.view === 'invite',
+      goBoard: () => this.set({ view:'board' }),
+      goGuest: () => this.set({ view:'guest' }),
+      goInvite: () => this.set({ view:'invite' }),
+      editing: s.editing, notEditing: !s.editing,
+      toggleEdit: () => this.setState({ editing: !s.editing }),
+      blocks, library, libraryEmpty: library.length === 0,
+      timelineCols, vendors, categories, tasks, docs, invoices,
+      committedLabel: f(committed), totalLabel: f(total),
+      committedPct: Math.round(committed / total * 100),
+      budgetBarStyle: { display:'block', height:'100%', width: Math.round(committed / total * 100) + '%', borderRadius:'999px', background:'linear-gradient(90deg,#D9564C,#A0231E)' },
+      paidLabel: f(paidEur), outstandingLabel: f(outEur), draftLabel: f(draftEur),
+      rateLine: c.code === 'EUR' ? 'Base currency · EUR' : '1 EUR = ' + c.rate + ' ' + c.code,
+      confirmedCount: confirmed, awaitingCount: 92 - confirmed, respondedCount: confirmed,
+      dietCount: 4 + (s.sent && s.rsvp.note ? 1 : 0),
+      programmeCols: [{ items: programme.slice(0, 3) }, { items: programme.slice(3) }],
+      travel, hotels, palette, faqs,
+      langs: ['EN','IT','DE'].map(code => ({ code, active: s.lang === code, inactive: s.lang !== code, onClick: () => this.setState({ lang: code }) })),
+      rsvpOpen: !s.sent, rsvpSent: s.sent,
+      rsvpName: s.rsvp.name, rsvpSeats: s.rsvp.seats, rsvpMenu: s.rsvp.menu, rsvpNote: s.rsvp.note,
+      rsvpShuttle: s.rsvp.shuttle, noShuttle: !s.rsvp.shuttle,
+      isComing: s.rsvp.going === 'yes',
+      goingOpts, rsvpSummary: summary,
+      onName: (e) => this.setState({ rsvp: { ...s.rsvp, name: e.target.value } }),
+      onSeats: (e) => this.setState({ rsvp: { ...s.rsvp, seats: e.target.value } }),
+      onMenu: (e) => this.setState({ rsvp: { ...s.rsvp, menu: e.target.value } }),
+      onNote: (e) => this.setState({ rsvp: { ...s.rsvp, note: e.target.value } }),
+      onShuttle: () => this.setState({ rsvp: { ...s.rsvp, shuttle: !s.rsvp.shuttle } }),
+      onSubmit: () => this.setState({ sent: true }),
+      onEditRsvp: () => this.setState({ sent: false }),
+      designs, sending,
+      envelopeClosed: !s.opened, envelopeOpen: s.opened,
+      onOpen: () => this.setState({ opened: true }),
+      onClose: () => this.setState({ opened: false }),
+      cardStyle: { width:'100%', maxWidth:'420px', background:d.bg, border:'1px solid rgba(35,40,35,.1)', borderRadius:'20px', padding:'44px 34px 34px', textAlign:'center', boxShadow:'0 1px 2px rgba(35,40,35,.04),0 26px 50px -30px rgba(35,40,35,.35)', animation:'riseIn .45s ease both' },
+      cardEyebrowStyle: { fontSize:'10.5px', letterSpacing:'.24em', textTransform:'uppercase', fontWeight:500, color:d.soft },
+      cardNamesStyle: { fontFamily:"'Bodoni Moda',serif", fontStyle:'italic', fontWeight:500, fontSize:'44px', lineHeight:1.05, margin:'14px 0 0', color:d.ink },
+      cardAmpStyle: { color:d.rule, fontSize:'.5em', verticalAlign:'.18em', padding:'0 .14em' },
+      cardRuleStyle: { width:'44px', height:'1px', background:d.rule, margin:'18px auto' },
+      cardLineStyle: { fontSize:'13.5px', color:d.soft, margin:'6px 0' },
+      cardGuestStyle: { fontFamily:"'Bodoni Moda',serif", fontSize:'23px', color:d.ink, margin:'4px 0' },
+      cardDateStyle: { fontFamily:"'Bodoni Moda',serif", fontSize:'19px', color:d.ink, margin:'10px 0 4px' },
+      cardSmallStyle: { fontSize:'12.5px', color:d.soft, margin:'18px 0 22px', letterSpacing:'.04em' },
+      cardBtnStyle: { border:'none', background:d.btn, color:d.btnInk, borderRadius:'999px', padding:'13px 24px', fontSize:'11px', fontWeight:500, letterSpacing:'.16em', textTransform:'uppercase', width:'100%' },
+      cardLinkStyle: { border:'none', background:'none', color:d.soft, fontSize:'12.5px', marginTop:'12px', textDecoration:'underline' }
+    };
+  }
+}
+
+</script>
+</body>
+</html>
