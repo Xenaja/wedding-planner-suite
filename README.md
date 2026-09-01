@@ -4,6 +4,9 @@
 **https://xenaja.github.io/wedding-planner-suite/** — the current design (v2), fully interactive.
 The previous palette is at [`/v1.html`](https://xenaja.github.io/wedding-planner-suite/v1.html)
 (still on grey photo placeholders; only v2 carries imagery).
+A Russian, unbranded build of v2 is at
+[`/index-ru.html`](https://xenaja.github.io/wedding-planner-suite/index-ru.html) —
+[what differs](#russian-version).
 
 The guest site's four photo slots are filled from `assets/` — see [CREDITS.md](CREDITS.md).
 All of it is demo content; a real wedding replaces it with the couple's photographer.
@@ -113,6 +116,7 @@ Hero wash (planner board): `radial-gradient(1100px 420px at 50% -210px, #F5E4DC,
 - **UI / body:** `Jost` — geometric sans. 300 body default, 400/500 for UI.
 - Google Fonts: `family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:wght@300..600`. Self-host for production.
 - Body: 300, `line-height:1.55`, `-webkit-font-smoothing:antialiased`, `text-wrap:pretty`.
+- Neither face carries Cyrillic; the Russian build substitutes both — see [Russian version](#russian-version).
 
 | Role | Spec |
 |---|---|
@@ -298,7 +302,31 @@ No binary assets ship with this design. Placeholders to replace:
 - The "A&J" wax seal is CSS type, not an image; a real monogram SVG would be better.
 - Fonts: Bodoni Moda and Jost from Google Fonts — self-host for production.
 
+## Russian version
+
+`index-ru.html` is a localised duplicate of v2, not a replacement: the English pair is
+untouched and `build.sh` still builds it. Its canonical source is `Wedding Suite v2 RU.dc.html`,
+and the two are kept in step by hand, because `build.sh` only knows the English filenames.
+
+Four things differ from the English v2, and only these four:
+
+- **No agency brand.** `plannerName` defaults to a neutral «Свадебный организатор» instead of
+  the commissioning agency's name, so the prototype can be shown to any client.
+- **Type.** Bodoni Moda and Jost carry no Cyrillic, and Russian copy set in them drops to Times
+  New Roman. `Playfair Display` (display, 400–900 plus italic) and `Montserrat` (UI, 300–600)
+  replace them — the same pairing of a high-contrast didone with a geometric sans, both with
+  full Cyrillic. Every other token is untouched: colour, spacing, radii, shadows, motion.
+- **Currencies.** RUB · EUR · USD, roubles the default, in place of EUR/GBP/CHF/PLN. Money is
+  still stored in EUR and converted only for display, so the "invoiced €8,400" sub-line and the
+  rate card behave exactly as documented above. The rates in the file are static demo values.
+- **Content.** The couple and the guests are Russian; the wedding stays on Lake Como, so the
+  venue, vendors, hotels and the map remain Italian and keep their own names.
+
+Nothing in the data model or the interaction spec changes. In production both locales come from
+one codebase behind a locale switch — which is what the guest site's language pills stand in for.
+
 ## Files
 - `Wedding Suite v2.dc.html` — **the design to build.** Full prototype of all three views with live interactions: the header switches views, "Customise blocks" enables layout editing (drag, arrows, hide, block library), the currency group converts all money, invoice actions advance statuses, and the RSVP form submits and writes back to the board. Open it directly in a browser.
 - `Wedding Suite.dc.html` — the earlier version in a sage/gold palette. Reference only, for structure; **v2 is the visual source of truth**.
+- `Wedding Suite v2 RU.dc.html` — the Russian, unbranded build of v2, with `index-ru.html` as its browser copy. See [Russian version](#russian-version).
 - `README.md` — this document.
