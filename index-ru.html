@@ -20,6 +20,13 @@
   button { cursor:pointer; }
   :focus-visible { outline:2px solid #C9302A; outline-offset:3px; border-radius:4px; }
   @keyframes riseIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+  /* riseIn заканчивается кадром transform:none и при fill-mode:both затирает
+     собственный transform элемента. Для того, что центрируется трансформом,
+     нужен кадр, сохраняющий его. */
+  @keyframes riseInCentered {
+    from { opacity:0; transform:translate(-50%,calc(-50% + 10px)); }
+    to   { opacity:1; transform:translate(-50%,-50%); }
+  }
 
   /* ---------- motion ----------
      CSS only, deliberately: the runtime compiles this template to React, so a
@@ -780,8 +787,25 @@
 </div>
 </sc-if>
 
+<!-- ============ ПРИГЛАШЕНИЕ НА ЭКСКУРСИЮ ============ -->
+<sc-if value="{{ invite }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div onClick="{{ inviteNo }}" style="position:fixed;inset:0;z-index:110;background:rgba(51,35,31,.38);backdrop-filter:blur(1.5px)"></div>
+  <div style="position:fixed;inset:0;z-index:111;display:grid;place-items:center;padding:16px;pointer-events:none">
+  <div style="position:relative;pointer-events:auto;width:min(440px,100%);background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:30px 30px 26px;text-align:center;box-shadow:0 26px 60px -24px rgba(51,35,31,.6);animation:riseIn .4s ease both">
+    <button onClick="{{ inviteNo }}" aria-label="Закрыть" style="position:absolute;top:12px;right:14px;border:none;background:none;color:#98857C;font-size:18px;line-height:1;padding:4px 6px">×</button>
+    <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Экскурсия · 1 минута</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:28px;margin:12px 0 10px">Первый раз здесь?</h2>
+    <p style="font-size:14.5px;color:#6B5850;margin:0 0 22px">Это демо кабинета свадебного агентства. Проведу по нему за минуту — покажу, где деньги, гости и сайт пары.</p>
+    <button onClick="{{ inviteYes }}" class="btn-lift" style="width:100%;border:none;background:#C9302A;color:#fff;border-radius:999px;padding:14px;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase">Показать за минуту</button>
+    <button onClick="{{ inviteNo }}" style="margin-top:12px;border:none;background:none;color:#98857C;font-size:13.5px;text-decoration:underline">Осмотрюсь сам</button>
+  </div>
+  </div>
+</div>
+</sc-if>
+
 <!-- ============ ЭКСКУРСИЯ ============ -->
-<sc-if value="{{ tourOff }}" hint-placeholder-val="{{ false }}">
+<sc-if value="{{ tourIdle }}" hint-placeholder-val="{{ false }}">
   <button onClick="{{ tourStart }}" class="btn-lift" style="position:fixed;right:18px;bottom:18px;z-index:90;border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 10px 30px -14px rgba(51,35,31,.5)">Экскурсия</button>
 </sc-if>
 
@@ -826,6 +850,7 @@ class Component extends DCLogic {
     hint: null,
     tour: null,
     tourRect: null,
+    invite: false,
     vw: 1440,
     currency: null,
     editing: false,
@@ -862,15 +887,32 @@ class Component extends DCLogic {
     this.__sync = () => this.measureTour(false);
     window.addEventListener('resize', this.__sync);
     window.addEventListener('scroll', this.__sync, true);
+    this.__esc = (e) => {
+      if (e.key !== 'Escape') return;
+      if (this.state.invite) this.inviteClose();
+      else if (this.state.tour != null) this.tourEnd();
+    };
+    window.addEventListener('keydown', this.__esc);
     this.setState({ vw: window.innerWidth });
     let seen = false;
     try { seen = !!localStorage.getItem(this.TOUR_KEY); } catch (e) {}
-    if (!seen) this.tourGo(0);
+    // Не забираем экран сразу: дать увидеть, куда человек попал, и только
+    // потом предложить экскурсию.
+    if (!seen) this.__inviteTimer = setTimeout(() => this.setState({ invite: true }), 1800);
   }
 
   componentWillUnmount() {
     window.removeEventListener('resize', this.__sync);
     window.removeEventListener('scroll', this.__sync, true);
+    window.removeEventListener('keydown', this.__esc);
+    clearTimeout(this.__inviteTimer);
+  }
+
+  inviteYes() { this.setState({ invite: false }, () => this.tourGo(0)); }
+
+  inviteClose() {
+    try { localStorage.setItem(this.TOUR_KEY, '1'); } catch (e) {}
+    this.setState({ invite: false });
   }
 
   // Смена экрана и замер связаны колбэком setState: плашка не показывается,
@@ -1032,7 +1074,8 @@ class Component extends DCLogic {
       tourCardStyle = { ...cardBase, left:'12px', right:'12px', bottom:'12px' };
     } else if (!rect) {
       tourCardStyle = { ...cardBase, left:'50%', top:'50%', transform:'translate(-50%,-50%)',
-                        width:'min(420px, calc(100vw - 40px))' };
+                        width:'min(420px, calc(100vw - 40px))',
+                        animation:'riseInCentered .35s ease both' };
     } else {
       // Высота плашки заранее неизвестна, поэтому выбираем сторону по запасу
       // места: снизу, сверху, а если цель занимает почти весь экран — прижимаем
@@ -1296,7 +1339,10 @@ class Component extends DCLogic {
         padding:'14px 20px', borderBottom:'1px solid #DED2C8', background:'#FBF7F3',
         fontSize:'10px', letterSpacing:'.14em', textTransform:'uppercase', fontWeight:500, color:'#98857C'
       },
-      tourOn, tourOff: !tourOn,
+      tourOn, tourOff: !tourOn, tourIdle: !tourOn && !s.invite,
+      invite: s.invite,
+      inviteYes: () => this.inviteYes(),
+      inviteNo: () => this.inviteClose(),
       tourHasSpot: hasSpot, tourNoSpot: tourOn && !hasSpot,
       tourSpotStyle: rect ? {
         position:'fixed', zIndex:100, pointerEvents:'none',
