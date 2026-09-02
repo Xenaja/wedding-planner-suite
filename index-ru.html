@@ -1153,6 +1153,27 @@ class Component extends DCLogic {
     USD: { code:'USD', rate:1.08, pre:'$', post:'' }
   };
 
+  // Демо под брендом клиента: ?planner=WOW-WEDDING&email=hi@wow.com
+  // Значение попадает в вёрстку как текстовый узел (рантайм экранирует), но
+  // всё равно чистим: управляющие символы, схлопнутые пробелы и длина — иначе
+  // чужая строка ломает шапку.
+  fromUrl(key, max) {
+    try {
+      const v = new URLSearchParams(location.search).get(key);
+      if (!v) return null;
+      // Без unicode-эскейпов намеренно: отсеиваем управляющие символы по коду.
+      const clean = Array.from(v)
+        .filter(ch => { const c = ch.charCodeAt(0); return c > 31 && c !== 127; })
+        .join('').replace(/\s+/g, ' ').trim();
+      return clean ? clean.slice(0, max) : null;
+    } catch (e) { return null; }
+  }
+
+  brandEmail() {
+    const v = this.fromUrl('email', 60);
+    return v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? v : null;
+  }
+
   cur() { return this.RATES[this.state.currency || this.props.currency || 'RUB'] || this.RATES.RUB; }
 
   fmt(eur, c) {
@@ -1255,8 +1276,8 @@ class Component extends DCLogic {
     const s = this.state;
     const c = this.cur();
     const f = (v) => this.fmt(v, c);
-    const plannerName = this.props.plannerName ?? 'Свадебный организатор';
-    const plannerEmail = this.props.plannerEmail ?? 'hello@your-studio.com';
+    const plannerName = this.fromUrl('planner', 28) ?? this.props.plannerName ?? 'Свадебный организатор';
+    const plannerEmail = this.brandEmail() ?? this.props.plannerEmail ?? 'hello@your-studio.com';
     const rsvpDeadline = this.props.rsvpDeadline ?? '15 мая';
     const daysLeft = Math.max(0, Math.ceil((new Date('2027-06-12T00:00:00') - new Date()) / 86400000));
 

@@ -347,8 +347,32 @@ Both builds now carry the agency cabinet and the tour. Four things differ, and o
 Nothing in the data model or the interaction spec changes. In production both locales come from
 one codebase behind a locale switch — which is what the guest site's language pills stand in for.
 
+## Branding the demo for a client
+
+`plannerName` and `plannerEmail` read from the query string before falling back to
+the props, so `?planner=WOW-WEDDING&email=hi@wow-wedding.com` dresses the whole demo
+in a client's name with no rebuild. Values are stripped of control characters,
+collapsed, and capped at 28 characters; the runtime renders them as a text node, so
+markup in the parameter shows up as literal text rather than markup. A malformed
+email is ignored rather than displayed.
+
+**The preview card does not follow the query string.** Telegram and WhatsApp read the
+static `<head>`, and this page renders entirely in JavaScript, so a crawler never sees
+the parameter — the link still previews as the generic demo. When the branded card is
+the point, generate a page of its own:
+
+```
+node tools/make-client.mjs --name "WOW-WEDDING" --slug wow-wedding --email hi@wow-wedding.com
+node tools/make-client.mjs --name "Свадьбы Веры" --slug svadby-very --ru
+```
+
+That writes `<slug>.html` with its own og tags and `assets/og-<slug>.png` — a 1200×630
+shot of the cabinet with the client's name already in the logotype and the heading.
+Commit both and the link previews under their brand before anyone clicks it.
+
 ## Files
 - `Wedding Suite v2.dc.html` — **the design to build.** Full prototype of all three views with live interactions: the header switches views, "Customise blocks" enables layout editing (drag, arrows, hide, block library), the currency group converts all money, invoice actions advance statuses, and the RSVP form submits and writes back to the board. Open it directly in a browser.
 - `Wedding Suite.dc.html` — the earlier version in a sage/gold palette. Reference only, for structure; **v2 is the visual source of truth**.
 - `Wedding Suite v2 RU.dc.html` — the Russian build of v2, with `index-ru.html` as its browser copy. See [Russian version](#russian-version).
+- `tools/make-client.mjs` — generates a per-client page and its preview image. See [Branding the demo for a client](#branding-the-demo-for-a-client).
 - `README.md` — this document.
