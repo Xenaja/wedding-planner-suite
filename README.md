@@ -40,8 +40,9 @@ vertical rhythm tightens under 640 px. Those overrides need `!important` because
 markup is inline-styled; they are confined to media queries, so desktop is untouched.
 
 ## Overview
-A white-label wedding product for a **European wedding planner**. It has three parts, all driven by one data model:
+A white-label wedding product for a **European wedding planner**. It has four parts, all driven by one data model:
 
+0. **Agency cabinet** — the entry screen. Seven weddings in a table (couple, date, location, status, budget committed, RSVP outstanding, invoices due), one problem row called out in red, and only Amélie & Jonas opening through to a board; the rest answer a click with a note saying so. Below it, a four-step "how it works" strip. Its purpose is to make the demo read as a tool an agency runs many weddings from, rather than one couple's screen.
 1. **Planning board** — the planner's template for each couple. Blocks (Timeline, Payments & invoices, Vendors, Budget, Next steps, Guests, Documents, Guest site status) can be reordered, hidden, and re-added from a block library, per wedding, with no code changes.
 2. **Guest site** — the couple's public page: cover, story, programme of the day, travel, accommodation, dress code, working RSVP, gifts, FAQ.
 3. **Digital invitation** — an envelope that opens to a card personalised per guest, in three finishes (Sage / Ivory / Nocturne), plus delivery stats.
@@ -156,7 +157,8 @@ All CTAs and tabs are small uppercase letterspaced labels in pills — never sen
 ## Global chrome
 
 **Header** — sticky, `top:0`, `z-index:30`, `background: rgba(250,248,243,.92)`, `backdrop-filter: blur(10px)`, `border-bottom: 1px solid #DED2C8`, inner `max-width:1180px; padding:12px 24px`, flex, wraps.
-- Left: planner name in Cormorant italic 20px + eyebrow `WEDDING SUITE` (10px, `.2em`, `#98857C`). `margin-right:auto`.
+- Left: a `← AGENCY CABINET` pill (hidden on the cabinet itself), then the logotype stacked over an eyebrow that names the current screen — `AGENCY CABINET` / `WEDDING BOARD` / `GUEST SITE` / `INVITATION` (10px, `.2em`, `#98857C`). The lockup is stacked rather than inline because the row no longer fits on one line at 1180px otherwise. `margin-right:auto`.
+- Tabs and the currency group are hidden on the agency cabinet, which sits a level above a single wedding.
 - Centre: view tabs in a pill group (`#fff`, 1px `#DED2C8`, radius 999, padding 4px). Active tab: `#C9302A` bg, `#fff` text, 500. Inactive: transparent, `#6B5850`, 400. Padding `8px 18px`, 13px.
 - Right: currency group — same pill container, label `CURRENCY` (10px `.18em` `#98857C`) then 4 buttons EUR/GBP/CHF/PLN. Active: bg `#F5E9E4`, border `#B9635A`, text `#A0453D`, 500. Inactive: transparent, no visible border, `#98857C`.
 
@@ -220,7 +222,7 @@ Seed ledger: INV-2041 Villa Regina, venue deposit 2 of 3, €8,400, due 15 Mar 2
 - *Weather & rain plan* — "Plan B ready": Ceremony loggia if rain risk > 40% · Dinner orangery seats 100 · Decision called 24h before.
 
 ### Footer
-Top border, `padding:32px 24px 46px`, centred, 13px `#6B5850`. Cormorant italic 18px "A planning template by **Cherii**" then "Each couple gets their own board from this template — blocks reordered, hidden or added per wedding." + "Demo data. Custom code, no site builder."
+Top border, `padding:32px 24px 46px`, centred, 13px `#6B5850`. Bodoni italic 18px "A planning template by **{plannerName}**" — a neutral placeholder, not an agency name then "Each couple gets their own board from this template — blocks reordered, hidden or added per wedding." + "Demo data. Custom code, no site builder."
 
 ---
 
@@ -259,6 +261,24 @@ Top border, `padding:32px 24px 46px`, centred, 13px `#6B5850`. Cormorant italic 
 - **What the planner controls card:** Cormorant 22px heading, 14px copy ("Wording, finish, languages and the reply deadline are fields on the board — no developer needed per wedding"), buttons "Back to the board" (`#C9302A`) and "Guest site" (white).
 
 ---
+
+## Guided tour
+
+A five-step tour for a cold visitor: the weddings table, the invoice ledger, the guest counters,
+the guest-site block, and a closing card offering a call. It does not start itself — a centred
+invitation appears about two seconds after the cabinet renders, on a backdrop light enough to
+read the screen behind it, and the tour runs only if the visitor accepts. Declining, the close
+cross and Escape all dismiss it and set a `localStorage` flag; a corner button restarts it later.
+**The flag is per language** (`wedding-suite-en-tour`, `wedding-suite-ru-tour`) because both
+builds are served from one origin and would otherwise share it.
+
+Implementation notes worth keeping if you rebuild it: it is written against the component logic
+rather than a tour library, so the step that moves from the cabinet to the board navigates and
+measures in sequence through the `setState` callback instead of guessing at a delay. Targets are
+addressed through static marker elements inside the per-block branches, so reordering or hiding a
+block cannot break the route, and a missing target degrades to a centred card. The dimming is one
+element with a 9999px shadow spread, not a mask. Below 768px the card is a bottom sheet with no
+anchoring, per the brief.
 
 ## Interactions & Behaviour
 - **Label convention:** every button, tab and CTA is an uppercase letterspaced pill label at 11–11.5px with `white-space:nowrap`; the nowrap matters — at these letter-spacings labels like "Planning board" wrap and break the pill.
@@ -308,15 +328,17 @@ No binary assets ship with this design. Placeholders to replace:
 untouched and `build.sh` still builds it. Its canonical source is `Wedding Suite v2 RU.dc.html`,
 and the two are kept in step by hand, because `build.sh` only knows the English filenames.
 
-Four things differ from the English v2, and only these four:
+Both builds now carry the agency cabinet and the tour. Four things differ, and only these four:
 
-- **No agency brand.** `plannerName` defaults to a neutral «Свадебный организатор» instead of
-  the commissioning agency's name, so the prototype can be shown to any client.
+- **Wording.** The Russian build calls a couple's screen «план свадьбы», not «доска»: as a
+  Trello-style container noun that is a calque, and a wedding agency does not talk that way.
+  English keeps **board**, which is the native term. Both default `plannerName` to a neutral
+  placeholder rather than the commissioning agency's name.
 - **Type.** Bodoni Moda and Jost carry no Cyrillic, and Russian copy set in them drops to Times
   New Roman. `Playfair Display` (display, 400–900 plus italic) and `Montserrat` (UI, 300–600)
   replace them — the same pairing of a high-contrast didone with a geometric sans, both with
   full Cyrillic. Every other token is untouched: colour, spacing, radii, shadows, motion.
-- **Currencies.** RUB · EUR · USD, roubles the default, in place of EUR/GBP/CHF/PLN. Money is
+- **Currencies.** RUB · EUR · USD, roubles the default, against EUR · GBP · USD in English. Money is
   still stored in EUR and converted only for display, so the "invoiced €8,400" sub-line and the
   rate card behave exactly as documented above. The rates in the file are static demo values.
 - **Content.** The couple and the guests are Russian; the wedding stays on Lake Como, so the
@@ -328,5 +350,5 @@ one codebase behind a locale switch — which is what the guest site's language 
 ## Files
 - `Wedding Suite v2.dc.html` — **the design to build.** Full prototype of all three views with live interactions: the header switches views, "Customise blocks" enables layout editing (drag, arrows, hide, block library), the currency group converts all money, invoice actions advance statuses, and the RSVP form submits and writes back to the board. Open it directly in a browser.
 - `Wedding Suite.dc.html` — the earlier version in a sage/gold palette. Reference only, for structure; **v2 is the visual source of truth**.
-- `Wedding Suite v2 RU.dc.html` — the Russian, unbranded build of v2, with `index-ru.html` as its browser copy. See [Russian version](#russian-version).
+- `Wedding Suite v2 RU.dc.html` — the Russian build of v2, with `index-ru.html` as its browser copy. See [Russian version](#russian-version).
 - `README.md` — this document.

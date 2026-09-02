@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,6 +20,13 @@
   button { cursor:pointer; }
   :focus-visible { outline:2px solid #C9302A; outline-offset:3px; border-radius:4px; }
   @keyframes riseIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+  /* riseIn ends on transform:none and, with fill-mode:both, that last frame
+     outlives the animation and wipes the element's own transform. Anything
+     centred by a transform needs a keyframe that preserves it. */
+  @keyframes riseInCentered {
+    from { opacity:0; transform:translate(-50%,calc(-50% + 10px)); }
+    to   { opacity:1; transform:translate(-50%,-50%); }
+  }
 
   /* ---------- motion ----------
      CSS only, deliberately: the runtime compiles this template to React, so a
@@ -45,6 +52,14 @@
   .photo-tile { transition: transform .7s cubic-bezier(.2,.6,.2,1), box-shadow .5s ease; }
   .photo-tile:hover { transform: scale(1.02); box-shadow: 0 18px 38px -26px rgba(51,35,31,.55); }
 
+  /* ---------- agency cabinet ----------
+     Rows are inline-styled like everything else here; only hover and the
+     narrow-screen reflow live in the stylesheet, since neither can be
+     expressed inline. */
+  .wed-row { transition: background .2s ease; }
+  .wed-row:hover { background: #FBF4F1 !important; }
+  .wed-meta { display: none; }
+
   .btn-lift { transition: transform .25s ease, box-shadow .25s ease; }
   .btn-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -14px rgba(51,35,31,.55); }
   .btn-lift:active { transform: translateY(0); }
@@ -65,6 +80,17 @@
   @media (max-width: 860px) {
     .board-grid { grid-template-columns: 1fr !important; }
   }
+  /* The wedding table stops being a table below 760px: the row becomes a card,
+     the column head is dropped, and date/location move into a meta line under
+     the couple, so nothing has to scroll sideways. */
+  @media (max-width: 760px) {
+    .wed-head { display: none !important; }
+    .wed-row { display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 15px 16px !important; }
+    .wed-c-pair { flex: 1 1 100%; }
+    .wed-c-date, .wed-c-loc { display: none !important; }
+    .wed-meta { display: block; }
+    .wed-c-budget, .wed-c-rsvp { text-align: left !important; }
+  }
   @media (max-width: 640px) {
     /* min-width:0 is the load-bearing bit — a flex item refuses to shrink below
        its content without it, so overflow-x would never engage and the pill
@@ -76,6 +102,15 @@
     .gs-hero-copy { padding: 28px 20px 34px !important; }
     .photo-tile { height: 200px !important; }
     .gs-map { height: 220px !important; }
+    /* A nowrap tag pill beside the block title, and the three guest counters,
+       gave the column a min-content wider than the screen. Below 640px the pill
+       may wrap and the counter captions tighten. */
+    .blk-tag { white-space: normal !important; text-align: right; }
+    /* Long words kept the block title on one line with its pill and gave the
+       board a minimum width of ~397px. Let the pill wrap instead. */
+    .blk-head { flex-wrap: wrap; }
+    .blk-head h2 { font-size: 20px !important; }
+    .stat-cap { font-size: 10px !important; letter-spacing: .04em !important; }
   }
   @media (max-width: 380px) {
     .sec-pad, .gs-hero-copy { padding-left: 16px !important; padding-right: 16px !important; }
@@ -86,24 +121,30 @@
 <div style="min-height:100vh;background:#EFE7E0">
 
 <header style="position:sticky;top:0;z-index:30;background:rgba(250,248,243,.92);backdrop-filter:blur(10px);border-bottom:1px solid #DED2C8">
-  <div style="max-width:1180px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap">
-    <div style="display:flex;align-items:baseline;gap:9px;margin-right:auto">
+  <div style="max-width:1180px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <sc-if value="{{ notAgency }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ goAgency }}" class="btn-lift" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:6px 12px;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap">← Agency cabinet</button>
+    </sc-if>
+    <div style="display:flex;flex-direction:column;margin-right:auto;line-height:1.15">
       <span style="font-family:'Bodoni Moda',serif;font-weight:700;font-size:23px;color:#C9302A;letter-spacing:-.015em">{{ plannerName }}</span>
-      <span style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:#98857C">wedding suite</span>
+      <span style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:#98857C">{{ chromeLabel }}</span>
     </div>
+    <sc-if value="{{ notAgency }}" hint-placeholder-val="{{ false }}">
     <nav class="nav-tabs" style="display:flex;gap:6px;background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:4px">
       <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
         <sc-if value="{{ t.active }}" hint-placeholder-val="{{ true }}">
-          <button onClick="{{ t.onClick }}" style="border:none;border-radius:999px;padding:9px 18px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;background:#C9302A;color:#fff">{{ t.label }}</button>
+          <button onClick="{{ t.onClick }}" style="border:none;border-radius:999px;padding:9px 15px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;background:#C9302A;color:#fff">{{ t.label }}</button>
         </sc-if>
         <sc-if value="{{ t.inactive }}">
-          <button onClick="{{ t.onClick }}" style="border:none;border-radius:999px;padding:9px 18px;font-size:11px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;background:transparent;color:#6B5850">{{ t.label }}</button>
+          <button onClick="{{ t.onClick }}" style="border:none;border-radius:999px;padding:9px 15px;font-size:11px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;background:transparent;color:#6B5850">{{ t.label }}</button>
         </sc-if>
       </sc-for>
     </nav>
+    </sc-if>
+    <sc-if value="{{ notAgency }}" hint-placeholder-val="{{ false }}">
     <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:6px 8px 6px 14px">
       <span style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:#98857C">currency</span>
-      <sc-for list="{{ currencies }}" as="c" hint-placeholder-count="4">
+      <sc-for list="{{ currencies }}" as="c" hint-placeholder-count="3">
         <sc-if value="{{ c.active }}" hint-placeholder-val="{{ true }}">
           <button onClick="{{ c.onClick }}" style="border:1px solid #B9635A;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:500;background:#F5E9E4;color:#A0453D">{{ c.code }}</button>
         </sc-if>
@@ -112,8 +153,74 @@
         </sc-if>
       </sc-for>
     </div>
+    </sc-if>
   </div>
 </header>
+
+<!-- ============ VIEW 0 · AGENCY CABINET ============ -->
+<sc-if value="{{ isAgency }}" hint-placeholder-val="{{ true }}">
+<div>
+  <section style="padding:52px 24px 34px;text-align:center;border-bottom:1px solid #DED2C8;background:radial-gradient(1100px 420px at 50% -210px,#F5E4DC,transparent 72%)">
+    <h1 style="font-family:'Bodoni Moda',serif;font-style:italic;font-weight:500;font-size:clamp(34px,5.6vw,54px);line-height:1.08;margin:0">Agency cabinet · {{ plannerName }}</h1>
+    <p style="margin:16px auto 0;max-width:62ch;font-size:15px;color:#6B5850">Every wedding the agency runs — each on its own board, built from your template.</p>
+  </section>
+
+  <main style="max-width:1180px;margin:0 auto;padding:26px 24px 0">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+      <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C">Weddings</div>
+      <div style="font-size:12.5px;color:#98857C">One board opens in this demo — Amélie &amp; Jonas</div>
+    </div>
+
+    <div id="tour-cabinet" style="background:#fff;border:1px solid #DED2C8;border-radius:20px;box-shadow:0 1px 2px rgba(35,40,35,.04),0 10px 30px -18px rgba(35,40,35,.18);overflow:hidden">
+      <div class="wed-head" style="{{ headStyle }}">
+        <div>Couple</div>
+        <div>Date</div>
+        <div>Location</div>
+        <div>Status</div>
+        <div style="text-align:right">Budget committed</div>
+        <div style="text-align:right">RSVP outstanding</div>
+        <div>Invoices due</div>
+      </div>
+      <sc-for list="{{ weddings }}" as="w" hint-placeholder-count="7">
+        <div class="wed-row" style="{{ w.rowStyle }}" onClick="{{ w.onClick }}">
+          <div class="wed-c-pair">
+            <b style="font-weight:500;font-size:14.5px;display:block">{{ w.pair }}</b>
+            <sc-if value="{{ w.isLive }}">
+              <span style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:#C9302A">Open the board →</span>
+            </sc-if>
+            <span class="wed-meta" style="font-size:12.5px;color:#6B5850">{{ w.date }} · {{ w.place }}</span>
+          </div>
+          <div class="wed-c-date" style="font-size:13px;color:#6B5850;font-variant-numeric:tabular-nums">{{ w.date }}</div>
+          <div class="wed-c-loc" style="font-size:13px;color:#6B5850">{{ w.place }}</div>
+          <div class="wed-c-status"><span style="{{ w.statusStyle }}">{{ w.status }}</span></div>
+          <div class="wed-c-budget" style="font-size:13.5px;color:#33231F;font-variant-numeric:tabular-nums;text-align:right">{{ w.budget }}</div>
+          <div class="wed-c-rsvp" style="{{ w.rsvpStyle }}">{{ w.rsvp }}</div>
+          <div class="wed-c-inv"><span style="{{ w.invStyle }}">{{ w.inv }}</span></div>
+          <sc-if value="{{ w.showHint }}">
+            <div style="grid-column:1 / -1;flex-basis:100%;font-size:12.5px;color:#A0453D;background:#F5E9E4;border:1px solid #EBD8D2;border-radius:12px;padding:8px 12px;margin-top:2px">One wedding opens in this demo — Amélie &amp; Jonas</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin:30px 0 0">
+      <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C;margin-bottom:14px">How it works</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(215px,100%),1fr));gap:14px">
+        <sc-for list="{{ howSteps }}" as="h" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:18px 20px;display:flex;gap:13px;align-items:flex-start">
+            <span style="flex:none;width:26px;height:26px;border-radius:50%;background:#F7E7E3;color:#C9302A;display:grid;place-items:center;font-size:12.5px;font-weight:600">{{ h.n }}</span>
+            <span style="font-size:14px;color:#33231F">{{ h.text }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid #DED2C8;margin-top:36px;padding:30px 24px 46px;text-align:center;color:#6B5850;font-size:13px">
+    Demo data. Custom code, no site builder.
+  </footer>
+</div>
+</sc-if>
 
 <!-- ============ VIEW 1 · PLANNING BOARD ============ -->
 <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ true }}">
@@ -160,12 +267,12 @@
     <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
       <section style="{{ b.wrapStyle }}" draggable="{{ b.draggable }}" onDragStart="{{ b.onDragStart }}" onDragOver="{{ b.onDragOver }}" onDrop="{{ b.onDrop }}" onDragEnd="{{ b.onDragEnd }}">
         <div style="{{ b.cardStyle }}">
-          <div style="display:flex;align-items:center;gap:12px;padding:20px 22px 0">
+          <div class="blk-head" style="display:flex;align-items:center;gap:12px;padding:20px 22px 0">
             <sc-if value="{{ b.editing }}" hint-placeholder-val="{{ false }}">
               <span style="color:#CDBCB1;font-size:13px;letter-spacing:-2px;line-height:1;cursor:grab">⋮⋮</span>
             </sc-if>
             <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:23px;margin:0">{{ b.title }}</h2>
-            <span style="margin-left:auto;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#C9302A;background:#F7E7E3;padding:4px 10px;border-radius:999px;white-space:nowrap">{{ b.tag }}</span>
+            <span style="margin-left:auto;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#C9302A;background:#F7E7E3;padding:4px 10px;border-radius:999px;white-space:nowrap" class="blk-tag">{{ b.tag }}</span>
             <sc-if value="{{ b.editing }}">
               <div style="display:flex;gap:5px">
                 <button onClick="{{ b.onUp }}" aria-label="Move up" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:12px">↑</button>
@@ -178,7 +285,7 @@
 
             <!-- timeline -->
             <sc-if value="{{ b.isTimeline }}">
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:6px 44px">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:6px 44px">
                 <sc-for list="{{ timelineCols }}" as="col" hint-placeholder-count="2">
                   <div style="position:relative;padding-left:26px">
                     <div style="position:absolute;left:8px;top:6px;bottom:6px;width:1px;background:linear-gradient(#B9635A,#DED2C8)"></div>
@@ -197,7 +304,8 @@
 
             <!-- invoices -->
             <sc-if value="{{ b.isInvoices }}">
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:18px">
+              <i id="tour-invoices" style="display:block;height:0"></i>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:10px;margin-bottom:18px">
                 <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
                   <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Paid</div>
                   <div style="font-family:'Bodoni Moda',serif;font-size:26px;color:#6B5850">{{ paidLabel }}</div>
@@ -303,18 +411,19 @@
 
             <!-- guests -->
             <sc-if value="{{ b.isGuests }}">
+              <i id="tour-guests" style="display:block;height:0"></i>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
                 <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
                   <b style="display:block;font-family:'Bodoni Moda',serif;font-size:27px;font-weight:500">92</b>
-                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500">Invited</span>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Invited</span>
                 </div>
                 <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
                   <b style="display:block;font-family:'Bodoni Moda',serif;font-size:27px;font-weight:500;color:#C9302A">{{ confirmedCount }}</b>
-                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500">Confirmed</span>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Confirmed</span>
                 </div>
                 <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
                   <b style="display:block;font-family:'Bodoni Moda',serif;font-size:27px;font-weight:500;color:#B9635A">{{ awaitingCount }}</b>
-                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500">Awaiting</span>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Awaiting</span>
                 </div>
               </div>
               <p style="font-size:13px;color:#6B5850;margin:0"><b style="font-weight:500;color:#33231F">7 guests</b> need the shuttle from Como station · <b style="font-weight:500;color:#33231F">{{ dietCount }}</b> dietary notes — every RSVP from the guest site lands here and syncs to the caterer.</p>
@@ -335,6 +444,7 @@
 
             <!-- guest site status -->
             <sc-if value="{{ b.isGuestSite }}">
+              <i id="tour-guestsite" style="display:block;height:0"></i>
               <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
                 <div style="flex:1;min-width:240px">
                   <p style="font-size:14px;color:#6B5850;margin:0 0 14px">The couple's public page and the digital invitation run off this same board — change a time here and the guest site updates.</p>
@@ -344,10 +454,10 @@
                   </div>
                 </div>
                 <div style="min-width:200px;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 16px">
-                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span style="color:#6B5850">Invitations delivered</span><b style="font-weight:500">92</b></div>
-                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span style="color:#6B5850">Opened</span><b style="font-weight:500">71</b></div>
-                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0"><span style="color:#6B5850">Responded</span><b style="font-weight:500">{{ respondedCount }}</b></div>
-                  <div style="display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-top:1px solid #DED2C8;margin-top:6px"><span style="color:#6B5850">Languages live</span><b style="font-weight:500">EN · IT · DE</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Invitations delivered</span><b style="font-weight:500">92</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Opened</span><b style="font-weight:500">71</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Responded</span><b style="font-weight:500">{{ respondedCount }}</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0;border-top:1px solid #DED2C8;margin-top:6px"><span style="color:#6B5850">Languages live</span><b style="font-weight:500">EN · IT · DE</b></div>
                 </div>
               </div>
             </sc-if>
@@ -379,7 +489,7 @@
 <!-- ============ VIEW 2 · GUEST SITE ============ -->
 <sc-if value="{{ isGuest }}">
 <div>
-  <div style="background:#C9302A;color:#F7E7E3;text-align:center;font-size:12px;letter-spacing:.06em;padding:7px 24px">Guest-facing page · amelie-and-jonas.com — what your couple's invitees see</div>
+  <div style="background:#C9302A;color:#F7E7E3;text-align:center;font-size:12px;letter-spacing:.06em;padding:7px 24px">Guest-facing page · amelie-and-jonas.com — what your couple&#39;s invitees see</div>
 
   <section style="position:relative;padding:0 0 0;border-bottom:1px solid #DED2C8">
     <div class="anim-cover" style="height:clamp(220px,34vw,380px);background:linear-gradient(#E9DCD3,#F7E7E3 60%,#F5E9E4);border-bottom:1px solid #DED2C8;overflow:hidden">
@@ -391,7 +501,7 @@
       <p class="anim-3" style="font-family:'Bodoni Moda',serif;font-size:20px;color:#6B5850;margin:14px 0 0">Villa Regina, Lake Como — Italy</p>
       <div class="anim-4" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px">
         <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap"><b style="font-weight:600;color:#33231F;font-size:15px">{{ daysLeft }}</b> days to go</div>
-        <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap">Ceremony <b style="font-weight:600;color:#33231F;font-size:15px">15:00</b></div>
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap">Ceremony <b style="font-weight:600;color:#33231F;font-size:15px">15:30</b></div>
         <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap">RSVP by <b style="font-weight:600;color:#33231F;font-size:15px">{{ rsvpDeadline }}</b></div>
       </div>
       <div class="anim-5" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px">
@@ -412,7 +522,7 @@
     </div>
   </section>
 
-  <section class="sec-pad" style="max-width:1000px;margin:0 auto;padding:60px 24px 10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
+  <section class="sec-pad" style="max-width:1000px;margin:0 auto;padding:60px 24px 10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:20px">
     <img src="./assets/story-1.jpg" loading="lazy" class="photo-tile reveal" alt="Ceremony arch of white roses on the lawn above the lake" style="width:100%;height:240px;object-fit:cover;border-radius:20px;display:block;background:linear-gradient(#F7E7E3,#E9DCD3)">
     <img src="./assets/story-2.jpg" loading="lazy" class="photo-tile reveal" alt="The couple on the terrace at golden hour" style="width:100%;height:240px;object-fit:cover;border-radius:20px;display:block;background:linear-gradient(#F5E9E4,#EBDDD2)">
     <img src="./assets/story-3.jpg" loading="lazy" class="photo-tile reveal" alt="The banquet table laid on the terrace at dusk" style="width:100%;height:240px;object-fit:cover;border-radius:20px;display:block;background:linear-gradient(#F6E8E4,#EBD5CF)">
@@ -428,7 +538,7 @@
       <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">The day</div>
       <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 0">Saturday, 12 June</h2>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:8px 44px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:8px 44px">
       <sc-for list="{{ programmeCols }}" as="col" hint-placeholder-count="2">
         <div style="position:relative;padding-left:24px">
           <div style="position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:linear-gradient(#B9635A,#DED2C8)"></div>
@@ -446,7 +556,7 @@
   </section>
 
   <section style="background:#fff;border-top:1px solid #DED2C8;border-bottom:1px solid #DED2C8">
-    <div class="sec-pad" style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:34px;align-items:center">
+    <div class="sec-pad" style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:34px;align-items:center">
       <div>
         <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Getting there</div>
         <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:29px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">Villa Regina</h2>
@@ -464,7 +574,7 @@
     </div>
   </section>
 
-  <section class="sec-pad reveal" style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px">
+  <section class="sec-pad reveal" style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:28px">
     <div>
       <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Where to stay</div>
       <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">Rooms held until 1 May</h2>
@@ -518,7 +628,7 @@
           </div>
           <sc-if value="{{ isComing }}" hint-placeholder-val="{{ true }}">
             <div>
-              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:18px">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:14px;margin-bottom:18px">
                 <div>
                   <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:6px">Guests</label>
                   <select value="{{ rsvpSeats }}" onChange="{{ onSeats }}" style="width:100%;border:1px solid #DED2C8;border-radius:12px;padding:11px 13px;font-size:15px;background:#EFE7E0">
@@ -545,7 +655,7 @@
                 <sc-if value="{{ noShuttle }}">
                   <span style="width:19px;height:19px;border-radius:6px;background:#fff;border:1.5px solid #DED2C8;display:block"></span>
                 </sc-if>
-                <span>We'll take the shuttle from Como, 13:45</span>
+                <span>We&#39;ll take the shuttle from Como, 13:45</span>
               </button>
             </div>
           </sc-if>
@@ -575,7 +685,7 @@
   </section>
 
   <section class="sec-pad reveal" style="max-width:900px;margin:0 auto;padding:56px 24px">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:32px">
       <div>
         <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Gifts</div>
         <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">Your presence, mostly</h2>
@@ -601,7 +711,7 @@
 
   <footer style="border-top:1px solid #DED2C8;padding:34px 24px 50px;text-align:center;color:#6B5850;font-size:13px">
     <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-size:19px;color:#33231F;margin-bottom:8px">Amélie &amp; Jonas · 12.06.2027</div>
-    Anything at all — ask <b style="font-weight:500;color:#C9302A">{{ plannerName }}</b>, our planner: <a href="mailto:xenonline77@gmail.com">xenonline77@gmail.com</a> · <a href="https://t.me/Xenaja" target="_blank" rel="noopener">Telegram</a> / <a href="https://wa.me/79217963804" target="_blank" rel="noopener">WhatsApp</a> <span style="white-space:nowrap">+7 921 796-38-04</span>
+    Anything at all — ask <b style="font-weight:500;color:#C9302A">{{ plannerName }}</b>, our planner: <a href="mailto:hello@xenaja.studio">hello@xenaja.studio</a> · <a href="https://t.me/Xenaja" target="_blank" rel="noopener">Telegram</a> / <a href="https://wa.me/79217963804" target="_blank" rel="noopener">WhatsApp</a>
   </footer>
 </div>
 </sc-if>
@@ -613,7 +723,7 @@
     <div style="text-align:center;margin-bottom:30px">
       <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Digital invitation</div>
       <h1 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:clamp(30px,4.4vw,40px);margin:8px 0 8px">One personal link per guest</h1>
-      <p style="font-size:14.5px;color:#6B5850;max-width:56ch;margin:0 auto">Each invitation opens with the guest's own name, their own arrival details, and a reply that lands on the planning board. Three finishes ship with the template.</p>
+      <p style="font-size:14.5px;color:#6B5850;max-width:56ch;margin:0 auto">Each invitation opens with the guest&#39;s own name, their own arrival details, and a reply that lands on the planning board. Three finishes ship with the template.</p>
       <div style="display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap">
         <sc-for list="{{ designs }}" as="d" hint-placeholder-count="3">
           <sc-if value="{{ d.active }}" hint-placeholder-val="{{ true }}">
@@ -626,7 +736,7 @@
       </div>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px;align-items:start">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;align-items:start">
       <div style="display:grid;place-items:center;min-height:520px">
         <sc-if value="{{ envelopeClosed }}" hint-placeholder-val="{{ true }}">
           <button onClick="{{ onOpen }}" style="width:100%;max-width:420px;aspect-ratio:1.5;border:1px solid #DED2C8;border-radius:20px;background:linear-gradient(160deg,#FDF9F5,#F2E7DF);box-shadow:0 1px 2px rgba(35,40,35,.04),0 26px 50px -30px rgba(35,40,35,.3);position:relative;display:grid;place-items:center;overflow:hidden;padding:0">
@@ -677,13 +787,71 @@
 </div>
 </sc-if>
 
+<!-- ============ TOUR INVITATION ============ -->
+<sc-if value="{{ invite }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div onClick="{{ inviteNo }}" style="position:fixed;inset:0;z-index:110;background:rgba(51,35,31,.38);backdrop-filter:blur(1.5px)"></div>
+  <div style="position:fixed;inset:0;z-index:111;display:grid;place-items:center;padding:16px;pointer-events:none">
+  <div style="position:relative;pointer-events:auto;width:min(440px,100%);background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:30px 30px 26px;text-align:center;box-shadow:0 26px 60px -24px rgba(51,35,31,.6);animation:riseIn .4s ease both">
+    <button onClick="{{ inviteNo }}" aria-label="Close" style="position:absolute;top:12px;right:14px;border:none;background:none;color:#98857C;font-size:18px;line-height:1;padding:4px 6px">×</button>
+    <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Tour · one minute</div>
+    <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:28px;margin:12px 0 10px">First time here?</h2>
+    <p style="font-size:14.5px;color:#6B5850;margin:0 0 22px">A demo of the cabinet a wedding agency works from. Give me a minute and I will show you where the money, the guests and the couple’s site are.</p>
+    <button onClick="{{ inviteYes }}" class="btn-lift" style="width:100%;border:none;background:#C9302A;color:#fff;border-radius:999px;padding:14px;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase">Show me around</button>
+    <button onClick="{{ inviteNo }}" style="margin-top:12px;border:none;background:none;color:#98857C;font-size:13.5px;text-decoration:underline">I’ll look around</button>
+  </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ TOUR ============ -->
+<sc-if value="{{ tourIdle }}" hint-placeholder-val="{{ false }}">
+  <button onClick="{{ tourStart }}" class="btn-lift" style="position:fixed;right:18px;bottom:18px;z-index:90;border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 10px 30px -14px rgba(51,35,31,.5)">Tour</button>
+</sc-if>
+
+<sc-if value="{{ tourOn }}" hint-placeholder-val="{{ true }}">
+<div>
+  <sc-if value="{{ tourHasSpot }}" hint-placeholder-val="{{ true }}">
+    <div style="{{ tourSpotStyle }}"></div>
+  </sc-if>
+  <sc-if value="{{ tourNoSpot }}">
+    <div style="position:fixed;inset:0;z-index:100;background:rgba(51,35,31,.55);pointer-events:none"></div>
+  </sc-if>
+
+  <div class="tour-card" style="{{ tourCardStyle }}">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#C9302A">Tour</span>
+      <span style="margin-left:auto;font-size:11.5px;color:#98857C;font-variant-numeric:tabular-nums">{{ tourProgress }}</span>
+    </div>
+    <p style="margin:0 0 16px;font-size:15px;line-height:1.5;color:#33231F">{{ tourText }}</p>
+    <sc-if value="{{ tourNotFinal }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button onClick="{{ tourNext }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Next</button>
+        <button onClick="{{ tourSkip }}" style="margin-left:auto;border:none;background:none;color:#98857C;font-size:13px;text-decoration:underline">Skip</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ tourFinal }}">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button onClick="{{ tourContact }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Talk to us</button>
+        <button onClick="{{ tourSkip }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Explore on my own</button>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
 </div>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;plannerName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Cherii&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;EUR&quot;,&quot;GBP&quot;,&quot;CHF&quot;,&quot;PLN&quot;],&quot;default&quot;:&quot;EUR&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;rsvpDeadline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;15 May&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Guest site&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;plannerName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Wedding Planner&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;EUR&quot;,&quot;GBP&quot;,&quot;USD&quot;],&quot;default&quot;:&quot;EUR&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;rsvpDeadline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;15 May&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Guest site&quot;}}">
 class Component extends DCLogic {
   state = {
-    view: 'board',
+    view: 'agency',
+    hint: null,
+    tour: null,
+    tourRect: null,
+    invite: false,
+    vw: 1440,
     currency: null,
     editing: false,
     order: ['timeline','invoices','vendors','budget','checklist','guests','documents','guestsite','seating','stay','honeymoon','weather'],
@@ -699,11 +867,89 @@ class Component extends DCLogic {
     design: 'sage'
   };
 
+  // The tour. Targets are addressed through static markers in the markup, so
+  // reordering or hiding a block cannot break the route.
+  TOUR_KEY = 'wedding-suite-en-tour';
+  TOUR = [
+    { view:'agency', target:'tour-cabinet',
+      text:'This is your cabinet: every wedding the agency runs, in one place. Each has its own board, built from your template. Let us open one.' },
+    { view:'board', target:'tour-invoices',
+      text:'Payments, overdue invoices and the exchange rate live here, not in an inbox. An invoice is paid and the budget updates itself.' },
+    { view:'board', target:'tour-guests',
+      text:'A guest replies on the site and the answer is already with you: the menu counted, the shuttle list updated, the caterer told.' },
+    { view:'board', target:'tour-guestsite',
+      text:'The couple site and the personal invitations run off this same board. Change a time here and the guests see it.' },
+    { view:null, target:null, final:true,
+      text:'That is one wedding. Want to see it on a real one? Fifteen minutes on a call.' }
+  ];
+
+  componentDidMount() {
+    this.__sync = () => this.measureTour(false);
+    window.addEventListener('resize', this.__sync);
+    window.addEventListener('scroll', this.__sync, true);
+    this.__esc = (e) => {
+      if (e.key !== 'Escape') return;
+      if (this.state.invite) this.inviteClose();
+      else if (this.state.tour != null) this.tourEnd();
+    };
+    window.addEventListener('keydown', this.__esc);
+    this.setState({ vw: window.innerWidth });
+    let seen = false;
+    try { seen = !!localStorage.getItem(this.TOUR_KEY); } catch (e) {}
+    // Do not take the screen straight away: let people see where they have
+    // landed, and only then offer the tour.
+    if (!seen) this.__inviteTimer = setTimeout(() => this.setState({ invite: true }), 1800);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.__sync);
+    window.removeEventListener('scroll', this.__sync, true);
+    window.removeEventListener('keydown', this.__esc);
+    clearTimeout(this.__inviteTimer);
+  }
+
+  inviteYes() { this.setState({ invite: false }, () => this.tourGo(0)); }
+
+  inviteClose() {
+    try { localStorage.setItem(this.TOUR_KEY, '1'); } catch (e) {}
+    this.setState({ invite: false });
+  }
+
+  // Navigation and measurement are chained through the setState callback, so
+  // the card never shows before its screen has rendered.
+  tourGo(i) {
+    const step = this.TOUR[i];
+    if (!step) return this.tourEnd();
+    const after = () => requestAnimationFrame(() => this.measureTour(true));
+    const patch = { tour: i, tourRect: null };
+    if (step.view && this.state.view !== step.view) { patch.view = step.view; patch.hint = null; }
+    this.setState(patch, after);
+  }
+
+  measureTour(scrollFirst) {
+    const i = this.state.tour;
+    if (i == null) return;
+    const step = this.TOUR[i];
+    const el = step && step.target ? document.getElementById(step.target) : null;
+    const box = el && (el.closest('section') || el);
+    if (!box) { this.setState({ tourRect: null, vw: window.innerWidth }); return; }
+    if (scrollFirst) {
+      try { box.scrollIntoView({ block: 'center', behavior: 'instant' }); }
+      catch (e) { box.scrollIntoView(); }
+    }
+    const b = box.getBoundingClientRect();
+    this.setState({ tourRect: { top:b.top, left:b.left, w:b.width, h:b.height }, vw: window.innerWidth });
+  }
+
+  tourEnd() {
+    try { localStorage.setItem(this.TOUR_KEY, '1'); } catch (e) {}
+    this.setState({ tour: null, tourRect: null });
+  }
+
   RATES = {
     EUR: { code:'EUR', rate:1, pre:'€', post:'' },
     GBP: { code:'GBP', rate:0.842, pre:'£', post:'' },
-    CHF: { code:'CHF', rate:0.938, pre:'CHF ', post:'' },
-    PLN: { code:'PLN', rate:4.26, pre:'', post:' zł' }
+    USD: { code:'USD', rate:1.08, pre:'$', post:'' }
   };
 
   cur() { return this.RATES[this.state.currency || this.props.currency || 'EUR'] || this.RATES.EUR; }
@@ -766,6 +1012,28 @@ class Component extends DCLogic {
     ]}
   };
 
+  // The agency's book of work. Only the first wedding opens; the other rows
+  // exist so the demo reads as a cabinet, not as one couple's board.
+  WEDDINGS = [
+    { pair:'Amélie & Jonas',  date:'12.06.2027', place:'Lake Como',  status:'In progress', budget:'64%',  rsvp:'21', inv:'2 due',     live:true },
+    { pair:'Maria & Stefano', date:'03.10.2026', place:'Tuscany',    status:'Final week',  budget:'97%',  rsvp:'0',  inv:'1 overdue', alert:true },
+    { pair:'Sophie & Lucas',  date:'15.05.2027', place:'Santorini',  status:'In progress', budget:'41%',  rsvp:'38', inv:'—' },
+    { pair:'Klara & Marek',   date:'20.09.2026', place:'Prague',     status:'Final week',  budget:'100%', rsvp:'2',  inv:'settled' },
+    { pair:'Ines & Tomas',    date:'07.08.2027', place:'Montenegro', status:'Kick-off',    budget:'12%',  rsvp:'invitations not sent', inv:'—' },
+    { pair:'Layla & Omar',    date:'14.02.2027', place:'Dubai',      status:'In progress', budget:'55%',  rsvp:'9',  inv:'3 due' },
+    { pair:'Nina & Roman',    date:'30.05.2027', place:'Georgia',    status:'In progress', budget:'48%',  rsvp:'15', inv:'1 due' }
+  ];
+
+  HOW_STEPS = [
+    'A wedding is created from your template',
+    'The couple get their own board',
+    'Guests reply on the couple site',
+    'Everything lands back in this cabinet'
+  ];
+
+  // One line drives the columns for both the head row and the rows themselves.
+  WED_COLS = 'minmax(150px,1.5fr) 92px minmax(min(94px,100%),1fr) 130px 116px 120px 124px';
+
   INVOICES = [
     { id:'INV-2041', to:'Villa Regina', what:'Venue — deposit 2 of 3', eur:8400, due:'15 Mar 2027', status:'paid' },
     { id:'INV-2042', to:'Studio Lumen', what:'Photography & film — final balance', eur:2300, due:'1 Apr 2027', status:'sent' },
@@ -786,11 +1054,82 @@ class Component extends DCLogic {
     const s = this.state;
     const c = this.cur();
     const f = (v) => this.fmt(v, c);
-    const plannerName = this.props.plannerName ?? 'Cherii';
+    const plannerName = this.props.plannerName ?? 'Wedding Planner';
     const rsvpDeadline = this.props.rsvpDeadline ?? '15 May';
     const daysLeft = Math.max(0, Math.ceil((new Date('2027-06-12T00:00:00') - new Date()) / 86400000));
 
-    const tabDefs = [['board','Planning board'],['guest','Guest site'],['invite','Invitation']];
+    // tour
+    const ti = s.tour, tourOn = ti != null, tStep = tourOn ? this.TOUR[ti] : null;
+    const rect = s.tourRect, vw = s.vw || 1440, narrow = vw < 768, hasSpot = tourOn && !!rect;
+    const cardBase = {
+      position:'fixed', zIndex:101, background:'#fff', border:'1px solid #DED2C8',
+      borderRadius:'20px', padding:'18px 20px 16px',
+      boxShadow:'0 20px 50px -20px rgba(51,35,31,.6)', animation:'riseIn .35s ease both'
+    };
+    let tourCardStyle;
+    if (!tourOn) {
+      tourCardStyle = { display:'none' };
+    } else if (narrow) {
+      // Narrow screens get a full-width bottom sheet, with no anchoring at all.
+      tourCardStyle = { ...cardBase, left:'12px', right:'12px', bottom:'12px' };
+    } else if (!rect) {
+      tourCardStyle = { ...cardBase, left:'50%', top:'50%', transform:'translate(-50%,-50%)',
+                        width:'min(420px, calc(100vw - 40px))',
+                        animation:'riseInCentered .35s ease both' };
+    } else {
+      // The card's height is not known in advance, so the side is chosen by the
+      // room actually available: below, above, or pinned to the bottom when the
+      // target fills the screen — otherwise the card gets clipped.
+      const W = 380, gap = 14, H = 215, vh = window.innerHeight;
+      const below = vh - (rect.top + rect.h) - gap, above = rect.top - gap;
+      const left = Math.min(Math.max(12, rect.left + rect.w / 2 - W / 2), Math.max(12, vw - W - 12));
+      tourCardStyle = { ...cardBase, width:'min(' + W + 'px, calc(100vw - 24px))', left: left + 'px' };
+      if (below >= H) tourCardStyle.top = (rect.top + rect.h + gap) + 'px';
+      else if (above >= H) tourCardStyle.bottom = (vh - rect.top + gap) + 'px';
+      else tourCardStyle.bottom = '20px';
+    }
+
+    // agency cabinet
+    const pill = (bg, ink, border) => ({
+      display:'inline-block', fontSize:'11px', fontWeight:500, letterSpacing:'.08em',
+      textTransform:'uppercase', padding:'4px 11px', borderRadius:'999px', whiteSpace:'nowrap',
+      background:bg, color:ink, border:'1px solid ' + (border || 'transparent')
+    });
+    const STATUS = {
+      'Kick-off':    pill('#F0EAE2', '#98857C'),
+      'In progress': pill('#F5E9E4', '#A0453D'),
+      'Final week':  pill('#F7E7E3', '#C9302A')
+    };
+    const invPill = (v) => v.indexOf('overdue') >= 0 ? pill('#C9302A', '#fff')
+      : v.indexOf('due') >= 0 ? pill('#F5E9E4', '#A0453D')
+      : v === 'settled' ? pill('#fff', '#6B5850', '#DED2C8')
+      : { fontSize:'13px', color:'#98857C' };
+    const last = this.WEDDINGS.length - 1;
+    const weddings = this.WEDDINGS.map((w, i) => ({
+      ...w,
+      isLive: !!w.live,
+      showHint: s.hint === i,
+      statusStyle: STATUS[w.status] || pill('#F0EAE2', '#98857C'),
+      invStyle: invPill(w.inv),
+      rsvpStyle: {
+        fontSize: w.rsvp.length > 4 ? '12px' : '13.5px',
+        color: w.rsvp.length > 4 ? '#A0453D' : (w.rsvp === '0' ? '#98857C' : '#33231F'),
+        fontVariantNumeric:'tabular-nums', textAlign:'right'
+      },
+      rowStyle: {
+        display:'grid', gridTemplateColumns:this.WED_COLS, gap:'6px 14px', alignItems:'center',
+        padding:'13px 20px', cursor:'pointer',
+        borderBottom: i === last ? 'none' : '1px solid #DED2C8',
+        background: w.alert ? '#FCF2EF' : '#fff',
+        boxShadow: w.alert ? 'inset 3px 0 0 #C9302A' : (w.live ? 'inset 3px 0 0 #B9635A' : 'none')
+      },
+      onClick: () => w.live
+        ? this.setState({ view:'board', hint:null })
+        : this.setState({ hint: s.hint === i ? null : i })
+    }));
+    const howSteps = this.HOW_STEPS.map((text, i) => ({ n: i + 1, text }));
+
+    const tabDefs = [['board','Board'],['guest','Guest site'],['invite','Invitation']];
     const tabs = tabDefs.map(([id, label]) => ({
       label, active: s.view === id, inactive: s.view !== id,
       onClick: () => this.set({ view: id })
@@ -988,6 +1327,40 @@ class Component extends DCLogic {
     return {
       plannerName, rsvpDeadline, daysLeft,
       tabs, currencies, currencyCode: c.code,
+      weddings, howSteps,
+      headStyle: {
+        display:'grid', gridTemplateColumns:this.WED_COLS, gap:'14px', alignItems:'end',
+        padding:'14px 20px', borderBottom:'1px solid #DED2C8', background:'#FBF7F3',
+        fontSize:'10px', letterSpacing:'.14em', textTransform:'uppercase', fontWeight:500, color:'#98857C'
+      },
+      tourOn, tourOff: !tourOn, tourIdle: !tourOn && !s.invite,
+      invite: s.invite,
+      inviteYes: () => this.inviteYes(),
+      inviteNo: () => this.inviteClose(),
+      tourHasSpot: hasSpot, tourNoSpot: tourOn && !hasSpot,
+      tourSpotStyle: rect ? {
+        position:'fixed', zIndex:100, pointerEvents:'none',
+        top:(rect.top - 6) + 'px', left:(rect.left - 6) + 'px',
+        width:(rect.w + 12) + 'px', height:(rect.h + 12) + 'px',
+        borderRadius:'24px', border:'2px solid #C9302A',
+        boxShadow:'0 0 0 9999px rgba(51,35,31,.55)', transition:'top .25s ease, left .25s ease, width .25s ease, height .25s ease'
+      } : null,
+      tourCardStyle,
+      tourText: tStep ? tStep.text : '',
+      tourProgress: tourOn ? (ti + 1) + ' of ' + this.TOUR.length : '',
+      tourFinal: tourOn && !!tStep.final, tourNotFinal: tourOn && !tStep.final,
+      tourNext: () => this.tourGo(ti + 1),
+      tourSkip: () => this.tourEnd(),
+      tourContact: () => {
+        try { window.open('https://t.me/Xenaja', '_blank', 'noopener'); } catch (e) {}
+        this.tourEnd();
+      },
+      tourStart: () => this.tourGo(0),
+      isAgency: s.view === 'agency', notAgency: s.view !== 'agency',
+      chromeLabel: s.view === 'agency' ? 'agency cabinet'
+        : s.view === 'board' ? 'wedding board'
+        : s.view === 'guest' ? 'guest site' : 'invitation',
+      goAgency: () => this.set({ view:'agency', hint:null }),
       isBoard: s.view === 'board', isGuest: s.view === 'guest', isInvite: s.view === 'invite',
       goBoard: () => this.set({ view:'board' }),
       goGuest: () => this.set({ view:'guest' }),
