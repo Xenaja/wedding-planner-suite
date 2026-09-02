@@ -164,7 +164,7 @@
       <div style="font-size:12.5px;color:#98857C">В демо открывается один план — Анна и Дмитрий</div>
     </div>
 
-    <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;box-shadow:0 1px 2px rgba(35,40,35,.04),0 10px 30px -18px rgba(35,40,35,.18);overflow:hidden">
+    <div id="tour-cabinet" style="background:#fff;border:1px solid #DED2C8;border-radius:20px;box-shadow:0 1px 2px rgba(35,40,35,.04),0 10px 30px -18px rgba(35,40,35,.18);overflow:hidden">
       <div class="wed-head" style="{{ headStyle }}">
         <div>Пара</div>
         <div>Дата</div>
@@ -297,6 +297,7 @@
 
             <!-- invoices -->
             <sc-if value="{{ b.isInvoices }}">
+              <i id="tour-invoices" style="display:block;height:0"></i>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:10px;margin-bottom:18px">
                 <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
                   <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Оплачено</div>
@@ -403,6 +404,7 @@
 
             <!-- guests -->
             <sc-if value="{{ b.isGuests }}">
+              <i id="tour-guests" style="display:block;height:0"></i>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
                 <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
                   <b style="display:block;font-family:'Playfair Display',serif;font-size:27px;font-weight:500">92</b>
@@ -435,6 +437,7 @@
 
             <!-- guest site status -->
             <sc-if value="{{ b.isGuestSite }}">
+              <i id="tour-guestsite" style="display:block;height:0"></i>
               <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
                 <div style="flex:1;min-width:240px">
                   <p style="font-size:14px;color:#6B5850;margin:0 0 14px">Публичная страница пары и цифровое приглашение работают с этим же планом — меняете время здесь, и сайт для гостей обновляется.</p>
@@ -777,6 +780,42 @@
 </div>
 </sc-if>
 
+<!-- ============ ЭКСКУРСИЯ ============ -->
+<sc-if value="{{ tourOff }}" hint-placeholder-val="{{ false }}">
+  <button onClick="{{ tourStart }}" class="btn-lift" style="position:fixed;right:18px;bottom:18px;z-index:90;border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 10px 30px -14px rgba(51,35,31,.5)">Экскурсия</button>
+</sc-if>
+
+<sc-if value="{{ tourOn }}" hint-placeholder-val="{{ true }}">
+<div>
+  <sc-if value="{{ tourHasSpot }}" hint-placeholder-val="{{ true }}">
+    <div style="{{ tourSpotStyle }}"></div>
+  </sc-if>
+  <sc-if value="{{ tourNoSpot }}">
+    <div style="position:fixed;inset:0;z-index:100;background:rgba(51,35,31,.55);pointer-events:none"></div>
+  </sc-if>
+
+  <div class="tour-card" style="{{ tourCardStyle }}">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#C9302A">Экскурсия</span>
+      <span style="margin-left:auto;font-size:11.5px;color:#98857C;font-variant-numeric:tabular-nums">{{ tourProgress }}</span>
+    </div>
+    <p style="margin:0 0 16px;font-size:15px;line-height:1.5;color:#33231F">{{ tourText }}</p>
+    <sc-if value="{{ tourNotFinal }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button onClick="{{ tourNext }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Далее</button>
+        <button onClick="{{ tourSkip }}" style="margin-left:auto;border:none;background:none;color:#98857C;font-size:13px;text-decoration:underline">Пропустить</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ tourFinal }}">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button onClick="{{ tourContact }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Написать нам</button>
+        <button onClick="{{ tourSkip }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Смотреть демо свободно</button>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
 </div>
 
 </x-dc>
@@ -785,6 +824,9 @@ class Component extends DCLogic {
   state = {
     view: 'agency',
     hint: null,
+    tour: null,
+    tourRect: null,
+    vw: 1440,
     currency: null,
     editing: false,
     order: ['timeline','invoices','vendors','budget','checklist','guests','documents','guestsite','seating','stay','honeymoon','weather'],
@@ -799,6 +841,68 @@ class Component extends DCLogic {
     opened: false,
     design: 'sage'
   };
+
+  // Экскурсия. Тексты финальные (см. ТЗ), цели адресуются статическими
+  // маркерами в разметке, чтобы не зависеть от порядка и видимости блоков.
+  TOUR_KEY = 'wedding-suite-ru-tour';
+  TOUR = [
+    { view:'agency', target:'tour-cabinet',
+      text:'Это ваш кабинет: все свадьбы агентства в одном месте. У каждой свой план, собранный из вашего шаблона. Откроем один.' },
+    { view:'board', target:'tour-invoices',
+      text:'Оплаты, просрочки и курс валют – здесь, а не в переписке. Счёт оплачен – бюджет обновился сам.' },
+    { view:'board', target:'tour-guests',
+      text:'Гость ответил на сайте – ответ уже у вас: меню посчитано, трансфер обновлён, кейтеринг в курсе.' },
+    { view:'board', target:'tour-guestsite',
+      text:'Сайт пары и именные приглашения работают с этим же планом. Поменяли время здесь – у гостей всё обновилось.' },
+    { view:null, target:null, final:true,
+      text:'Так это выглядит для одной свадьбы. Хотите увидеть на вашей реальной – 15 минут созвона.' }
+  ];
+
+  componentDidMount() {
+    this.__sync = () => this.measureTour(false);
+    window.addEventListener('resize', this.__sync);
+    window.addEventListener('scroll', this.__sync, true);
+    this.setState({ vw: window.innerWidth });
+    let seen = false;
+    try { seen = !!localStorage.getItem(this.TOUR_KEY); } catch (e) {}
+    if (!seen) this.tourGo(0);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.__sync);
+    window.removeEventListener('scroll', this.__sync, true);
+  }
+
+  // Смена экрана и замер связаны колбэком setState: плашка не показывается,
+  // пока целевой экран не отрисован.
+  tourGo(i) {
+    const step = this.TOUR[i];
+    if (!step) return this.tourEnd();
+    const after = () => requestAnimationFrame(() => this.measureTour(true));
+    const patch = { tour: i, tourRect: null };
+    if (step.view && this.state.view !== step.view) { patch.view = step.view; patch.hint = null; }
+    this.setState(patch, after);
+  }
+
+  measureTour(scrollFirst) {
+    const i = this.state.tour;
+    if (i == null) return;
+    const step = this.TOUR[i];
+    const el = step && step.target ? document.getElementById(step.target) : null;
+    const box = el && (el.closest('section') || el);
+    if (!box) { this.setState({ tourRect: null, vw: window.innerWidth }); return; }
+    if (scrollFirst) {
+      try { box.scrollIntoView({ block: 'center', behavior: 'instant' }); }
+      catch (e) { box.scrollIntoView(); }
+    }
+    const b = box.getBoundingClientRect();
+    this.setState({ tourRect: { top:b.top, left:b.left, w:b.width, h:b.height }, vw: window.innerWidth });
+  }
+
+  tourEnd() {
+    try { localStorage.setItem(this.TOUR_KEY, '1'); } catch (e) {}
+    this.setState({ tour: null, tourRect: null });
+  }
 
   RATES = {
     RUB: { code:'RUB', rate:98, pre:'', post:' ₽' },
@@ -911,6 +1015,36 @@ class Component extends DCLogic {
     const plannerName = this.props.plannerName ?? 'Свадебный организатор';
     const rsvpDeadline = this.props.rsvpDeadline ?? '15 мая';
     const daysLeft = Math.max(0, Math.ceil((new Date('2027-06-12T00:00:00') - new Date()) / 86400000));
+
+    // экскурсия
+    const ti = s.tour, tourOn = ti != null, tStep = tourOn ? this.TOUR[ti] : null;
+    const rect = s.tourRect, vw = s.vw || 1440, narrow = vw < 768, hasSpot = tourOn && !!rect;
+    const cardBase = {
+      position:'fixed', zIndex:101, background:'#fff', border:'1px solid #DED2C8',
+      borderRadius:'20px', padding:'18px 20px 16px',
+      boxShadow:'0 20px 50px -20px rgba(51,35,31,.6)', animation:'riseIn .35s ease both'
+    };
+    let tourCardStyle;
+    if (!tourOn) {
+      tourCardStyle = { display:'none' };
+    } else if (narrow) {
+      // На узком экране — нижняя карточка во всю ширину, без стрелок и привязки.
+      tourCardStyle = { ...cardBase, left:'12px', right:'12px', bottom:'12px' };
+    } else if (!rect) {
+      tourCardStyle = { ...cardBase, left:'50%', top:'50%', transform:'translate(-50%,-50%)',
+                        width:'min(420px, calc(100vw - 40px))' };
+    } else {
+      // Высота плашки заранее неизвестна, поэтому выбираем сторону по запасу
+      // места: снизу, сверху, а если цель занимает почти весь экран — прижимаем
+      // к низу окна, иначе плашка обрезается краем.
+      const W = 380, gap = 14, H = 215, vh = window.innerHeight;
+      const below = vh - (rect.top + rect.h) - gap, above = rect.top - gap;
+      const left = Math.min(Math.max(12, rect.left + rect.w / 2 - W / 2), Math.max(12, vw - W - 12));
+      tourCardStyle = { ...cardBase, width:'min(' + W + 'px, calc(100vw - 24px))', left: left + 'px' };
+      if (below >= H) tourCardStyle.top = (rect.top + rect.h + gap) + 'px';
+      else if (above >= H) tourCardStyle.bottom = (vh - rect.top + gap) + 'px';
+      else tourCardStyle.bottom = '20px';
+    }
 
     // agency cabinet
     const pill = (bg, ink, border) => ({
@@ -1162,6 +1296,26 @@ class Component extends DCLogic {
         padding:'14px 20px', borderBottom:'1px solid #DED2C8', background:'#FBF7F3',
         fontSize:'10px', letterSpacing:'.14em', textTransform:'uppercase', fontWeight:500, color:'#98857C'
       },
+      tourOn, tourOff: !tourOn,
+      tourHasSpot: hasSpot, tourNoSpot: tourOn && !hasSpot,
+      tourSpotStyle: rect ? {
+        position:'fixed', zIndex:100, pointerEvents:'none',
+        top:(rect.top - 6) + 'px', left:(rect.left - 6) + 'px',
+        width:(rect.w + 12) + 'px', height:(rect.h + 12) + 'px',
+        borderRadius:'24px', border:'2px solid #C9302A',
+        boxShadow:'0 0 0 9999px rgba(51,35,31,.55)', transition:'top .25s ease, left .25s ease, width .25s ease, height .25s ease'
+      } : null,
+      tourCardStyle,
+      tourText: tStep ? tStep.text : '',
+      tourProgress: tourOn ? (ti + 1) + ' из ' + this.TOUR.length : '',
+      tourFinal: tourOn && !!tStep.final, tourNotFinal: tourOn && !tStep.final,
+      tourNext: () => this.tourGo(ti + 1),
+      tourSkip: () => this.tourEnd(),
+      tourContact: () => {
+        try { window.open('https://t.me/Xenaja', '_blank', 'noopener'); } catch (e) {}
+        this.tourEnd();
+      },
+      tourStart: () => this.tourGo(0),
       isAgency: s.view === 'agency', notAgency: s.view !== 'agency',
       chromeLabel: s.view === 'agency' ? 'кабинет агентства'
         : s.view === 'board' ? 'план свадьбы'
