@@ -1,0 +1,1641 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Кабинет агентства Свадьбы Веры: все свадьбы в одном месте</title>
+<meta name="description" content="Демо под Свадьбы Веры: у каждой пары свой план, счета и бюджет считаются сами, ответы гостей с сайта попадают сразу к вам. Экскурсия занимает минуту.">
+
+<!-- Ссылку открывают из мессенджера, и первое, что видит человек, — карточка
+     превью. Краулеры Telegram и WhatsApp не исполняют JS, поэтому вся страница
+     для них — вот эти теги. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Wedding planning suite">
+<meta property="og:locale" content="ru_RU">
+<meta property="og:url" content="https://xenaja.github.io/wedding-planner-suite/svadby-very.html">
+<meta property="og:title" content="Кабинет агентства Свадьбы Веры: все свадьбы в одном месте">
+<meta property="og:description" content="Демо под Свадьбы Веры: у каждой пары свой план, счета и бюджет считаются сами, ответы гостей с сайта попадают сразу к вам. Экскурсия занимает минуту.">
+<meta property="og:image" content="https://xenaja.github.io/wedding-planner-suite/assets/og-svadby-very.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="2400">
+<meta property="og:image:height" content="1260">
+<meta property="og:image:alt" content="Кабинет агентства: семь свадеб в таблице, одна отмечена просроченным счётом">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Кабинет агентства Свадьбы Веры: все свадьбы в одном месте">
+<meta name="twitter:description" content="Демо под Свадьбы Веры: у каждой пары свой план, счета и бюджет считаются сами, ответы гостей с сайта попадают сразу к вам. Экскурсия занимает минуту.">
+<meta name="twitter:image" content="https://xenaja.github.io/wedding-planner-suite/assets/og-svadby-very.png">
+
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300..600&display=swap" rel="stylesheet" />
+<style>
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:#EFE7E0; color:#33231F; font-family:'Montserrat',system-ui,sans-serif; font-weight:300; line-height:1.55; -webkit-font-smoothing:antialiased; text-wrap:pretty; }
+  * { box-sizing:border-box; }
+  a { color:#C9302A; text-decoration:none; }
+  a:hover { color:#B9635A; }
+  input, select, textarea, button { font:inherit; color:inherit; }
+  button { cursor:pointer; }
+  :focus-visible { outline:2px solid #C9302A; outline-offset:3px; border-radius:4px; }
+  @keyframes riseIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+  /* riseIn заканчивается кадром transform:none и при fill-mode:both затирает
+     собственный transform элемента. Для того, что центрируется трансформом,
+     нужен кадр, сохраняющий его. */
+  @keyframes riseInCentered {
+    from { opacity:0; transform:translate(-50%,calc(-50% + 10px)); }
+    to   { opacity:1; transform:translate(-50%,-50%); }
+  }
+
+  /* ---------- motion ----------
+     CSS only, deliberately: the runtime compiles this template to React, so a
+     <script> in here would never run and an IntersectionObserver has nowhere to
+     live. Scroll reveals ride animation-timeline and are wrapped in @supports —
+     where it is unsupported the element simply renders, with no animation and
+     nothing hidden. */
+  @keyframes riseUp  { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:none; } }
+  @keyframes fadeIn  { from { opacity:0; } to { opacity:1; } }
+  @keyframes zoomOut { from { transform:scale(1.055); } to { transform:scale(1); } }
+
+  .anim-cover img { animation: zoomOut 2s cubic-bezier(.2,.6,.2,1) both; }
+  .anim-1 { animation: riseUp .7s ease both .05s; }
+  .anim-2 { animation: riseUp .7s ease both .16s; }
+  .anim-3 { animation: riseUp .7s ease both .27s; }
+  .anim-4 { animation: riseUp .7s ease both .38s; }
+  .anim-5 { animation: riseUp .7s ease both .49s; }
+
+  @supports (animation-timeline: view()) {
+    .reveal { animation: riseUp .8s ease both; animation-timeline: view(); animation-range: entry 0% entry 70%; }
+  }
+
+  .photo-tile { transition: transform .7s cubic-bezier(.2,.6,.2,1), box-shadow .5s ease; }
+  .photo-tile:hover { transform: scale(1.02); box-shadow: 0 18px 38px -26px rgba(51,35,31,.55); }
+
+  /* ---------- agency cabinet ----------
+     Rows are inline-styled like everything else here; only hover and the
+     narrow-screen reflow live in the stylesheet, since neither can be
+     expressed inline. */
+  .wed-row { transition: background .2s ease; }
+  .wed-row:hover { background: #FBF4F1 !important; }
+  .wed-meta { display: none; }
+
+  .btn-lift { transition: transform .25s ease, box-shadow .25s ease; }
+  .btn-lift:hover { transform: translateY(-2px); box-shadow: 0 10px 22px -14px rgba(51,35,31,.55); }
+  .btn-lift:active { transform: translateY(0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+      animation-duration: .001ms !important; animation-delay: 0s !important;
+      animation-iteration-count: 1 !important; transition-duration: .001ms !important;
+    }
+    .photo-tile:hover { transform: none; }
+  }
+
+  /* ---------- narrow screens ----------
+     The markup is inline-styled, so a stylesheet rule loses to it every time —
+     hence !important. Kept strictly inside media queries, so desktop rendering
+     is byte-for-byte what it was. */
+  @media (max-width: 860px) {
+    .board-grid { grid-template-columns: 1fr !important; }
+  }
+  /* The wedding table stops being a table below 760px: the row becomes a card,
+     the column head is dropped, and date/location move into a meta line under
+     the couple, so nothing has to scroll sideways. */
+  @media (max-width: 760px) {
+    .wed-head { display: none !important; }
+    .wed-row { display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px 10px; padding: 15px 16px !important; }
+    .wed-c-pair { flex: 1 1 100%; }
+    .wed-c-date, .wed-c-loc { display: none !important; }
+    .wed-meta { display: block; }
+    .wed-c-budget, .wed-c-rsvp { text-align: left !important; }
+  }
+  @media (max-width: 640px) {
+    /* min-width:0 is the load-bearing bit — a flex item refuses to shrink below
+       its content without it, so overflow-x would never engage and the pill
+       would push the page sideways instead of scrolling inside itself. */
+    .nav-tabs { overflow-x: auto; max-width: 100%; min-width: 0; scrollbar-width: none; }
+    .nav-tabs::-webkit-scrollbar { display: none; }
+    .nav-tabs button { padding: 7px 11px !important; font-size: 10px !important; letter-spacing: .08em !important; }
+    .sec-pad { padding-top: 34px !important; padding-bottom: 34px !important; }
+    .gs-hero-copy { padding: 28px 20px 34px !important; }
+    .photo-tile { height: 200px !important; }
+    .gs-map { height: 220px !important; }
+    /* Русские подписи вдвое длиннее английских: nowrap-плашка в заголовке блока
+       и трёхколоночные счётчики гостей задавали колонке min-content шире экрана,
+       и весь план уезжал вбок. Ниже 640px разрешаем перенос и ужимаем трекинг. */
+    .blk-tag { white-space: normal !important; text-align: right; }
+    /* Длинные слова вроде «приглашения» держали заголовок блока в одну строку с
+       плашкой и задавали плану минимальную ширину ~397px. Пусть плашка переносится. */
+    .blk-head { flex-wrap: wrap; }
+    .blk-head h2 { font-size: 20px !important; }
+    /* Перетаскивание блоков от касания не работает нигде: HTML5 drag-and-drop
+       не запускается тачем. На телефоне единственный путь — эти кнопки, поэтому
+       им нужна нормальная тап-цель. */
+    .blk-btn { width: 44px !important; height: 44px !important; border-radius: 12px !important; font-size: 15px !important; }
+    .stat-cap { font-size: 10px !important; letter-spacing: .04em !important; }
+  }
+  @media (max-width: 380px) {
+    .sec-pad, .gs-hero-copy { padding-left: 16px !important; padding-right: 16px !important; }
+  }
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#EFE7E0">
+
+<header style="position:sticky;top:0;z-index:30;background:rgba(250,248,243,.92);backdrop-filter:blur(10px);border-bottom:1px solid #DED2C8">
+  <div style="max-width:1180px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <sc-if value="{{ notAgency }}" hint-placeholder-val="{{ false }}">
+      <button onClick="{{ goAgency }}" class="btn-lift" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:6px 12px;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap">← Кабинет агентства</button>
+    </sc-if>
+    <div style="display:flex;flex-direction:column;margin-right:auto;line-height:1.15">
+      <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:23px;color:#C9302A;letter-spacing:-.015em">{{ plannerName }}</span>
+      <span style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:#98857C">{{ chromeLabel }}</span>
+    </div>
+    <sc-if value="{{ notAgency }}" hint-placeholder-val="{{ false }}">
+    <nav class="nav-tabs" style="display:flex;gap:6px;background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:4px">
+      <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="3">
+        <sc-if value="{{ t.active }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ t.onClick }}" style="border:none;border-radius:999px;padding:9px 15px;font-size:11px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;background:#C9302A;color:#fff">{{ t.label }}</button>
+        </sc-if>
+        <sc-if value="{{ t.inactive }}">
+          <button onClick="{{ t.onClick }}" style="border:none;border-radius:999px;padding:9px 15px;font-size:11px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap;background:transparent;color:#6B5850">{{ t.label }}</button>
+        </sc-if>
+      </sc-for>
+    </nav>
+    </sc-if>
+    <sc-if value="{{ notAgency }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:8px;background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:6px 8px 6px 14px">
+      <span style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:500;color:#98857C">валюта</span>
+      <sc-for list="{{ currencies }}" as="c" hint-placeholder-count="3">
+        <sc-if value="{{ c.active }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ c.onClick }}" style="border:1px solid #B9635A;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:500;background:#F5E9E4;color:#A0453D">{{ c.code }}</button>
+        </sc-if>
+        <sc-if value="{{ c.inactive }}">
+          <button onClick="{{ c.onClick }}" style="border:1px solid transparent;border-radius:999px;padding:5px 11px;font-size:12px;font-weight:400;background:transparent;color:#98857C">{{ c.code }}</button>
+        </sc-if>
+      </sc-for>
+    </div>
+    </sc-if>
+  </div>
+</header>
+
+<!-- ============ VIEW 0 · AGENCY CABINET ============ -->
+<sc-if value="{{ isAgency }}" hint-placeholder-val="{{ true }}">
+<div>
+  <section style="padding:52px 24px 34px;text-align:center;border-bottom:1px solid #DED2C8;background:radial-gradient(1100px 420px at 50% -210px,#F5E4DC,transparent 72%)">
+    <h1 style="font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:clamp(34px,5.6vw,54px);line-height:1.08;margin:0">Кабинет агентства {{ plannerName }}</h1>
+    <p style="margin:16px auto 0;max-width:62ch;font-size:15px;color:#6B5850">Все свадьбы агентства — у каждой свой план, собранный из вашего шаблона.</p>
+  </section>
+
+  <main style="max-width:1180px;margin:0 auto;padding:26px 24px 0">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px">
+      <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C">Свадьбы агентства</div>
+      <div style="font-size:12.5px;color:#98857C">В демо открывается один план — Анна и Дмитрий</div>
+    </div>
+
+    <div id="tour-cabinet" style="background:#fff;border:1px solid #DED2C8;border-radius:20px;box-shadow:0 1px 2px rgba(35,40,35,.04),0 10px 30px -18px rgba(35,40,35,.18);overflow:hidden">
+      <div class="wed-head" style="{{ headStyle }}">
+        <div>Пара</div>
+        <div>Дата</div>
+        <div>Локация</div>
+        <div>Статус</div>
+        <div style="text-align:right">Бюджет законтрактован</div>
+        <div style="text-align:right">RSVP без ответа</div>
+        <div>Счета к оплате</div>
+      </div>
+      <sc-for list="{{ weddings }}" as="w" hint-placeholder-count="7">
+        <div class="wed-row" style="{{ w.rowStyle }}" onClick="{{ w.onClick }}">
+          <div class="wed-c-pair">
+            <b style="font-weight:500;font-size:14.5px;display:block">{{ w.pair }}</b>
+            <sc-if value="{{ w.isLive }}">
+              <span style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:#C9302A">Открыть план →</span>
+            </sc-if>
+            <span class="wed-meta" style="font-size:12.5px;color:#6B5850">{{ w.date }} · {{ w.place }}</span>
+          </div>
+          <div class="wed-c-date" style="font-size:13px;color:#6B5850;font-variant-numeric:tabular-nums">{{ w.date }}</div>
+          <div class="wed-c-loc" style="font-size:13px;color:#6B5850">{{ w.place }}</div>
+          <div class="wed-c-status"><span style="{{ w.statusStyle }}">{{ w.status }}</span></div>
+          <div class="wed-c-budget" style="font-size:13.5px;color:#33231F;font-variant-numeric:tabular-nums;text-align:right">{{ w.budget }}</div>
+          <div class="wed-c-rsvp" style="{{ w.rsvpStyle }}">{{ w.rsvp }}</div>
+          <div class="wed-c-inv"><span style="{{ w.invStyle }}">{{ w.inv }}</span></div>
+          <sc-if value="{{ w.showHint }}">
+            <div style="grid-column:1 / -1;flex-basis:100%;font-size:12.5px;color:#A0453D;background:#F5E9E4;border:1px solid #EBD8D2;border-radius:12px;padding:8px 12px;margin-top:2px">В демо открывается одна свадьба – Анна и Дмитрий</div>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="margin:30px 0 0">
+      <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C;margin-bottom:14px">Как это устроено</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(215px,100%),1fr));gap:14px">
+        <sc-for list="{{ howSteps }}" as="h" hint-placeholder-count="4">
+          <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:18px 20px;display:flex;gap:13px;align-items:flex-start">
+            <span style="flex:none;width:26px;height:26px;border-radius:50%;background:#F7E7E3;color:#C9302A;display:grid;place-items:center;font-size:12.5px;font-weight:600">{{ h.n }}</span>
+            <span style="font-size:14px;color:#33231F">{{ h.text }}</span>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </main>
+
+  <footer style="border-top:1px solid #DED2C8;margin-top:36px;padding:30px 24px 46px;text-align:center;color:#6B5850;font-size:13px">
+    Демо-данные. Собственный код, без конструкторов сайтов.
+  </footer>
+</div>
+</sc-if>
+
+<!-- ============ VIEW 1 · PLANNING BOARD ============ -->
+<sc-if value="{{ isBoard }}" hint-placeholder-val="{{ true }}">
+<div>
+  <section style="padding:52px 24px 38px;text-align:center;border-bottom:1px solid #DED2C8;background:radial-gradient(1100px 420px at 50% -210px,#F5E4DC,transparent 72%)">
+    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#C9302A;margin-bottom:16px">Свадьба</div>
+    <h1 style="font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:clamp(42px,7vw,70px);line-height:1.05;margin:0">Анна <span style="color:#B9635A;font-size:.55em;vertical-align:.12em;padding:0 .18em">и</span> Дмитрий</h1>
+    <div style="margin-top:12px;font-size:15px;color:#6B5850">12 июня 2027 <span style="color:#B9635A;padding:0 10px">·</span> Villa Regina, озеро Комо <span style="color:#B9635A;padding:0 10px">·</span> 92 гостя</div>
+    <div style="margin:28px auto 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
+      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#C9302A"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ daysLeft }}</b> дней до свадьбы</div>
+      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#B9635A"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ committedPct }}%</b> бюджета законтрактовано</div>
+      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#C48F84"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ outstandingLabel }}</b> счетов к оплате</div>
+    </div>
+  </section>
+
+  <div style="max-width:1180px;margin:0 auto;padding:22px 24px 0;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
+    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C">Планирование · шаблон</div>
+    <div style="display:flex;align-items:center;gap:12px">
+      <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+        <span style="font-size:12px;color:#6B5850">Перетащите блок, чтобы поменять порядок · скройте его · или добавьте из библиотеки</span>
+      </sc-if>
+      <sc-if value="{{ editing }}">
+        <button onClick="{{ toggleEdit }}" style="display:flex;align-items:center;gap:10px;border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;white-space:nowrap">Редактирование <span style="width:30px;height:16px;border-radius:999px;background:rgba(255,255,255,.35);position:relative;display:block"><span style="position:absolute;top:2px;left:16px;width:12px;height:12px;border-radius:50%;background:#fff;display:block"></span></span></button>
+      </sc-if>
+      <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}">
+        <button onClick="{{ toggleEdit }}" style="display:flex;align-items:center;gap:10px;border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;white-space:nowrap">Настроить блоки <span style="width:30px;height:16px;border-radius:999px;background:#DED2C8;position:relative;display:block"><span style="position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;display:block"></span></span></button>
+      </sc-if>
+    </div>
+  </div>
+
+  <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+    <div style="max-width:1180px;margin:14px auto 0;padding:16px 20px;background:#F7E7E3;border:1px solid #E8D3CC;border-radius:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+      <span style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#C9302A">Библиотека блоков</span>
+      <sc-for list="{{ library }}" as="l" hint-placeholder-count="4">
+        <button onClick="{{ l.onAdd }}" style="border:1px dashed #C9958B;background:#fff;color:#C9302A;border-radius:999px;padding:7px 15px;font-size:13px">+ {{ l.title }}</button>
+      </sc-for>
+      <sc-if value="{{ libraryEmpty }}">
+        <span style="font-size:13px;color:#6B5850">Все блоки в плане. Скройте любой — он вернётся в библиотеку.</span>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <main class="board-grid" style="max-width:1180px;margin:0 auto;padding:20px 24px 30px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;align-items:start">
+    <sc-for list="{{ blocks }}" as="b" hint-placeholder-count="6">
+      <section style="{{ b.wrapStyle }}" draggable="{{ b.draggable }}" onDragStart="{{ b.onDragStart }}" onDragOver="{{ b.onDragOver }}" onDrop="{{ b.onDrop }}" onDragEnd="{{ b.onDragEnd }}">
+        <div style="{{ b.cardStyle }}">
+          <div class="blk-head" style="display:flex;align-items:center;gap:12px;padding:20px 22px 0">
+            <sc-if value="{{ b.editing }}" hint-placeholder-val="{{ false }}">
+              <span style="color:#CDBCB1;font-size:13px;letter-spacing:-2px;line-height:1;cursor:grab">⋮⋮</span>
+            </sc-if>
+            <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:23px;margin:0">{{ b.title }}</h2>
+            <span style="margin-left:auto;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#C9302A;background:#F7E7E3;padding:4px 10px;border-radius:999px;white-space:nowrap" class="blk-tag">{{ b.tag }}</span>
+            <sc-if value="{{ b.editing }}">
+              <div style="display:flex;gap:5px">
+                <button onClick="{{ b.onUp }}" aria-label="Переместить вверх" class="blk-btn" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:12px">↑</button>
+                <button onClick="{{ b.onDown }}" aria-label="Переместить вниз" class="blk-btn" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:12px">↓</button>
+                <button onClick="{{ b.onHide }}" aria-label="Скрыть блок" class="blk-btn" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:13px">×</button>
+              </div>
+            </sc-if>
+          </div>
+          <div style="padding:14px 22px 22px">
+
+            <!-- timeline -->
+            <sc-if value="{{ b.isTimeline }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:6px 44px">
+                <sc-for list="{{ timelineCols }}" as="col" hint-placeholder-count="2">
+                  <div style="position:relative;padding-left:26px">
+                    <div style="position:absolute;left:8px;top:6px;bottom:6px;width:1px;background:linear-gradient(#B9635A,#DED2C8)"></div>
+                    <sc-for list="{{ col.items }}" as="m" hint-placeholder-count="3">
+                      <div style="position:relative;padding:0 0 20px 18px">
+                        <div style="{{ m.dotStyle }}"></div>
+                        <div style="{{ m.whenStyle }}">{{ m.when }}</div>
+                        <h3 style="{{ m.titleStyle }}">{{ m.title }}</h3>
+                        <p style="font-size:14px;color:#6B5850;margin:2px 0 0;max-width:50ch">{{ m.text }}</p>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+
+            <!-- invoices -->
+            <sc-if value="{{ b.isInvoices }}">
+              <i id="tour-invoices" style="display:block;height:0"></i>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:10px;margin-bottom:18px">
+                <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Оплачено</div>
+                  <div style="font-family:'Playfair Display',serif;font-size:26px;color:#6B5850">{{ paidLabel }}</div>
+                </div>
+                <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">К оплате</div>
+                  <div style="font-family:'Playfair Display',serif;font-size:26px;color:#B9635A">{{ outstandingLabel }}</div>
+                </div>
+                <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Черновики</div>
+                  <div style="font-family:'Playfair Display',serif;font-size:26px;color:#6B5850">{{ draftLabel }}</div>
+                </div>
+                <div style="background:#F5E9E4;border:1px solid #EBD8D2;border-radius:16px;padding:13px 15px">
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#A0453D">Курс сегодня</div>
+                  <div style="font-size:14px;color:#A0453D;padding-top:5px">{{ rateLine }}</div>
+                </div>
+              </div>
+              <sc-for list="{{ invoices }}" as="i" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid #DED2C8;font-size:14px;flex-wrap:wrap">
+                  <div style="width:66px;font-variant-numeric:tabular-nums;font-size:12px;letter-spacing:.04em;color:#98857C">{{ i.id }}</div>
+                  <div style="min-width:190px;flex:1">
+                    <b style="display:block;font-weight:500;font-size:14.5px">{{ i.to }}</b>
+                    <span style="font-size:12.5px;color:#6B5850">{{ i.what }}</span>
+                  </div>
+                  <div style="text-align:right;min-width:110px">
+                    <b style="display:block;font-weight:500;font-variant-numeric:tabular-nums">{{ i.amount }}</b>
+                    <sc-if value="{{ i.showBase }}">
+                      <span style="font-size:12px;color:#98857C">выставлен {{ i.base }}</span>
+                    </sc-if>
+                  </div>
+                  <div style="min-width:96px;font-size:12.5px;color:#6B5850;text-align:right">до {{ i.due }}</div>
+                  <sc-if value="{{ i.isPaid }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#fff;border:1px solid #DED2C8;color:#6B5850;min-width:92px;text-align:center">✓ Оплачен</span></sc-if>
+                  <sc-if value="{{ i.isSent }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#F5E9E4;color:#A0453D;min-width:92px;text-align:center">Отправлен</span></sc-if>
+                  <sc-if value="{{ i.isOverdue }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#C9302A;color:#fff;min-width:92px;text-align:center">Просрочен</span></sc-if>
+                  <sc-if value="{{ i.isDraft }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#F0EAE2;color:#98857C;min-width:92px;text-align:center">Черновик</span></sc-if>
+                  <sc-if value="{{ i.hasAct }}">
+                    <button onClick="{{ i.onAct }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:6px 14px;font-size:12.5px">{{ i.actLabel }}</button>
+                  </sc-if>
+                  <sc-if value="{{ i.noAct }}">
+                    <span style="width:104px"></span>
+                  </sc-if>
+                </div>
+              </sc-for>
+              <p style="font-size:13px;color:#6B5850;margin:14px 0 0">Каждый счёт выставляется в <b style="font-weight:500;color:#33231F">EUR</b> — со строкой НДС, IBAN и условиями оплаты — и дублируется в валюте пары по курсу ЕЦБ на дату выставления. Оплаченные счета сразу попадают в блок бюджета.</p>
+            </sc-if>
+
+            <!-- vendors -->
+            <sc-if value="{{ b.isVendors }}">
+              <sc-for list="{{ vendors }}" as="v" hint-placeholder-count="6">
+                <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+                  <div style="width:34px;height:34px;border-radius:12px;background:#F7E7E3;display:grid;place-items:center;font-size:15px;flex:none">{{ v.icon }}</div>
+                  <div>
+                    <b style="display:block;font-weight:500;font-size:15px">{{ v.name }}</b>
+                    <span style="color:#6B5850;font-size:13px">{{ v.role }}</span>
+                  </div>
+                  <div style="margin-left:auto;text-align:right">
+                    <div style="font-size:13.5px;font-variant-numeric:tabular-nums;color:#33231F">{{ v.fee }}</div>
+                    <sc-if value="{{ v.isBooked }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#6B5850">✓ Забронирован</span></sc-if>
+                    <sc-if value="{{ v.isWaiting }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#A0453D">Договор отправлен</span></sc-if>
+                    <sc-if value="{{ v.isOpen }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#C9302A">Не забронирован</span></sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <!-- budget -->
+            <sc-if value="{{ b.isBudget }}">
+              <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
+                <span style="font-family:'Playfair Display',serif;font-size:33px;font-weight:500">{{ committedLabel }}</span>
+                <span style="color:#6B5850;font-size:14px">из {{ totalLabel }} законтрактовано</span>
+              </div>
+              <div style="height:8px;border-radius:999px;background:#F7E7E3;overflow:hidden;margin:8px 0 18px">
+                <div style="{{ budgetBarStyle }}"></div>
+              </div>
+              <sc-for list="{{ categories }}" as="c" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:10px;font-size:14px;padding:7px 0">
+                  <span>{{ c.name }}</span>
+                  <span style="margin-left:auto;width:70px;height:4px;border-radius:99px;background:#F7E7E3;overflow:hidden;flex:none">
+                    <span style="{{ c.barStyle }}"></span>
+                  </span>
+                  <span style="color:#6B5850;font-variant-numeric:tabular-nums;min-width:80px;text-align:right">{{ c.amount }}</span>
+                </div>
+              </sc-for>
+              <p style="font-size:12.5px;color:#98857C;margin:14px 0 0">Хранится в EUR · показано в {{ currencyCode }}</p>
+            </sc-if>
+
+            <!-- checklist -->
+            <sc-if value="{{ b.isChecklist }}">
+              <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="5">
+                <div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+                  <sc-if value="{{ t.done }}">
+                    <button onClick="{{ t.onToggle }}" aria-label="Снять отметку" style="width:19px;height:19px;border:1.5px solid #C9302A;background:#C9302A;color:#fff;border-radius:6px;flex:none;display:grid;place-items:center;font-size:11px;padding:0">✓</button>
+                    <span style="color:#98857C;text-decoration:line-through;text-decoration-color:#D3C4B9">{{ t.label }}</span>
+                  </sc-if>
+                  <sc-if value="{{ t.open }}">
+                    <button onClick="{{ t.onToggle }}" aria-label="Отметить выполненным" style="width:19px;height:19px;border:1.5px solid #DED2C8;background:#fff;border-radius:6px;flex:none;padding:0"></button>
+                    <span>{{ t.label }}</span>
+                  </sc-if>
+                  <span style="margin-left:auto;font-size:12px;color:#B9635A;white-space:nowrap">{{ t.due }}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <!-- guests -->
+            <sc-if value="{{ b.isGuests }}">
+              <i id="tour-guests" style="display:block;height:0"></i>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
+                <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
+                  <b style="display:block;font-family:'Playfair Display',serif;font-size:27px;font-weight:500">92</b>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Приглашено</span>
+                </div>
+                <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
+                  <b style="display:block;font-family:'Playfair Display',serif;font-size:27px;font-weight:500;color:#C9302A">{{ confirmedCount }}</b>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Подтвердили</span>
+                </div>
+                <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
+                  <b style="display:block;font-family:'Playfair Display',serif;font-size:27px;font-weight:500;color:#B9635A">{{ awaitingCount }}</b>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Ждём ответа</span>
+                </div>
+              </div>
+              <p style="font-size:13px;color:#6B5850;margin:0"><b style="font-weight:500;color:#33231F">7 гостей</b> поедут трансфером от вокзала Комо · <b style="font-weight:500;color:#33231F">{{ dietCount }}</b> пожеланий по питанию — каждый ответ с сайта для гостей попадает сюда и уходит кейтерингу.</p>
+            </sc-if>
+
+            <!-- documents -->
+            <sc-if value="{{ b.isDocs }}">
+              <sc-for list="{{ docs }}" as="d" hint-placeholder-count="4">
+                <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+                  <div style="width:32px;height:32px;border-radius:12px;background:#F5E9E4;display:grid;place-items:center;font-size:13px;flex:none">{{ d.icon }}</div>
+                  <div>
+                    <b style="display:block;font-weight:500;font-size:14px">{{ d.name }}</b>
+                    <span style="font-size:12px;color:#6B5850">{{ d.meta }}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </sc-if>
+
+            <!-- guest site status -->
+            <sc-if value="{{ b.isGuestSite }}">
+              <i id="tour-guestsite" style="display:block;height:0"></i>
+              <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
+                <div style="flex:1;min-width:240px">
+                  <p style="font-size:14px;color:#6B5850;margin:0 0 14px">Публичная страница пары и цифровое приглашение работают с этим же планом — меняете время здесь, и сайт для гостей обновляется.</p>
+                  <div style="display:flex;gap:10px;flex-wrap:wrap">
+                    <button onClick="{{ goGuest }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Открыть сайт гостей</button>
+                    <button onClick="{{ goInvite }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Открыть приглашение</button>
+                  </div>
+                </div>
+                <div style="min-width:200px;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 16px">
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Приглашений доставлено</span><b style="font-weight:500">92</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Открыли</span><b style="font-weight:500">71</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Ответили</span><b style="font-weight:500">{{ respondedCount }}</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0;border-top:1px solid #DED2C8;margin-top:6px"><span style="color:#6B5850">Языки сайта</span><b style="font-weight:500">EN · IT · RU</b></div>
+                </div>
+              </div>
+            </sc-if>
+
+            <!-- generic library blocks -->
+            <sc-if value="{{ b.isGeneric }}">
+              <sc-for list="{{ b.rows }}" as="r" hint-placeholder-count="3">
+                <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+                  <b style="font-weight:500">{{ r.a }}</b>
+                  <span style="margin-left:auto;color:#6B5850;font-size:13px;text-align:right">{{ r.b }}</span>
+                </div>
+              </sc-for>
+            </sc-if>
+
+          </div>
+        </div>
+      </section>
+    </sc-for>
+  </main>
+
+  <footer style="border-top:1px solid #DED2C8;padding:32px 24px 46px;text-align:center;color:#6B5850;font-size:13px">
+    <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:#33231F;margin-bottom:6px">Шаблон планирования — <b style="font-weight:500;color:#C9302A;font-style:normal">{{ plannerName }}</b></div>
+    Каждая пара получает свой план из этого шаблона — блоки переставляются, скрываются и добавляются под конкретную свадьбу.<br />
+    Демо-данные. Собственный код, без конструкторов сайтов.
+  </footer>
+</div>
+</sc-if>
+
+<!-- ============ VIEW 2 · GUEST SITE ============ -->
+<sc-if value="{{ isGuest }}">
+<div>
+  <div style="background:#C9302A;color:#F7E7E3;text-align:center;font-size:12px;letter-spacing:.06em;padding:7px 24px">Страница для гостей · anna-i-dmitry.com — то, что видят приглашённые вашей пары</div>
+
+  <section style="position:relative;padding:0 0 0;border-bottom:1px solid #DED2C8">
+    <div class="anim-cover" style="height:clamp(220px,34vw,380px);background:linear-gradient(#E9DCD3,#F7E7E3 60%,#F5E9E4);border-bottom:1px solid #DED2C8;overflow:hidden">
+      <img src="./assets/cover-villa.jpg" alt="{{ gCoverAlt }}" style="width:100%;height:100%;object-fit:cover;object-position:50% 66%;display:block">
+    </div>
+    <div class="gs-hero-copy" style="max-width:820px;margin:0 auto;padding:44px 24px 52px;text-align:center">
+      <div class="anim-1" style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gEyebrowDate }}</div>
+      <h1 class="anim-2" style="font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:clamp(46px,9vw,88px);line-height:1;margin:16px 0 0">Анна <span style="color:#B9635A;font-size:.5em;vertical-align:.16em;padding:0 .16em">и</span> Дмитрий</h1>
+      <p class="anim-3" style="font-family:'Playfair Display',serif;font-size:20px;color:#6B5850;margin:14px 0 0">{{ gVenue }}</p>
+      <div class="anim-4" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px">
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap"><b style="font-weight:600;color:#33231F;font-size:15px">{{ daysLeft }}</b> {{ gDaysToGo }}</div>
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap">{{ gCeremony }} <b style="font-weight:600;color:#33231F;font-size:15px">15:30</b></div>
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap">{{ gRsvpBy }} <b style="font-weight:600;color:#33231F;font-size:15px">{{ gDeadline }}</b></div>
+      </div>
+      <div class="anim-5" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:26px">
+        <a href="#gs-rsvp" class="btn-lift" style="background:#C9302A;color:#fff;border-radius:999px;padding:14px 30px;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;display:inline-block">{{ gCtaRsvp }}</a>
+        <a href="#gs-day" class="btn-lift" style="background:#fff;border:1px solid #DED2C8;color:#C9302A;border-radius:999px;padding:14px 30px;font-size:11px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;display:inline-block">{{ gCtaDay }}</a>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:34px;align-items:center">
+        <span style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#98857C">{{ gReadIn }}</span>
+        <sc-for list="{{ langs }}" as="g" hint-placeholder-count="3">
+          <sc-if value="{{ g.active }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ g.onClick }}" style="border:1px solid #B9635A;background:#F5E9E4;color:#A0453D;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:500">{{ g.code }}</button>
+          </sc-if>
+          <sc-if value="{{ g.inactive }}">
+            <button onClick="{{ g.onClick }}" style="border:1px solid #DED2C8;background:#fff;color:#98857C;border-radius:999px;padding:4px 12px;font-size:12px">{{ g.code }}</button>
+          </sc-if>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-pad" style="max-width:1000px;margin:0 auto;padding:60px 24px 10px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));gap:20px">
+    <img src="./assets/story-1.jpg" loading="lazy" class="photo-tile reveal" alt="{{ gAlt1 }}" style="width:100%;height:240px;object-fit:cover;border-radius:20px;display:block;background:linear-gradient(#F7E7E3,#E9DCD3)">
+    <img src="./assets/story-2.jpg" loading="lazy" class="photo-tile reveal" alt="{{ gAlt2 }}" style="width:100%;height:240px;object-fit:cover;border-radius:20px;display:block;background:linear-gradient(#F5E9E4,#EBDDD2)">
+    <img src="./assets/story-3.jpg" loading="lazy" class="photo-tile reveal" alt="{{ gAlt3 }}" style="width:100%;height:240px;object-fit:cover;border-radius:20px;display:block;background:linear-gradient(#F6E8E4,#EBD5CF)">
+  </section>
+
+  <section class="sec-pad reveal" style="max-width:720px;margin:0 auto;padding:56px 24px;text-align:center">
+    <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gStoryEyebrow }}</div>
+    <p style="font-family:'Playfair Display',serif;font-size:clamp(20px,2.6vw,26px);line-height:1.5;color:#4A342E;margin:18px 0 0">{{ gStoryText }}</p>
+  </section>
+
+  <section id="gs-day" class="sec-pad reveal" style="max-width:1000px;margin:0 auto;padding:20px 24px 60px">
+    <div style="text-align:center;margin-bottom:34px">
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gDayEyebrow }}</div>
+      <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 0">{{ gDayTitle }}</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:8px 44px">
+      <sc-for list="{{ programmeCols }}" as="col" hint-placeholder-count="2">
+        <div style="position:relative;padding-left:24px">
+          <div style="position:absolute;left:7px;top:8px;bottom:8px;width:1px;background:linear-gradient(#B9635A,#DED2C8)"></div>
+          <sc-for list="{{ col.items }}" as="p" hint-placeholder-count="3">
+            <div style="position:relative;padding:0 0 22px 18px">
+              <div style="position:absolute;left:-21px;top:7px;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid #B9635A"></div>
+              <div style="font-size:12px;letter-spacing:.14em;font-weight:500;color:#B9635A">{{ p.time }}</div>
+              <h3 style="font-family:'Playfair Display',serif;font-weight:500;font-size:20px;margin:2px 0 2px">{{ p.title }}</h3>
+              <p style="font-size:14px;color:#6B5850;margin:0;max-width:46ch">{{ p.text }}</p>
+            </div>
+          </sc-for>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section style="background:#fff;border-top:1px solid #DED2C8;border-bottom:1px solid #DED2C8">
+    <div class="sec-pad" style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:34px;align-items:center">
+      <div>
+        <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gTravelEyebrow }}</div>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:29px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">Villa Regina</h2>
+        <p style="font-size:14.5px;color:#6B5850;margin:0 0 18px">{{ gAddress }}</p>
+        <sc-for list="{{ travel }}" as="t" hint-placeholder-count="3">
+          <div style="display:flex;gap:12px;padding:9px 0;border-top:1px solid #DED2C8;font-size:14px">
+            <b style="font-weight:500;min-width:120px">{{ t.a }}</b>
+            <span style="color:#6B5850">{{ t.b }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div class="gs-map reveal" style="height:300px;border-radius:20px;background:linear-gradient(140deg,#E9DCD3,#F7E7E3 45%,#E4D6CD);border:1px solid #DED2C8;overflow:hidden">
+        <iframe title="{{ gMapTitle }}" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=9.19%2C45.955%2C9.34%2C46.025&amp;layer=mapnik&amp;marker=45.98725%2C9.26130" style="width:100%;height:100%;border:0;display:block;filter:saturate(.55) sepia(.18) brightness(1.04) contrast(.92)"></iframe>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec-pad reveal" style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:28px">
+    <div>
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gStayEyebrow }}</div>
+      <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">{{ gStayTitle }}</h2>
+      <sc-for list="{{ hotels }}" as="h" hint-placeholder-count="3">
+        <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+          <div>
+            <b style="font-weight:500;display:block">{{ h.name }}</b>
+            <span style="font-size:12.5px;color:#6B5850">{{ h.meta }}</span>
+          </div>
+          <span style="margin-left:auto;font-variant-numeric:tabular-nums;color:#6B5850">{{ h.price }}</span>
+        </div>
+      </sc-for>
+      <p style="font-size:12.5px;color:#98857C;margin:12px 0 0">{{ gStayNote }}</p>
+    </div>
+    <div>
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gDressEyebrow }}</div>
+      <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">{{ gDressTitle }}</h2>
+      <p style="font-size:14.5px;color:#6B5850;margin:0 0 16px">{{ gDressText }}</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <sc-for list="{{ palette }}" as="s" hint-placeholder-count="5">
+          <div style="text-align:center">
+            <div style="{{ s.swatchStyle }}"></div>
+            <div style="font-size:11px;color:#98857C;margin-top:6px">{{ s.name }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="gs-rsvp" style="background:#EAE0D8;border-top:1px solid #DED2C8">
+    <div class="sec-pad" style="max-width:640px;margin:0 auto;padding:60px 24px">
+      <sc-if value="{{ rsvpOpen }}" hint-placeholder-val="{{ true }}">
+        <div style="text-align:center;margin-bottom:26px">
+          <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gRsvpEyebrow }}</div>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 6px">{{ gRsvpTitle }}</h2>
+          <p style="font-size:14px;color:#6B5850;margin:0">{{ gRsvpLead }}</p>
+        </div>
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:24px">
+          <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:6px">{{ gLabInvitation }}</label>
+          <input value="{{ rsvpName }}" onChange="{{ onName }}" style="width:100%;border:1px solid #DED2C8;border-radius:12px;padding:11px 13px;font-size:15px;background:#EFE7E0;margin-bottom:18px" />
+          <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:8px">{{ gLabAttending }}</label>
+          <div style="display:flex;gap:8px;margin-bottom:18px">
+            <sc-for list="{{ goingOpts }}" as="o" hint-placeholder-count="2">
+              <sc-if value="{{ o.active }}" hint-placeholder-val="{{ true }}">
+                <button onClick="{{ o.onClick }}" style="flex:1;border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:12px;padding:11px;font-size:14px;font-weight:500">{{ o.label }}</button>
+              </sc-if>
+              <sc-if value="{{ o.inactive }}">
+                <button onClick="{{ o.onClick }}" style="flex:1;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;border-radius:12px;padding:11px;font-size:14px">{{ o.label }}</button>
+              </sc-if>
+            </sc-for>
+          </div>
+          <sc-if value="{{ isComing }}" hint-placeholder-val="{{ true }}">
+            <div>
+              <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:14px;margin-bottom:18px">
+                <div>
+                  <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:6px">{{ gLabGuests }}</label>
+                  <select value="{{ rsvpSeats }}" onChange="{{ onSeats }}" style="width:100%;border:1px solid #DED2C8;border-radius:12px;padding:11px 13px;font-size:15px;background:#EFE7E0">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:6px">{{ gLabMain }}</label>
+                  <select value="{{ rsvpMenu }}" onChange="{{ onMenu }}" style="width:100%;border:1px solid #DED2C8;border-radius:12px;padding:11px 13px;font-size:15px;background:#EFE7E0">
+                    <option value="Lake fish">{{ gMenu0 }}</option>
+                    <option value="Veal">{{ gMenu1 }}</option>
+                    <option value="Vegetarian">{{ gMenu2 }}</option>
+                    <option value="Vegan">{{ gMenu3 }}</option>
+                  </select>
+                </div>
+              </div>
+              <button onClick="{{ onShuttle }}" style="width:100%;text-align:left;display:flex;align-items:center;gap:11px;border:1px solid #DED2C8;background:#EFE7E0;border-radius:12px;padding:12px 13px;font-size:14px;margin-bottom:18px">
+                <sc-if value="{{ rsvpShuttle }}" hint-placeholder-val="{{ true }}">
+                  <span style="width:19px;height:19px;border-radius:6px;background:#C9302A;color:#fff;display:grid;place-items:center;font-size:11px">✓</span>
+                </sc-if>
+                <sc-if value="{{ noShuttle }}">
+                  <span style="width:19px;height:19px;border-radius:6px;background:#fff;border:1.5px solid #DED2C8;display:block"></span>
+                </sc-if>
+                <span>{{ gShuttleLine }}</span>
+              </button>
+            </div>
+          </sc-if>
+          <label style="display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#98857C;font-weight:500;margin-bottom:6px">{{ gLabNote }}</label>
+          <textarea rows="3" value="{{ rsvpNote }}" onChange="{{ onNote }}" placeholder="{{ gNotePlaceholder }}" style="width:100%;border:1px solid #DED2C8;border-radius:12px;padding:11px 13px;font-size:15px;background:#EFE7E0;resize:vertical;margin-bottom:20px;font-family:inherit"></textarea>
+          <button onClick="{{ onSubmit }}" class="btn-lift" style="width:100%;border:none;background:#C9302A;color:#fff;border-radius:999px;padding:15px;font-size:11.5px;font-weight:500;letter-spacing:.18em;text-transform:uppercase">{{ gSubmit }}</button>
+          <p style="font-size:12.5px;color:#98857C;margin:12px 0 0;text-align:center">{{ gSubmitNote }}</p>
+        </div>
+      </sc-if>
+      <sc-if value="{{ rsvpSent }}">
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:34px 26px;text-align:center;animation:riseIn .4s ease both">
+          <div style="width:46px;height:46px;border-radius:50%;background:#F7E7E3;color:#C9302A;display:grid;place-items:center;font-size:19px;margin:0 auto 16px">✓</div>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:30px;margin:0 0 8px">{{ gThanks }} {{ rsvpName }}</h2>
+          <p style="font-size:14.5px;color:#6B5850;margin:0 0 18px">{{ rsvpSummary }}</p>
+          <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 16px;font-size:13px;color:#6B5850;text-align:left">
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span>{{ gReceipt0 }}</span><b style="font-weight:500;color:#C9302A">✓</b></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span>{{ gReceipt1 }}</span><b style="font-weight:500;color:#C9302A">✓</b></div>
+            <div style="display:flex;justify-content:space-between;padding:3px 0"><span>{{ gReceipt2 }}</span><b style="font-weight:500;color:#C9302A">✓</b></div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:20px">
+            <button onClick="{{ onEditRsvp }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:10px 20px;font-size:13.5px">{{ gChange }}</button>
+            <button onClick="{{ goBoard }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:10px 20px;font-size:13.5px;font-weight:500">{{ gSeeBoard }}</button>
+          </div>
+        </div>
+      </sc-if>
+    </div>
+  </section>
+
+  <section class="sec-pad reveal" style="max-width:900px;margin:0 auto;padding:56px 24px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:32px">
+      <div>
+        <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gGiftsEyebrow }}</div>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">{{ gGiftsTitle }}</h2>
+        <p style="font-size:14.5px;color:#6B5850;margin:0">{{ gGiftsText }}</p>
+      </div>
+      <div>
+        <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gFaqEyebrow }}</div>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">{{ gFaqTitle }}</h2>
+        <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="4">
+          <div style="border-bottom:1px solid #DED2C8">
+            <button onClick="{{ f.onClick }}" style="width:100%;text-align:left;background:none;border:none;padding:12px 0;font-size:14.5px;display:flex;gap:12px;align-items:center">
+              <span style="flex:1">{{ f.q }}</span>
+              <span style="color:#B9635A;font-size:15px">{{ f.sign }}</span>
+            </button>
+            <sc-if value="{{ f.open }}">
+              <p style="font-size:14px;color:#6B5850;margin:0 0 14px;max-width:52ch">{{ f.a }}</p>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #DED2C8;padding:34px 24px 50px;text-align:center;color:#6B5850;font-size:13px">
+    <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:19px;color:#33231F;margin-bottom:8px">Анна и Дмитрий · 12.06.2027</div>
+    {{ gFooterAsk }} <b style="font-weight:500;color:#C9302A">{{ plannerName }}</b>{{ gFooterRole }} <a href="mailto:{{ plannerEmail }}">{{ plannerEmail }}</a>
+  </footer>
+</div>
+</sc-if>
+
+<!-- ============ VIEW 3 · INVITATION ============ -->
+<sc-if value="{{ isInvite }}">
+<div style="min-height:calc(100vh - 60px);padding:44px 24px 60px">
+  <div style="max-width:1040px;margin:0 auto">
+    <div style="text-align:center;margin-bottom:30px">
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Цифровое приглашение</div>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(30px,4.4vw,40px);margin:8px 0 8px">Персональная ссылка каждому гостю</h1>
+      <p style="font-size:14.5px;color:#6B5850;max-width:56ch;margin:0 auto">Каждое приглашение открывается именем самого гостя, его деталями приезда и ответом, который попадает прямо в план свадьбы. В шаблоне три варианта отделки.</p>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap">
+        <sc-for list="{{ designs }}" as="d" hint-placeholder-count="3">
+          <sc-if value="{{ d.active }}" hint-placeholder-val="{{ true }}">
+            <button onClick="{{ d.onClick }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:9px 18px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500">{{ d.name }}</button>
+          </sc-if>
+          <sc-if value="{{ d.inactive }}">
+            <button onClick="{{ d.onClick }}" style="border:1px solid #DED2C8;background:#fff;color:#6B5850;border-radius:999px;padding:9px 18px;font-size:11px;letter-spacing:.14em;text-transform:uppercase">{{ d.name }}</button>
+          </sc-if>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:26px;align-items:start">
+      <div style="display:grid;place-items:center;min-height:520px">
+        <sc-if value="{{ envelopeClosed }}" hint-placeholder-val="{{ true }}">
+          <button onClick="{{ onOpen }}" style="width:100%;max-width:420px;aspect-ratio:1.5;border:1px solid #DED2C8;border-radius:20px;background:linear-gradient(160deg,#FDF9F5,#F2E7DF);box-shadow:0 1px 2px rgba(35,40,35,.04),0 26px 50px -30px rgba(35,40,35,.3);position:relative;display:grid;place-items:center;overflow:hidden;padding:0">
+            <div style="position:absolute;top:0;left:0;right:0;height:56%;background:linear-gradient(#F5EBE3,#EDE0D7);clip-path:polygon(0 0,100% 0,50% 100%);border-bottom:1px solid #DED2C8"></div>
+            <div style="position:relative;width:64px;height:64px;border-radius:50%;background:#C9302A;color:#fff;display:grid;place-items:center;font-family:'Playfair Display',serif;font-style:italic;font-size:22px;box-shadow:0 6px 14px -6px rgba(35,40,35,.5)">А&amp;Д</div>
+            <div style="position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#98857C">Нажмите, чтобы открыть</div>
+          </button>
+        </sc-if>
+        <sc-if value="{{ envelopeOpen }}">
+          <div style="{{ cardStyle }}">
+            <div style="{{ cardEyebrowStyle }}">Вместе со своими семьями</div>
+            <h2 style="{{ cardNamesStyle }}">Анна <span style="{{ cardAmpStyle }}">и</span> Дмитрий</h2>
+            <div style="{{ cardRuleStyle }}"></div>
+            <p style="{{ cardLineStyle }}">с радостью приглашают</p>
+            <p style="{{ cardGuestStyle }}">{{ rsvpName }}</p>
+            <p style="{{ cardLineStyle }}">на свою свадьбу</p>
+            <p style="{{ cardDateStyle }}">Суббота, 12 июня 2027 · в половине четвёртого</p>
+            <p style="{{ cardLineStyle }}">Villa Regina, Белладжо · озеро Комо</p>
+            <p style="{{ cardSmallStyle }}">Садовый формальный · далее ужин и танцы</p>
+            <button onClick="{{ goGuest }}" style="{{ cardBtnStyle }}">Ответить до {{ rsvpDeadline }}</button>
+            <button onClick="{{ onClose }}" style="{{ cardLinkStyle }}">Закрыть конверт</button>
+          </div>
+        </sc-if>
+      </div>
+
+      <div style="display:grid;gap:16px">
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:22px">
+          <h3 style="font-family:'Playfair Display',serif;font-weight:500;font-size:22px;margin:0 0 12px">Рассылка</h3>
+          <sc-for list="{{ sending }}" as="s" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #DED2C8;font-size:14px">
+              <b style="font-weight:500">{{ s.a }}</b>
+              <span style="margin-left:auto;color:#6B5850;font-size:13px;text-align:right">{{ s.b }}</span>
+            </div>
+          </sc-for>
+          <p style="font-size:12.5px;color:#98857C;margin:12px 0 0">PDF той же карточки для печати выгружается в 148 × 210 мм с вылетами 3 мм.</p>
+        </div>
+        <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:22px">
+          <h3 style="font-family:'Playfair Display',serif;font-weight:500;font-size:22px;margin:0 0 10px">Что настраивает организатор</h3>
+          <p style="font-size:14px;color:#6B5850;margin:0 0 14px">Формулировки, отделка, языки и дедлайн ответа — это поля в плане: разработчик под каждую свадьбу не нужен.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <button onClick="{{ goBoard }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Назад к плану</button>
+            <button onClick="{{ goGuest }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Сайт гостей</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- Вне сюжета: контакт студии отделён от вымышленной свадьбы. -->
+<div style="background:#33231F;color:#CDBCB1;text-align:center;font-size:12px;letter-spacing:.04em;padding:11px 24px">
+  Демо-прототип · сделала студия Xenaja — <a href="https://t.me/Xenaja" target="_blank" rel="noopener" style="color:#E0BFB6;text-decoration:underline">Telegram</a> · <a href="mailto:hello@xenaja.studio" style="color:#E0BFB6;text-decoration:underline">hello@xenaja.studio</a>
+</div>
+
+<!-- ============ ПРИГЛАШЕНИЕ НА ЭКСКУРСИЮ ============ -->
+<sc-if value="{{ invite }}" hint-placeholder-val="{{ false }}">
+<div>
+  <div onClick="{{ inviteNo }}" style="position:fixed;inset:0;z-index:110;background:rgba(51,35,31,.38);backdrop-filter:blur(1.5px)"></div>
+  <div style="position:fixed;inset:0;z-index:111;display:grid;place-items:center;padding:16px;pointer-events:none">
+  <div style="position:relative;pointer-events:auto;width:min(440px,100%);background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:30px 30px 26px;text-align:center;box-shadow:0 26px 60px -24px rgba(51,35,31,.6);animation:riseIn .4s ease both">
+    <button onClick="{{ inviteNo }}" aria-label="Закрыть" style="position:absolute;top:12px;right:14px;border:none;background:none;color:#98857C;font-size:18px;line-height:1;padding:4px 6px">×</button>
+    <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Экскурсия · 1 минута</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:28px;margin:12px 0 10px">Первый раз здесь?</h2>
+    <p style="font-size:14.5px;color:#6B5850;margin:0 0 22px">Это демо кабинета свадебного агентства. Проведу по нему за минуту — покажу, где деньги, гости и сайт пары.</p>
+    <button onClick="{{ inviteYes }}" class="btn-lift" style="width:100%;border:none;background:#C9302A;color:#fff;border-radius:999px;padding:14px;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase">Показать за минуту</button>
+    <button onClick="{{ inviteNo }}" style="margin-top:12px;border:none;background:none;color:#98857C;font-size:13.5px;text-decoration:underline">Осмотрюсь сам</button>
+  </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ============ ЭКСКУРСИЯ ============ -->
+<sc-if value="{{ tourIdle }}" hint-placeholder-val="{{ false }}">
+  <button onClick="{{ tourStart }}" class="btn-lift" style="position:fixed;right:18px;bottom:18px;z-index:90;border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 10px 30px -14px rgba(51,35,31,.5)">Экскурсия</button>
+</sc-if>
+
+<sc-if value="{{ tourOn }}" hint-placeholder-val="{{ true }}">
+<div>
+  <sc-if value="{{ tourHasSpot }}" hint-placeholder-val="{{ true }}">
+    <div style="{{ tourSpotStyle }}"></div>
+  </sc-if>
+  <sc-if value="{{ tourNoSpot }}">
+    <div style="position:fixed;inset:0;z-index:100;background:rgba(51,35,31,.55);pointer-events:none"></div>
+  </sc-if>
+
+  <div class="tour-card" style="{{ tourCardStyle }}">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+      <span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#C9302A">Экскурсия</span>
+      <span style="margin-left:auto;font-size:11.5px;color:#98857C;font-variant-numeric:tabular-nums">{{ tourProgress }}</span>
+    </div>
+    <p style="margin:0 0 16px;font-size:15px;line-height:1.5;color:#33231F">{{ tourText }}</p>
+    <sc-if value="{{ tourNotFinal }}" hint-placeholder-val="{{ true }}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <button onClick="{{ tourNext }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Далее</button>
+        <button onClick="{{ tourSkip }}" style="margin-left:auto;border:none;background:none;color:#98857C;font-size:13px;text-decoration:underline">Пропустить</button>
+      </div>
+    </sc-if>
+    <sc-if value="{{ tourFinal }}">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+        <button onClick="{{ tourContact }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Написать нам</button>
+        <button onClick="{{ tourSkip }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Посмотреть демо самостоятельно</button>
+      </div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;plannerName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Свадьбы Веры&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;RUB&quot;,&quot;EUR&quot;,&quot;USD&quot;],&quot;default&quot;:&quot;RUB&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;plannerEmail&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;hi@svadby-very.ru&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;rsvpDeadline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;15 мая&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Guest site&quot;}}">
+class Component extends DCLogic {
+  state = {
+    view: 'agency',
+    hint: null,
+    tour: null,
+    tourRect: null,
+    invite: false,
+    vw: 1440,
+    currency: null,
+    editing: false,
+    order: ['timeline','invoices','vendors','budget','checklist','guests','documents','guestsite','seating','stay','honeymoon','weather'],
+    hidden: { seating:true, stay:true, honeymoon:true, weather:true },
+    done: { t1:true },
+    invStatus: {},
+    drag: null,
+    rsvp: { name:'Мария и Пётр Ковалёвы', going:'yes', seats:'2', menu:'Lake fish', shuttle:true, note:'' },
+    sent: false,
+    faq: 0,
+    lang: 'RU',
+    opened: false,
+    design: 'sage'
+  };
+
+  // Экскурсия. Тексты финальные (см. ТЗ), цели адресуются статическими
+  // маркерами в разметке, чтобы не зависеть от порядка и видимости блоков.
+  TOUR_KEY = 'wedding-suite-ru-tour';
+  TOUR = [
+    { view:'agency', target:'tour-cabinet',
+      text:'Это ваш кабинет: все свадьбы агентства в одном месте. У каждой свой план, собранный из вашего шаблона. Откроем один.' },
+    { view:'board', target:'tour-invoices',
+      text:'Оплаты, просрочки и курс валют – здесь, а не в переписке. Счёт оплачен – бюджет обновился сам.' },
+    { view:'board', target:'tour-guests',
+      text:'Гость ответил на сайте – ответ уже у вас: меню посчитано, трансфер обновлён, кейтеринг в курсе.' },
+    { view:'board', target:'tour-guestsite',
+      text:'Сайт пары и именные приглашения работают с этим же планом. Поменяли время здесь – у гостей всё обновилось.' },
+    { view:null, target:null, final:true,
+      text:'Так это выглядит для одной свадьбы. Хотите увидеть на вашей реальной – 15 минут созвона.' }
+  ];
+
+  componentDidMount() {
+    this.__sync = () => this.measureTour(false);
+    window.addEventListener('resize', this.__sync);
+    window.addEventListener('scroll', this.__sync, true);
+    this.__esc = (e) => {
+      if (e.key !== 'Escape') return;
+      if (this.state.invite) this.inviteClose();
+      else if (this.state.tour != null) this.tourEnd();
+    };
+    window.addEventListener('keydown', this.__esc);
+    this.setState({ vw: window.innerWidth });
+    let seen = false;
+    try { seen = !!localStorage.getItem(this.TOUR_KEY); } catch (e) {}
+    // Не забираем экран сразу: дать увидеть, куда человек попал, и только
+    // потом предложить экскурсию.
+    if (!seen) this.__inviteTimer = setTimeout(() => this.setState({ invite: true }), 1800);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this.__sync);
+    window.removeEventListener('scroll', this.__sync, true);
+    window.removeEventListener('keydown', this.__esc);
+    clearTimeout(this.__inviteTimer);
+  }
+
+  inviteYes() { this.setState({ invite: false }, () => this.tourGo(0)); }
+
+  inviteClose() {
+    try { localStorage.setItem(this.TOUR_KEY, '1'); } catch (e) {}
+    this.setState({ invite: false });
+  }
+
+  // Смена экрана и замер связаны колбэком setState: плашка не показывается,
+  // пока целевой экран не отрисован.
+  tourGo(i) {
+    const step = this.TOUR[i];
+    if (!step) return this.tourEnd();
+    const after = () => requestAnimationFrame(() => this.measureTour(true));
+    const patch = { tour: i, tourRect: null };
+    if (step.view && this.state.view !== step.view) { patch.view = step.view; patch.hint = null; }
+    this.setState(patch, after);
+  }
+
+  measureTour(scrollFirst) {
+    const i = this.state.tour;
+    if (i == null) return;
+    const step = this.TOUR[i];
+    const el = step && step.target ? document.getElementById(step.target) : null;
+    const box = el && (el.closest('section') || el);
+    if (!box) { this.setState({ tourRect: null, vw: window.innerWidth }); return; }
+    if (scrollFirst) {
+      try { box.scrollIntoView({ block: 'center', behavior: 'instant' }); }
+      catch (e) { box.scrollIntoView(); }
+    }
+    const b = box.getBoundingClientRect();
+    this.setState({ tourRect: { top:b.top, left:b.left, w:b.width, h:b.height }, vw: window.innerWidth });
+  }
+
+  tourEnd() {
+    try { localStorage.setItem(this.TOUR_KEY, '1'); } catch (e) {}
+    this.setState({ tour: null, tourRect: null });
+  }
+
+  // Гостевой сайт живёт в трёх языках; переключатель под героем реально меняет
+  // копию. Доска и кабинет остаются на языке сборки — их видит планнер, не гость.
+  GUEST = {
+    EN: {
+      eyebrowDate:'Saturday · 12 June 2027', venue:'Villa Regina, Lake Como — Italy',
+      daysToGo:'days to go', ceremony:'Ceremony', rsvpBy:'RSVP by', deadline:'15 May',
+      ctaRsvp:'RSVP', ctaDay:'The day', readIn:'Read in',
+      coverAlt:'The villa terrace above Lake Como at golden hour',
+      alt1:'Ceremony arch of white roses on the lawn above the lake',
+      alt2:'The couple on the terrace at golden hour',
+      alt3:'The banquet table laid on the terrace at dusk',
+      storyEyebrow:'Our story, briefly',
+      storyText:'We met on a delayed train to Bologna in 2021, argued about the best espresso in Emilia-Romagna for four hours, and have been settling that argument ever since. Six years later we would love you at the lake with us.',
+      dayEyebrow:'The day', dayTitle:'Saturday, 12 June',
+      programme:[
+        ['14:15','Gates open','Arrive through the lower garden; a drink waits on the terrace.'],
+        ['15:30','Ceremony','On the lawn above the lake, about thirty minutes.'],
+        ['16:15','Aperitivo','Spritz, lake fish crostini, and the long view.'],
+        ['18:30','Dinner','Seated in the orangery. Speeches between courses.'],
+        ['21:30','First dance','Then the Trio hands over to a rather louder band.'],
+        ['01:00','Shuttles home','Last coach to Como and Bellagio hotels.']],
+      travelEyebrow:'Getting there',
+      address:'Via Regina 42, 22021 Bellagio, Como — gates open at 14:15, the ceremony is on the lawn above the lake.',
+      mapTitle:'Map · Bellagio, Lake Como',
+      travel:[
+        ['Milan Malpensa','1 h 20 by car · transfers can be shared, ask the planner'],
+        ['Milan Centrale','Train to Varenna, then the ferry — 1 h 40, and worth it'],
+        ['Wedding shuttle','Como station 13:45 · Bellagio hotels 14:00 · free']],
+      stayEyebrow:'Where to stay', stayTitle:'Rooms held until 1 May',
+      hotels:['5 min walk · 22 rooms held','10 min by shuttle · lake view','On the shuttle route · 8 rooms'],
+      stayNote:'Quote “Amélie & Jonas” when booking · prices per night, shown in %s',
+      dressEyebrow:'Dress code', dressTitle:'Garden formal',
+      dressText:'Long dresses and linen suits. The lawn is grass and gravel — heels are welcome, a flat pair is wise. Evenings on the lake turn cool: bring a wrap.',
+      palette:['Terracotta','Clay','Oat','Blush','Ink'],
+      rsvpEyebrow:'RSVP', rsvpTitle:'Will you join us?',
+      rsvpLead:'Please reply by %s. One form per invitation.',
+      labInvitation:'Invitation', labAttending:'Attending', labGuests:'Guests',
+      labMain:'Main course', labNote:'Anything we should know',
+      going:['Joyfully yes','Sadly no'],
+      menu:['Lake fish','Veal','Vegetarian','Vegan'],
+      shuttleLine:'We will take the shuttle from Como, 13:45',
+      notePlaceholder:'Allergies, a song you need to hear, arrival time…',
+      submit:'Send our reply', submitNote:'Goes straight to the planning board — no email chains.',
+      thanks:'Thank you,',
+      receipt:['Recorded on the planning board','Caterer notified of menu choice','Shuttle list updated'],
+      change:'Change our reply', seeBoard:'See it on the board',
+      seat:['seat','seats'], byShuttle:'shuttle from Como 13:45', byOwn:'own transport',
+      regrets:'We are sorry you cannot make it — we will raise a glass to you anyway.',
+      giftsEyebrow:'Gifts', giftsTitle:'Your presence, mostly',
+      giftsText:'You are travelling to a lake for us — that is plenty. If you would still like to give something, we are keeping a small fund for a fortnight in Puglia. Details on request from our planner.',
+      faqEyebrow:'Good to know', faqTitle:'Questions',
+      faq:[
+        ['Can we bring the children?','Yes — there is a kids table at dinner and a sitter from 21:00. Tell us names on the RSVP.'],
+        ['Is there parking at the villa?','Twelve spaces, first come. The shuttle is easier and means nobody drives the lake road at night.'],
+        ['What if it rains?','The ceremony moves to the loggia and dinner stays in the orangery. Nothing else changes.'],
+        ['Can we take photographs?','During the ceremony, please leave it to Studio Lumen. Afterwards, everything.']],
+      footerAsk:'Anything at all — ask', footerRole:', our planner:'
+    },
+    IT: {
+      eyebrowDate:'Sabato · 12 giugno 2027', venue:'Villa Regina, Lago di Como — Italia',
+      daysToGo:'giorni al matrimonio', ceremony:'Cerimonia', rsvpBy:'Rispondi entro', deadline:'15 maggio',
+      ctaRsvp:'Rispondi', ctaDay:'Il giorno', readIn:'Leggi in',
+      coverAlt:'La terrazza della villa sul Lago di Como alla luce del tramonto',
+      alt1:'Arco di rose bianche sul prato sopra il lago',
+      alt2:'Gli sposi sulla terrazza alla luce del tramonto',
+      alt3:'La tavola apparecchiata sulla terrazza al crepuscolo',
+      storyEyebrow:'La nostra storia, in breve',
+      storyText:'Ci siamo conosciuti nel 2021 su un treno in ritardo per Bologna, abbiamo discusso per quattro ore su quale fosse il miglior espresso dell’Emilia-Romagna, e da allora non abbiamo ancora finito. Sei anni dopo, ci farebbe felici avervi con noi sul lago.',
+      dayEyebrow:'Il giorno', dayTitle:'Sabato 12 giugno',
+      programme:[
+        ['14:15','Apertura dei cancelli','Si entra dal giardino basso; in terrazza vi aspetta un calice.'],
+        ['15:30','Cerimonia','Sul prato sopra il lago, circa trenta minuti.'],
+        ['16:15','Aperitivo','Spritz, crostini di pesce di lago e la vista lunga.'],
+        ['18:30','Cena','A tavola nell’orangerie. I discorsi tra una portata e l’altra.'],
+        ['21:30','Primo ballo','Poi il trio lascia il posto a una band ben più rumorosa.'],
+        ['01:00','Navette per il rientro','Ultimo pullman per Como e per gli hotel di Bellagio.']],
+      travelEyebrow:'Come arrivare',
+      address:'Via Regina 42, 22021 Bellagio, Como — i cancelli aprono alle 14:15, la cerimonia è sul prato sopra il lago.',
+      mapTitle:'Mappa · Bellagio, Lago di Como',
+      travel:[
+        ['Milano Malpensa','1 h 20 in auto · i transfer si possono condividere, chiedete alla planner'],
+        ['Milano Centrale','Treno per Varenna, poi il traghetto — 1 h 40, e ne vale la pena'],
+        ['Navetta degli sposi','Stazione di Como 13:45 · hotel di Bellagio 14:00 · gratuita']],
+      stayEyebrow:'Dove alloggiare', stayTitle:'Camere bloccate fino al 1° maggio',
+      hotels:['5 minuti a piedi · 22 camere bloccate','10 minuti in navetta · vista lago','Sul percorso della navetta · 8 camere'],
+      stayNote:'Al momento della prenotazione citate “Amélie & Jonas” · prezzi a notte, mostrati in %s',
+      dressEyebrow:'Dress code', dressTitle:'Formale da giardino',
+      dressText:'Abiti lunghi e completi di lino. Il prato è erba e ghiaia: i tacchi sono i benvenuti, un paio basso è saggio. La sera sul lago rinfresca: portate uno scialle.',
+      palette:['Terracotta','Argilla','Avena','Cipria','Inchiostro'],
+      rsvpEyebrow:'Rispondi', rsvpTitle:'Ci sarete?',
+      rsvpLead:'Vi chiediamo di rispondere entro il %s. Un modulo per invito.',
+      labInvitation:'Invito', labAttending:'Presenza', labGuests:'Ospiti',
+      labMain:'Secondo', labNote:'Qualcosa che dobbiamo sapere',
+      going:['Sì, con gioia','Purtroppo no'],
+      menu:['Pesce di lago','Vitello','Vegetariano','Vegano'],
+      shuttleLine:'Prenderemo la navetta da Como, 13:45',
+      notePlaceholder:'Allergie, una canzone che volete sentire, orario di arrivo…',
+      submit:'Invia la risposta', submitNote:'Arriva dritta al piano del matrimonio — niente scambi di email.',
+      thanks:'Grazie,',
+      receipt:['Registrato sul piano del matrimonio','Il catering conosce la scelta del menù','Lista navetta aggiornata'],
+      change:'Modifica la risposta', seeBoard:'Guarda sul piano',
+      seat:['posto','posti'], byShuttle:'navetta da Como 13:45', byOwn:'mezzi propri',
+      regrets:'Ci dispiace che non possiate esserci — brinderemo comunque a voi.',
+      giftsEyebrow:'Regali', giftsTitle:'La vostra presenza, soprattutto',
+      giftsText:'Venite fino a un lago per noi: è già molto. Se voleste comunque fare un pensiero, stiamo mettendo da parte qualcosa per due settimane in Puglia. I dettagli su richiesta alla nostra planner.',
+      faqEyebrow:'Buono a sapersi', faqTitle:'Domande',
+      faq:[
+        ['Possiamo portare i bambini?','Sì: a cena c’è un tavolo per i più piccoli e dalle 21:00 una babysitter. Scriveteci i nomi nel modulo.'],
+        ['C’è parcheggio alla villa?','Dodici posti, chi arriva prima. La navetta è più comoda ed evita a tutti la strada del lago di notte.'],
+        ['E se piove?','La cerimonia si sposta nella loggia e la cena resta nell’orangerie. Non cambia altro.'],
+        ['Possiamo fare fotografie?','Durante la cerimonia lasciate fare a Studio Lumen. Dopo, tutto quello che volete.']],
+      footerAsk:'Per qualsiasi cosa scrivete a', footerRole:', la nostra planner:'
+    },
+    RU: {
+      eyebrowDate:'Суббота · 12 июня 2027', venue:'Villa Regina, озеро Комо — Италия',
+      daysToGo:'дней до свадьбы', ceremony:'Церемония', rsvpBy:'Ответить до', deadline:'15 мая',
+      ctaRsvp:'Ответить', ctaDay:'Программа дня', readIn:'Язык',
+      coverAlt:'Терраса виллы над озером Комо в закатном свете',
+      alt1:'Свадебная арка из белых роз на лужайке над озером',
+      alt2:'Пара на террасе в закатном свете',
+      alt3:'Накрытый банкетный стол на террасе в сумерках',
+      storyEyebrow:'Коротко о нас',
+      storyText:'Мы познакомились в 2021 году в поезде до Болоньи, который опаздывал на два часа, четыре часа спорили о лучшем эспрессо в Эмилии-Романье — и с тех пор продолжаем этот спор. Шесть лет спустя нам очень хочется видеть вас с нами на озере.',
+      dayEyebrow:'Программа', dayTitle:'Суббота, 12 июня',
+      programme:[
+        ['14:15','Ворота открыты','Вход через нижний сад; на террасе уже ждёт аперитив.'],
+        ['15:30','Церемония','На лужайке над озером, около тридцати минут.'],
+        ['16:15','Аперитиво','Шпритц, кростини с озёрной рыбой и вид на озеро.'],
+        ['18:30','Ужин','Посадка в оранжерее. Тосты между переменами блюд.'],
+        ['21:30','Первый танец','Затем трио передаёт сцену куда более громкой группе.'],
+        ['01:00','Трансферы по домам','Последний автобус в Комо и к отелям Белладжо.']],
+      travelEyebrow:'Как добраться',
+      address:'Via Regina 42, 22021 Bellagio, Como — ворота открываются в 14:15, церемония проходит на лужайке над озером.',
+      mapTitle:'Карта · Белладжо, озеро Комо',
+      travel:[
+        ['Милан Мальпенса','1 ч 20 мин на машине · трансфер можно разделить, спросите организатора'],
+        ['Милан Чентрале','Поезд до Варенны, дальше паром — 1 ч 40 мин, и оно того стоит'],
+        ['Свадебный трансфер','Вокзал Комо 13:45 · отели Белладжо 14:00 · бесплатно']],
+      stayEyebrow:'Где остановиться', stayTitle:'Номера держим до 1 мая',
+      hotels:['5 минут пешком · 22 номера в блоке','10 минут на трансфере · вид на озеро','На маршруте трансфера · 8 номеров'],
+      stayNote:'При бронировании назовите «Amélie & Jonas» · цены за ночь, показаны в %s',
+      dressEyebrow:'Дресс-код', dressTitle:'Садовый формальный',
+      dressText:'Длинные платья и льняные костюмы. На лужайке трава и гравий — каблуки уместны, но пара плоской обуви пригодится. Вечером у озера прохладно: возьмите накидку.',
+      palette:['Терракота','Глина','Овсяный','Пудровый','Чернильный'],
+      rsvpEyebrow:'Ответ', rsvpTitle:'Будете с нами?',
+      rsvpLead:'Пожалуйста, ответьте до %s. Одна форма на приглашение.',
+      labInvitation:'Приглашение', labAttending:'Придёте', labGuests:'Гостей',
+      labMain:'Горячее', labNote:'Что нам важно знать',
+      going:['С радостью да','К сожалению, нет'],
+      menu:['Озёрная рыба','Телятина','Вегетарианское','Веганское'],
+      shuttleLine:'Поедем трансфером от Комо, 13:45',
+      notePlaceholder:'Аллергии, песня, которую хочется услышать, время приезда…',
+      submit:'Отправить ответ', submitNote:'Ответ уходит прямо в план свадьбы — без переписок по почте.',
+      thanks:'Спасибо,',
+      receipt:['Записано в плане свадьбы','Кейтеринг знает про выбор меню','Список на трансфер обновлён'],
+      change:'Изменить ответ', seeBoard:'Посмотреть в плане',
+      seat:['гость','гостя'], byShuttle:'трансфер от Комо в 13:45', byOwn:'свой транспорт',
+      regrets:'Жаль, что не получится — мы всё равно поднимем за вас бокал.',
+      giftsEyebrow:'Подарки', giftsTitle:'Главное — вы сами',
+      giftsText:'Вы едете ради нас к озеру — этого более чем достаточно. Если всё же хочется что-то подарить, мы копим на две недели в Апулии. Детали подскажет наш организатор.',
+      faqEyebrow:'Полезно знать', faqTitle:'Вопросы',
+      faq:[
+        ['Можно ли взять детей?','Да — за ужином есть детский стол, а с 21:00 работает няня. Напишите имена в форме ответа.'],
+        ['Есть ли парковка у виллы?','Двенадцать мест, кто первый приехал. Трансфер удобнее — и никому не придётся ехать по горной дороге ночью.'],
+        ['Что если пойдёт дождь?','Церемония переезжает в лоджию, ужин и так в оранжерее. Больше ничего не меняется.'],
+        ['Можно ли фотографировать?','Во время церемонии — доверьте это Studio Lumen. После — сколько угодно.']],
+      footerAsk:'Любой вопрос — напишите', footerRole:', нашему организатору:'
+    }
+  };
+
+  RATES = {
+    RUB: { code:'RUB', rate:98, pre:'', post:' ₽' },
+    EUR: { code:'EUR', rate:1, pre:'€', post:'' },
+    USD: { code:'USD', rate:1.08, pre:'$', post:'' }
+  };
+
+  // Демо под брендом клиента: ?planner=WOW-WEDDING&email=hi@wow.com
+  // Значение попадает в вёрстку как текстовый узел (рантайм экранирует), но
+  // всё равно чистим: управляющие символы, схлопнутые пробелы и длина — иначе
+  // чужая строка ломает шапку.
+  fromUrl(key, max) {
+    try {
+      const v = new URLSearchParams(location.search).get(key);
+      if (!v) return null;
+      // Без unicode-эскейпов намеренно: отсеиваем управляющие символы по коду.
+      const clean = Array.from(v)
+        .filter(ch => { const c = ch.charCodeAt(0); return c > 31 && c !== 127; })
+        .join('').replace(/\s+/g, ' ').trim();
+      return clean ? clean.slice(0, max) : null;
+    } catch (e) { return null; }
+  }
+
+  brandEmail() {
+    const v = this.fromUrl('email', 60);
+    return v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? v : null;
+  }
+
+  cur() { return this.RATES[this.state.currency || this.props.currency || 'RUB'] || this.RATES.RUB; }
+
+  fmt(eur, c) {
+    const cc = c || this.cur();
+    const v = Math.round(eur * cc.rate);
+    return cc.pre + v.toLocaleString('ru-RU') + cc.post;
+  }
+
+  set(patch) { this.setState(patch); }
+
+  move(key, dir) {
+    const order = [...this.state.order];
+    const vis = order.filter(k => !this.state.hidden[k]);
+    const vi = vis.indexOf(key);
+    const swapWith = vis[vi + dir];
+    if (!swapWith) return;
+    const a = order.indexOf(key), b = order.indexOf(swapWith);
+    order[a] = swapWith; order[b] = key;
+    this.setState({ order });
+  }
+
+  reorder(from, to) {
+    if (!from || from === to) return;
+    const order = [...this.state.order];
+    order.splice(order.indexOf(from), 1);
+    order.splice(order.indexOf(to), 0, from);
+    this.setState({ order });
+  }
+
+  META = {
+    timeline:  { title:'Таймлайн', tag:'В графике', wide:true, kind:'timeline' },
+    invoices:  { title:'Платежи и счета', tag:'2 напомнить', wide:true, kind:'invoices' },
+    vendors:   { title:'Подрядчики', tag:'6 / 9 забронировано', kind:'vendors' },
+    budget:    { title:'Бюджет', tag:'58% законтрактовано', kind:'budget' },
+    checklist: { title:'Ближайшие шаги', tag:'В этом месяце', kind:'checklist' },
+    guests:    { title:'Гости', tag:'Приём ответов', kind:'guests' },
+    documents: { title:'Документы', tag:'Всё в одном месте', kind:'docs' },
+    guestsite: { title:'Сайт гостей и приглашения', tag:'Опубликовано', wide:true, kind:'guestsite' },
+    seating:   { title:'Рассадка', tag:'9 столов', kind:'generic', rows:[
+      { a:'Стол молодых', b:'8 мест · подтверждён' },
+      { a:'Столы 1–7', b:'по 8 мест · черновик 3' },
+      { a:'Детский стол', b:'4 места · уточняется' }
+    ]},
+    stay:      { title:'Проживание', tag:'Номера в блоке', kind:'generic', rows:[
+      { a:'Hotel Belvedere', b:'22 номера держим до 1 мая' },
+      { a:'Флигель виллы', b:'6 номеров · ближайшие родственники' },
+      { a:'B&B La Riva', b:'8 номеров · на маршруте трансфера' }
+    ]},
+    honeymoon: { title:'Свадебное путешествие', tag:'Черновик', kind:'generic', rows:[
+      { a:'Апулия · 14–24 июня', b:'Билеты забронированы' },
+      { a:'Masseria Trulli', b:'Запросили смету' },
+      { a:'Трансфер Бриндизи', b:'Забронировать' }
+    ]},
+    weather:   { title:'Погода и план Б', tag:'План Б готов', kind:'generic', rows:[
+      { a:'Церемония', b:'Лоджия, если риск дождя > 40%' },
+      { a:'Ужин', b:'Оранжерея · 100 мест' },
+      { a:'Решение', b:'Принимаем за 24 часа' }
+    ]}
+  };
+
+  // Портфель агентства. Открывается только первая свадьба — остальные строки
+  // существуют, чтобы демо читалось как кабинет, а не как план одной пары.
+  WEDDINGS = [
+    { pair:'Анна и Дмитрий',  date:'12.06.2027', place:'оз. Комо',   status:'В работе',         budget:'64%',  rsvp:'21', inv:'2 к оплате',  live:true },
+    { pair:'Мария и Стефано', date:'03.10.2026', place:'Тоскана',    status:'Финальная неделя', budget:'97%',  rsvp:'0',  inv:'1 просрочен', alert:true },
+    { pair:'Ольга и Павел',   date:'15.05.2027', place:'Санторини',  status:'В работе',         budget:'41%',  rsvp:'38', inv:'—' },
+    { pair:'Ксения и Марк',   date:'20.09.2026', place:'Прага',      status:'Финальная неделя', budget:'100%', rsvp:'2',  inv:'оплачено' },
+    { pair:'Дарья и Антон',   date:'07.08.2027', place:'Черногория', status:'Старт',            budget:'12%',  rsvp:'приглашения не разосланы', inv:'—' },
+    { pair:'Елена и Игорь',   date:'14.02.2027', place:'Дубай',      status:'В работе',         budget:'55%',  rsvp:'9',  inv:'3 к оплате' },
+    { pair:'Алиса и Роман',   date:'30.05.2027', place:'Грузия',     status:'В работе',         budget:'48%',  rsvp:'15', inv:'1 к оплате' }
+  ];
+
+  HOW_STEPS = [
+    'Создали свадьбу из вашего шаблона',
+    'У пары появился свой план',
+    'Гости отвечают на сайте пары',
+    'Всё стекается в этот кабинет'
+  ];
+
+  // Одна строка задаёт колонки и шапке, и строкам — чтобы они не разъехались.
+  WED_COLS = 'minmax(150px,1.5fr) 92px minmax(min(94px,100%),1fr) 130px 116px 120px 124px';
+
+  INVOICES = [
+    { id:'INV-2041', to:'Villa Regina', what:'Площадка — взнос 2 из 3', eur:8400, due:'15 мар 2027', status:'paid' },
+    { id:'INV-2042', to:'Studio Lumen', what:'Фото и видео — финальный платёж', eur:2300, due:'1 апр 2027', status:'sent' },
+    { id:'INV-2043', to:'Fiori di Lina', what:'Цветы и оформление — предоплата', eur:1200, due:'28 фев 2027', status:'overdue' },
+    { id:'INV-2044', to:'Trio Belvedere', what:'Музыка на церемонии — полностью', eur:950, due:'10 фев 2027', status:'paid' },
+    { id:'INV-2045', to:'Анна и Дмитрий', what:'Гонорар организатора — этап 2 из 4', eur:1500, due:'1 мар 2027', status:'draft' }
+  ];
+
+  invoiceStatus(inv) { return this.state.invStatus[inv.id] || inv.status; }
+
+  advance(inv) {
+    const cur = this.invoiceStatus(inv);
+    const next = cur === 'draft' ? 'sent' : 'paid';
+    this.setState({ invStatus: { ...this.state.invStatus, [inv.id]: next } });
+  }
+
+  renderVals() {
+    const s = this.state;
+    const c = this.cur();
+    const f = (v) => this.fmt(v, c);
+    const plannerName = this.fromUrl('planner', 28) ?? this.props.plannerName ?? 'Свадьбы Веры';
+    const plannerEmail = this.brandEmail() ?? this.props.plannerEmail ?? 'hi@svadby-very.ru';
+    const rsvpDeadline = this.props.rsvpDeadline ?? '15 мая';
+    const daysLeft = Math.max(0, Math.ceil((new Date('2027-06-12T00:00:00') - new Date()) / 86400000));
+
+    // экскурсия
+    const ti = s.tour, tourOn = ti != null, tStep = tourOn ? this.TOUR[ti] : null;
+    const rect = s.tourRect, vw = s.vw || 1440, narrow = vw < 768, hasSpot = tourOn && !!rect;
+    const cardBase = {
+      position:'fixed', zIndex:101, background:'#fff', border:'1px solid #DED2C8',
+      borderRadius:'20px', padding:'18px 20px 16px',
+      boxShadow:'0 20px 50px -20px rgba(51,35,31,.6)', animation:'riseIn .35s ease both'
+    };
+    let tourCardStyle;
+    if (!tourOn) {
+      tourCardStyle = { display:'none' };
+    } else if (narrow) {
+      // На узком экране — нижняя карточка во всю ширину, без стрелок и привязки.
+      tourCardStyle = { ...cardBase, left:'12px', right:'12px', bottom:'12px' };
+    } else if (!rect) {
+      tourCardStyle = { ...cardBase, left:'50%', top:'50%', transform:'translate(-50%,-50%)',
+                        width:'min(420px, calc(100vw - 40px))',
+                        animation:'riseInCentered .35s ease both' };
+    } else {
+      // Высота плашки заранее неизвестна, поэтому выбираем сторону по запасу
+      // места: снизу, сверху, а если цель занимает почти весь экран — прижимаем
+      // к низу окна, иначе плашка обрезается краем.
+      const W = 380, gap = 14, H = 215, vh = window.innerHeight;
+      const below = vh - (rect.top + rect.h) - gap, above = rect.top - gap;
+      const left = Math.min(Math.max(12, rect.left + rect.w / 2 - W / 2), Math.max(12, vw - W - 12));
+      tourCardStyle = { ...cardBase, width:'min(' + W + 'px, calc(100vw - 24px))', left: left + 'px' };
+      if (below >= H) tourCardStyle.top = (rect.top + rect.h + gap) + 'px';
+      else if (above >= H) tourCardStyle.bottom = (vh - rect.top + gap) + 'px';
+      else tourCardStyle.bottom = '20px';
+    }
+
+    // agency cabinet
+    const pill = (bg, ink, border) => ({
+      display:'inline-block', fontSize:'11px', fontWeight:500, letterSpacing:'.08em',
+      textTransform:'uppercase', padding:'4px 11px', borderRadius:'999px', whiteSpace:'nowrap',
+      background:bg, color:ink, border:'1px solid ' + (border || 'transparent')
+    });
+    const STATUS = {
+      'Старт':            pill('#F0EAE2', '#98857C'),
+      'В работе':         pill('#F5E9E4', '#A0453D'),
+      'Финальная неделя': pill('#F7E7E3', '#C9302A')
+    };
+    const invPill = (v) => v.indexOf('просрочен') >= 0 ? pill('#C9302A', '#fff')
+      : v.indexOf('к оплате') >= 0 ? pill('#F5E9E4', '#A0453D')
+      : v === 'оплачено' ? pill('#fff', '#6B5850', '#DED2C8')
+      : { fontSize:'13px', color:'#98857C' };
+    const last = this.WEDDINGS.length - 1;
+    const weddings = this.WEDDINGS.map((w, i) => ({
+      ...w,
+      isLive: !!w.live,
+      showHint: s.hint === i,
+      statusStyle: STATUS[w.status] || pill('#F0EAE2', '#98857C'),
+      invStyle: invPill(w.inv),
+      rsvpStyle: {
+        fontSize: w.rsvp.length > 4 ? '12px' : '13.5px',
+        color: w.rsvp.length > 4 ? '#A0453D' : (w.rsvp === '0' ? '#98857C' : '#33231F'),
+        fontVariantNumeric:'tabular-nums', textAlign:'right'
+      },
+      rowStyle: {
+        display:'grid', gridTemplateColumns:this.WED_COLS, gap:'6px 14px', alignItems:'center',
+        padding:'13px 20px', cursor:'pointer',
+        borderBottom: i === last ? 'none' : '1px solid #DED2C8',
+        background: w.alert ? '#FCF2EF' : '#fff',
+        boxShadow: w.alert ? 'inset 3px 0 0 #C9302A' : (w.live ? 'inset 3px 0 0 #B9635A' : 'none')
+      },
+      onClick: () => w.live
+        ? this.setState({ view:'board', hint:null })
+        : this.setState({ hint: s.hint === i ? null : i })
+    }));
+    const howSteps = this.HOW_STEPS.map((text, i) => ({ n: i + 1, text }));
+
+    const tabDefs = [['board','План'],['guest','Сайт гостей'],['invite','Приглашение']];
+    const tabs = tabDefs.map(([id, label]) => ({
+      label, active: s.view === id, inactive: s.view !== id,
+      onClick: () => this.set({ view: id })
+    }));
+
+    const currencies = Object.keys(this.RATES).map(code => ({
+      code, active: c.code === code, inactive: c.code !== code,
+      onClick: () => this.set({ currency: code })
+    }));
+
+    // invoices
+    const invoices = this.INVOICES.map(inv => {
+      const st = this.invoiceStatus(inv);
+      const hasAct = st === 'draft' || st === 'sent' || st === 'overdue';
+      return {
+        ...inv,
+        amount: f(inv.eur),
+        base: this.fmt(inv.eur, this.RATES.EUR),
+        showBase: c.code !== 'EUR',
+        isPaid: st === 'paid', isSent: st === 'sent', isOverdue: st === 'overdue', isDraft: st === 'draft',
+        hasAct, noAct: !hasAct,
+        actLabel: st === 'draft' ? 'Отправить' : 'Отметить оплату',
+        onAct: () => this.advance(inv)
+      };
+    });
+    const sum = (pred) => this.INVOICES.filter(i => pred(this.invoiceStatus(i))).reduce((t, i) => t + i.eur, 0);
+    const paidEur = sum(st => st === 'paid');
+    const outEur = sum(st => st === 'sent' || st === 'overdue');
+    const draftEur = sum(st => st === 'draft');
+
+    // budget
+    const cats = [
+      ['Площадка и кейтеринг', 16800, 23000],
+      ['Фото и видео', 4600, 4600],
+      ['Цветы и декор', 2400, 6000],
+      ['Музыка', 1900, 2100],
+      ['Наряды и кольца', 1700, 5600]
+    ];
+    const committed = 27400, total = 47000;
+    const categories = cats.map(([name, spent, cap]) => ({
+      name, amount: f(spent),
+      barStyle: { display:'block', height:'100%', width: Math.round(spent / cap * 100) + '%', background:'#C9302A' }
+    }));
+
+    const milestones = [
+      ['Октябрь 2026','Площадка подтверждена','Villa Regina забронирована, предоплата внесена, план на случай дождя согласован с усадьбой.','done'],
+      ['Декабрь 2026','Фотограф и ведущий церемонии','Договоры подписаны; лавстори-съёмка назначена на март.','done'],
+      ['Сейчас · март 2027','Дегустация меню в Комо','В шорт-листе два кейтеринга — финальный выбор после дегустационных выходных.','next'],
+      ['Апрель 2027','Приглашения и приём ответов','Персональная ссылка каждому гостю; приём ответов до ' + rsvpDeadline + '.',''],
+      ['Май 2027','Финальные цифры и рассадка','Число гостей зафиксировано, схема зала отправлена площадке и кейтерингу.',''],
+      ['11–12 июня 2027','Репетиция и сам день','Прогон в пятницу вечером; тайминг дня разослан всем подрядчикам.','']
+    ].map(([when, title, text, st]) => ({
+      when, title, text,
+      dotStyle: {
+        position:'absolute', left:'-22px', top:'5px', width:'11px', height:'11px', borderRadius:'50%',
+        background: st === 'done' ? '#C9302A' : '#fff',
+        border: '2px solid ' + (st === 'done' ? '#C9302A' : st === 'next' ? '#B9635A' : '#DED2C8'),
+        boxShadow: st === 'next' ? '0 0 0 4px #F5E9E4' : 'none'
+      },
+      whenStyle: { fontSize:'11px', letterSpacing:'.16em', textTransform:'uppercase', fontWeight:500, color: st === 'next' ? '#B9635A' : '#98857C' },
+      titleStyle: { fontFamily:"'Playfair Display',serif", fontWeight:500, fontSize:'19px', margin:'2px 0', color: st === 'done' ? '#98857C' : '#33231F' }
+    }));
+    const timelineCols = [{ items: milestones.slice(0, 3) }, { items: milestones.slice(3) }];
+
+    const vendors = [
+      ['🏛','Villa Regina','Площадка · Белладжо',14200,'booked'],
+      ['📷','Studio Lumen','Фото и видео',4600,'booked'],
+      ['🌸','Fiori di Lina','Цветы и оформление',3900,'waiting'],
+      ['🍽','Кейтеринг — дегустация в марте','Две сметы получены',9800,'open'],
+      ['🎻','Trio Belvedere','Музыка на церемонии',950,'booked'],
+      ['🚐','Трансферы гостей','Комо ↔ вилла',1400,'open']
+    ].map(([icon, name, role, fee, st]) => ({
+      icon, name, role, fee: f(fee),
+      isBooked: st === 'booked', isWaiting: st === 'waiting', isOpen: st === 'open'
+    }));
+
+    const tasks = [
+      ['t1','Согласовать локацию для лавстори-съёмки','Готово'],
+      ['t2','Подписать договор на цветы и внести предоплату','28 фев'],
+      ['t3','Напомнить Fiori di Lina про счёт INV-2043','1 мар'],
+      ['t4','Купить билеты в Комо на дегустацию','5 мар'],
+      ['t5','Отправить отделку приглашения на утверждение','20 мар']
+    ].map(([id, label, due]) => ({
+      label, due, done: !!s.done[id], open: !s.done[id],
+      onToggle: () => this.setState({ done: { ...s.done, [id]: !s.done[id] } })
+    }));
+
+    const docs = [
+      ['📄','Договор с площадкой — Villa Regina','Подписан · 14 окт 2026'],
+      ['📄','Договор на фото и видео','Подписан · 2 дек 2026'],
+      ['✍️','Договор на цветы','Ждём подписи'],
+      ['🗓','Тайминг дня, версия 2','Черновик · обновления видны всем подрядчикам']
+    ].map(([icon, name, meta]) => ({ icon, name, meta }));
+
+    const blocks = s.order.filter(k => !s.hidden[k]).map(key => {
+      const m = this.META[key];
+      return {
+        title: m.title, tag: m.tag, rows: m.rows || [],
+        editing: s.editing, draggable: s.editing,
+        wrapStyle: { gridColumn: m.wide ? '1 / -1' : 'auto', opacity: s.drag === key ? 0.5 : 1 },
+        cardStyle: {
+          background:'#fff', border:'1px solid ' + (s.drag && s.drag !== key ? '#E8D3CC' : '#DED2C8'),
+          borderRadius:'20px', boxShadow:'0 1px 2px rgba(35,40,35,.04),0 10px 30px -18px rgba(35,40,35,.18)',
+          cursor: s.editing ? 'grab' : 'default'
+        },
+        isTimeline: m.kind === 'timeline', isInvoices: m.kind === 'invoices', isVendors: m.kind === 'vendors',
+        isBudget: m.kind === 'budget', isChecklist: m.kind === 'checklist', isGuests: m.kind === 'guests',
+        isDocs: m.kind === 'docs', isGuestSite: m.kind === 'guestsite', isGeneric: m.kind === 'generic',
+        onUp: () => this.move(key, -1),
+        onDown: () => this.move(key, 1),
+        onHide: () => this.setState({ hidden: { ...s.hidden, [key]: true } }),
+        onDragStart: () => this.setState({ drag: key }),
+        onDragOver: (e) => { if (s.drag) e.preventDefault(); },
+        onDrop: (e) => { e.preventDefault(); this.reorder(s.drag, key); this.setState({ drag: null }); },
+        onDragEnd: () => this.setState({ drag: null })
+      };
+    });
+
+    const library = s.order.filter(k => s.hidden[k]).map(key => ({
+      title: this.META[key].title,
+      onAdd: () => { const h = { ...s.hidden }; delete h[key]; this.setState({ hidden: h }); }
+    }));
+
+
+
+
+
+
+
+    const plural = (n, one, few, many) => {
+      const m10 = n % 10, m100 = n % 100;
+      if (m10 === 1 && m100 !== 11) return one;
+      if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+      return many;
+    };
+
+    // guest site locale
+    const L = this.GUEST[s.lang] || this.GUEST.EN;
+    const gDeadline = L.deadline;
+    const programme = L.programme.map(([time, title, text]) => ({ time, title, text }));
+    const travel = L.travel.map(([a, b]) => ({ a, b }));
+    const hotels = [['Hotel Belvedere', 180], ['Albergo Silvio', 140], ['B&B La Riva', 95]]
+      .map(([name, eur], i) => ({ name, meta: L.hotels[i], price: f(eur) }));
+    const palette = ['#C9302A', '#B9635A', '#EFE7E0', '#E8CFC7', '#33231F'].map((hex, i) => ({
+      name: L.palette[i],
+      swatchStyle: { width:'44px', height:'44px', borderRadius:'50%', background:hex, border:'1px solid rgba(35,40,35,.08)' }
+    }));
+    const faqs = L.faq.map(([q, a], i) => ({
+      q, a, open: s.faq === i, sign: s.faq === i ? '–' : '+',
+      onClick: () => this.setState({ faq: s.faq === i ? null : i })
+    }));
+    const goingOpts = [{ label:L.going[0], v:'yes' }, { label:L.going[1], v:'no' }].map(o => ({
+      label: o.label, active: s.rsvp.going === o.v, inactive: s.rsvp.going !== o.v,
+      onClick: () => this.setState({ rsvp: { ...s.rsvp, going: o.v } })
+    }));
+    const MENU_KEYS = ['Lake fish', 'Veal', 'Vegetarian', 'Vegan'];
+    const menuLabel = L.menu[Math.max(0, MENU_KEYS.indexOf(s.rsvp.menu))];
+    const seats = parseInt(s.rsvp.seats, 10) || 1;
+    const summary = s.rsvp.going === 'yes'
+      ? seats + ' ' + L.seat[seats === 1 ? 0 : 1] + ' · ' + menuLabel +
+        ' · ' + (s.rsvp.shuttle ? L.byShuttle : L.byOwn)
+      : L.regrets;
+    const guestStrings = {};
+    for (const k of Object.keys(L)) {
+      const v = L[k];
+      if (typeof v === 'string') guestStrings['g' + k.charAt(0).toUpperCase() + k.slice(1)] = v;
+    }
+    guestStrings.gDeadline = gDeadline;
+    guestStrings.gRsvpLead = L.rsvpLead.replace('%s', gDeadline);
+    guestStrings.gStayNote = L.stayNote.replace('%s', c.code);
+    guestStrings.gMenu0 = L.menu[0]; guestStrings.gMenu1 = L.menu[1];
+    guestStrings.gMenu2 = L.menu[2]; guestStrings.gMenu3 = L.menu[3];
+    guestStrings.gReceipt0 = L.receipt[0]; guestStrings.gReceipt1 = L.receipt[1];
+    guestStrings.gReceipt2 = L.receipt[2];
+
+    // invitation finishes
+    const D = {
+      sage:    { bg:'linear-gradient(170deg,#FBF3EF,#F5E4DC)', ink:'#33231F', soft:'#6B5850', rule:'#B9635A', btn:'#C9302A', btnInk:'#fff' },
+      ivory:   { bg:'linear-gradient(170deg,#FFFDF8,#F3EADA)', ink:'#33231F', soft:'#6B5850', rule:'#B9635A', btn:'#A0453D', btnInk:'#fff' },
+      nocturne:{ bg:'linear-gradient(170deg,#2E2320,#1E1614)', ink:'#F5EEE8', soft:'#C2ADA4', rule:'#E0BFB6', btn:'#E0BFB6', btnInk:'#241A17' }
+    };
+    const d = D[s.design];
+    const designs = [['sage','Терракота'],['ivory','Айвори'],['nocturne','Ноктюрн']].map(([id, name]) => ({
+      name, active: s.design === id, inactive: s.design !== id,
+      onClick: () => this.setState({ design: id })
+    }));
+
+    const sending = [
+      ['Доставлено','92 из 92 · WhatsApp и почта'],
+      ['Открыли','71 · остальным поставлено напоминание'],
+      ['Ответили', (34 + (s.sent && s.rsvp.going === 'yes' ? seats : 0)) + ' гостей'],
+      ['Языки','English · Italiano · Русский']
+    ].map(([a, b]) => ({ a, b }));
+
+    const confirmed = 34 + (s.sent && s.rsvp.going === 'yes' ? seats : 0);
+
+    return {
+      plannerName, plannerEmail, rsvpDeadline, daysLeft,
+      ...guestStrings,
+      tabs, currencies, currencyCode: c.code,
+      weddings, howSteps,
+      headStyle: {
+        display:'grid', gridTemplateColumns:this.WED_COLS, gap:'14px', alignItems:'end',
+        padding:'14px 20px', borderBottom:'1px solid #DED2C8', background:'#FBF7F3',
+        fontSize:'10px', letterSpacing:'.14em', textTransform:'uppercase', fontWeight:500, color:'#98857C'
+      },
+      tourOn, tourOff: !tourOn, tourIdle: !tourOn && !s.invite,
+      invite: s.invite,
+      inviteYes: () => this.inviteYes(),
+      inviteNo: () => this.inviteClose(),
+      tourHasSpot: hasSpot, tourNoSpot: tourOn && !hasSpot,
+      tourSpotStyle: rect ? {
+        position:'fixed', zIndex:100, pointerEvents:'none',
+        top:(rect.top - 6) + 'px', left:(rect.left - 6) + 'px',
+        width:(rect.w + 12) + 'px', height:(rect.h + 12) + 'px',
+        borderRadius:'24px', border:'2px solid #C9302A',
+        boxShadow:'0 0 0 9999px rgba(51,35,31,.55)', transition:'top .25s ease, left .25s ease, width .25s ease, height .25s ease'
+      } : null,
+      tourCardStyle,
+      tourText: tStep ? tStep.text : '',
+      tourProgress: tourOn ? (ti + 1) + ' из ' + this.TOUR.length : '',
+      tourFinal: tourOn && !!tStep.final, tourNotFinal: tourOn && !tStep.final,
+      tourNext: () => this.tourGo(ti + 1),
+      tourSkip: () => this.tourEnd(),
+      tourContact: () => {
+        try { window.open('https://t.me/Xenaja', '_blank', 'noopener'); } catch (e) {}
+        this.tourEnd();
+      },
+      tourStart: () => this.tourGo(0),
+      isAgency: s.view === 'agency', notAgency: s.view !== 'agency',
+      chromeLabel: s.view === 'agency' ? 'кабинет агентства'
+        : s.view === 'board' ? 'план свадьбы'
+        : s.view === 'guest' ? 'сайт гостей' : 'приглашение',
+      goAgency: () => this.set({ view:'agency', hint:null }),
+      isBoard: s.view === 'board', isGuest: s.view === 'guest', isInvite: s.view === 'invite',
+      goBoard: () => this.set({ view:'board' }),
+      goGuest: () => this.set({ view:'guest' }),
+      goInvite: () => this.set({ view:'invite' }),
+      editing: s.editing, notEditing: !s.editing,
+      toggleEdit: () => this.setState({ editing: !s.editing }),
+      blocks, library, libraryEmpty: library.length === 0,
+      timelineCols, vendors, categories, tasks, docs, invoices,
+      committedLabel: f(committed), totalLabel: f(total),
+      committedPct: Math.round(committed / total * 100),
+      budgetBarStyle: { display:'block', height:'100%', width: Math.round(committed / total * 100) + '%', borderRadius:'999px', background:'linear-gradient(90deg,#D9564C,#A0231E)' },
+      paidLabel: f(paidEur), outstandingLabel: f(outEur), draftLabel: f(draftEur),
+      rateLine: c.code === 'EUR' ? 'Базовая валюта · EUR' : '1 EUR = ' + c.rate + ' ' + c.code,
+      confirmedCount: confirmed, awaitingCount: 92 - confirmed, respondedCount: confirmed,
+      dietCount: 4 + (s.sent && s.rsvp.note ? 1 : 0),
+      programmeCols: [{ items: programme.slice(0, 3) }, { items: programme.slice(3) }],
+      travel, hotels, palette, faqs,
+      langs: ['EN','IT','RU'].map(code => ({ code, active: s.lang === code, inactive: s.lang !== code, onClick: () => this.setState({ lang: code }) })),
+      rsvpOpen: !s.sent, rsvpSent: s.sent,
+      rsvpName: s.rsvp.name, rsvpSeats: s.rsvp.seats, rsvpMenu: s.rsvp.menu, rsvpNote: s.rsvp.note,
+      rsvpShuttle: s.rsvp.shuttle, noShuttle: !s.rsvp.shuttle,
+      isComing: s.rsvp.going === 'yes',
+      goingOpts, rsvpSummary: summary,
+      onName: (e) => this.setState({ rsvp: { ...s.rsvp, name: e.target.value } }),
+      onSeats: (e) => this.setState({ rsvp: { ...s.rsvp, seats: e.target.value } }),
+      onMenu: (e) => this.setState({ rsvp: { ...s.rsvp, menu: e.target.value } }),
+      onNote: (e) => this.setState({ rsvp: { ...s.rsvp, note: e.target.value } }),
+      onShuttle: () => this.setState({ rsvp: { ...s.rsvp, shuttle: !s.rsvp.shuttle } }),
+      onSubmit: () => this.setState({ sent: true }),
+      onEditRsvp: () => this.setState({ sent: false }),
+      designs, sending,
+      envelopeClosed: !s.opened, envelopeOpen: s.opened,
+      onOpen: () => this.setState({ opened: true }),
+      onClose: () => this.setState({ opened: false }),
+      cardStyle: { width:'100%', maxWidth:'420px', background:d.bg, border:'1px solid rgba(35,40,35,.1)', borderRadius:'20px', padding:'44px 34px 34px', textAlign:'center', boxShadow:'0 1px 2px rgba(35,40,35,.04),0 26px 50px -30px rgba(35,40,35,.35)', animation:'riseIn .45s ease both' },
+      cardEyebrowStyle: { fontSize:'10.5px', letterSpacing:'.24em', textTransform:'uppercase', fontWeight:500, color:d.soft },
+      cardNamesStyle: { fontFamily:"'Playfair Display',serif", fontStyle:'italic', fontWeight:500, fontSize:'44px', lineHeight:1.05, margin:'14px 0 0', color:d.ink },
+      cardAmpStyle: { color:d.rule, fontSize:'.5em', verticalAlign:'.18em', padding:'0 .14em' },
+      cardRuleStyle: { width:'44px', height:'1px', background:d.rule, margin:'18px auto' },
+      cardLineStyle: { fontSize:'13.5px', color:d.soft, margin:'6px 0' },
+      cardGuestStyle: { fontFamily:"'Playfair Display',serif", fontSize:'23px', color:d.ink, margin:'4px 0' },
+      cardDateStyle: { fontFamily:"'Playfair Display',serif", fontSize:'19px', color:d.ink, margin:'10px 0 4px' },
+      cardSmallStyle: { fontSize:'12.5px', color:d.soft, margin:'18px 0 22px', letterSpacing:'.04em' },
+      cardBtnStyle: { border:'none', background:d.btn, color:d.btnInk, borderRadius:'999px', padding:'13px 24px', fontSize:'11px', fontWeight:500, letterSpacing:'.16em', textTransform:'uppercase', width:'100%' },
+      cardLinkStyle: { border:'none', background:'none', color:d.soft, fontSize:'12.5px', marginTop:'12px', textDecoration:'underline' }
+    };
+  }
+}
+
+</script>
+</body>
+</html>
