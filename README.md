@@ -1,11 +1,11 @@
 # Handoff: Wedding Planning Suite (planner board + guest site + digital invitation)
 
 ## Live prototype
-**https://xenaja.github.io/wedding-planner-suite/** — the current design (v2), fully interactive.
-The previous palette is at [`/v1.html`](https://xenaja.github.io/wedding-planner-suite/v1.html)
+**https://wedding.proekty-online.ru/** — the current design (v2), fully interactive.
+The previous palette is at [`/v1.html`](https://wedding.proekty-online.ru/v1.html)
 (still on grey photo placeholders; only v2 carries imagery).
 A Russian, unbranded build of v2 is at
-[`/index-ru.html`](https://xenaja.github.io/wedding-planner-suite/index-ru.html) —
+[`/index-ru.html`](https://wedding.proekty-online.ru/index-ru.html) —
 [what differs](#russian-version).
 
 The guest site's four photo slots are filled from `assets/` — see [CREDITS.md](CREDITS.md).
