@@ -1,17 +1,18 @@
 # Handoff: Wedding Planning Suite (planner board + guest site + digital invitation)
 
 ## Live prototype
-**https://wedding.proekty-online.ru/** — the current design (v2), fully interactive.
+**https://wedding.proekty-online.ru/** — the current design (v2), fully interactive, in its
+Russian, unbranded build ([what differs](#russian-version)). The English build is at
+[`/en.html`](https://wedding.proekty-online.ru/en.html).
 The previous palette is at [`/v1.html`](https://wedding.proekty-online.ru/v1.html)
 (still on grey photo placeholders; only v2 carries imagery).
-A Russian, unbranded build of v2 is at
-[`/index-ru.html`](https://wedding.proekty-online.ru/index-ru.html) —
-[what differs](#russian-version).
+`/index-ru.html`, the Russian build's old address, now only redirects to the root, keeping
+the query string, so links already sent with `?planner=…` still land branded.
 
 The guest site's four photo slots are filled from `assets/` — see [CREDITS.md](CREDITS.md).
 All of it is demo content; a real wedding replaces it with the couple's photographer.
 
-The `.dc.html` files are the canonical sources; `index.html` and `v1.html` are copies of them
+The `.dc.html` files are the canonical sources; `index.html` (RU), `en.html` and `v1.html` are copies of them
 produced by `build.sh`, because GitHub Pages needs an `index.html` and space-free URLs.
 `support.js` is the runtime that renders the `<x-dc>` template — the prototypes are blank
 without it, and it pulls React and Babel from unpkg at load time, so the page needs a network
@@ -324,9 +325,10 @@ No binary assets ship with this design. Placeholders to replace:
 
 ## Russian version
 
-`index-ru.html` is a localised duplicate of v2, not a replacement: the English pair is
-untouched and `build.sh` still builds it. Its canonical source is `Wedding Suite v2 RU.dc.html`,
-and the two are kept in step by hand, because `build.sh` only knows the English filenames.
+The Russian build is the main one and is served as `index.html`; the English build is a
+sibling at `en.html`, not a fallback. Their canonical sources are `Wedding Suite v2 RU.dc.html`
+and `Wedding Suite v2.dc.html`; `build.sh` copies both, but the two sources are kept in step
+by hand.
 
 Both builds now carry the agency cabinet and the tour. Four things differ, and only these four:
 
@@ -373,6 +375,6 @@ Commit both and the link previews under their brand before anyone clicks it.
 ## Files
 - `Wedding Suite v2.dc.html` — **the design to build.** Full prototype of all three views with live interactions: the header switches views, "Customise blocks" enables layout editing (drag, arrows, hide, block library), the currency group converts all money, invoice actions advance statuses, and the RSVP form submits and writes back to the board. Open it directly in a browser.
 - `Wedding Suite.dc.html` — the earlier version in a sage/gold palette. Reference only, for structure; **v2 is the visual source of truth**.
-- `Wedding Suite v2 RU.dc.html` — the Russian build of v2, with `index-ru.html` as its browser copy. See [Russian version](#russian-version).
+- `Wedding Suite v2 RU.dc.html` — the Russian build of v2, with `index.html` as its browser copy (`en.html` is the English one). See [Russian version](#russian-version).
 - `tools/make-client.mjs` — generates a per-client page and its preview image. See [Branding the demo for a client](#branding-the-demo-for-a-client).
 - `README.md` — this document.

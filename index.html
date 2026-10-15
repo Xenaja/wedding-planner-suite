@@ -1,29 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>One cabinet for every wedding the agency runs</title>
-<meta name="description" content="A working demo: a board per couple, invoices and budget that keep themselves current, and a guest site whose RSVPs land straight back. Open it and take the one-minute tour.">
+<title>Кабинет агентства: все свадьбы в одном месте</title>
+<meta name="description" content="Живое демо: у каждой пары свой план, счета и бюджет считаются сами, ответы гостей с сайта попадают сразу к вам. Откройте и пройдите экскурсию за минуту.">
 
 <!-- Ссылку открывают из мессенджера, и первое, что видит человек, — карточка
      превью. Краулеры Telegram и WhatsApp не исполняют JS, поэтому вся страница
      для них — вот эти теги. -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Wedding planning suite">
-<meta property="og:locale" content="en_GB">
+<meta property="og:locale" content="ru_RU">
 <meta property="og:url" content="https://wedding.proekty-online.ru/">
-<meta property="og:title" content="One cabinet for every wedding the agency runs">
-<meta property="og:description" content="A working demo: a board per couple, invoices and budget that keep themselves current, and a guest site whose RSVPs land straight back. Open it and take the one-minute tour.">
-<meta property="og:image" content="https://wedding.proekty-online.ru/assets/og-cover.png">
+<meta property="og:title" content="Кабинет агентства: все свадьбы в одном месте">
+<meta property="og:description" content="Живое демо: у каждой пары свой план, счета и бюджет считаются сами, ответы гостей с сайта попадают сразу к вам. Откройте и пройдите экскурсию за минуту.">
+<meta property="og:image" content="https://wedding.proekty-online.ru/assets/og-cover-ru.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="2400">
 <meta property="og:image:height" content="1260">
-<meta property="og:image:alt" content="The agency cabinet: seven weddings in a table, one flagged for an overdue invoice">
+<meta property="og:image:alt" content="Кабинет агентства: семь свадеб в таблице, одна отмечена просроченным счётом">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="One cabinet for every wedding the agency runs">
-<meta name="twitter:description" content="A working demo: a board per couple, invoices and budget that keep themselves current, and a guest site whose RSVPs land straight back. Open it and take the one-minute tour.">
-<meta name="twitter:image" content="https://wedding.proekty-online.ru/assets/og-cover.png">
+<meta name="twitter:title" content="Кабинет агентства: все свадьбы в одном месте">
+<meta name="twitter:description" content="Живое демо: у каждой пары свой план, счета и бюджет считаются сами, ответы гостей с сайта попадают сразу к вам. Откройте и пройдите экскурсию за минуту.">
+<meta name="twitter:image" content="https://wedding.proekty-online.ru/assets/og-cover-ru.png">
 
 <script src="./support.js"></script>
 </head>
@@ -31,10 +31,10 @@
 <x-dc>
 <helmet>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Jost:wght@300..600&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300..600&display=swap" rel="stylesheet" />
 <style>
   html { scroll-behavior: smooth; }
-  body { margin:0; background:#EFE7E0; color:#33231F; font-family:'Jost',system-ui,sans-serif; font-weight:300; line-height:1.55; -webkit-font-smoothing:antialiased; text-wrap:pretty; }
+  body { margin:0; background:#EFE7E0; color:#33231F; font-family:'Montserrat',system-ui,sans-serif; font-weight:300; line-height:1.55; -webkit-font-smoothing:antialiased; text-wrap:pretty; }
   * { box-sizing:border-box; }
   a { color:#C9302A; text-decoration:none; }
   a:hover { color:#B9635A; }
@@ -42,9 +42,9 @@
   button { cursor:pointer; }
   :focus-visible { outline:2px solid #C9302A; outline-offset:3px; border-radius:4px; }
   @keyframes riseIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
-  /* riseIn ends on transform:none and, with fill-mode:both, that last frame
-     outlives the animation and wipes the element's own transform. Anything
-     centred by a transform needs a keyframe that preserves it. */
+  /* riseIn заканчивается кадром transform:none и при fill-mode:both затирает
+     собственный transform элемента. Для того, что центрируется трансформом,
+     нужен кадр, сохраняющий его. */
   @keyframes riseInCentered {
     from { opacity:0; transform:translate(-50%,calc(-50% + 10px)); }
     to   { opacity:1; transform:translate(-50%,-50%); }
@@ -124,12 +124,12 @@
     .gs-hero-copy { padding: 28px 20px 34px !important; }
     .photo-tile { height: 200px !important; }
     .gs-map { height: 220px !important; }
-    /* A nowrap tag pill beside the block title, and the three guest counters,
-       gave the column a min-content wider than the screen. Below 640px the pill
-       may wrap and the counter captions tighten. */
+    /* Русские подписи вдвое длиннее английских: nowrap-плашка в заголовке блока
+       и трёхколоночные счётчики гостей задавали колонке min-content шире экрана,
+       и весь план уезжал вбок. Ниже 640px разрешаем перенос и ужимаем трекинг. */
     .blk-tag { white-space: normal !important; text-align: right; }
-    /* Long words kept the block title on one line with its pill and gave the
-       board a minimum width of ~397px. Let the pill wrap instead. */
+    /* Длинные слова вроде «приглашения» держали заголовок блока в одну строку с
+       плашкой и задавали плану минимальную ширину ~397px. Пусть плашка переносится. */
     .blk-head { flex-wrap: wrap; }
     .blk-head h2 { font-size: 20px !important; }
     /* Перетаскивание блоков от касания не работает нигде: HTML5 drag-and-drop
@@ -152,7 +152,7 @@
       <button onClick="{{ goAgency }}" class="btn-lift" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:6px 12px;font-size:10.5px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;white-space:nowrap">{{ chromeBackLabel }}</button>
     </sc-if>
     <div style="display:flex;flex-direction:column;margin-right:auto;line-height:1.15">
-      <span style="font-family:'Bodoni Moda',serif;font-weight:700;font-size:23px;color:#C9302A;letter-spacing:-.015em">{{ plannerName }}</span>
+      <span style="font-family:'Playfair Display',serif;font-weight:700;font-size:23px;color:#C9302A;letter-spacing:-.015em">{{ plannerName }}</span>
       <span style="font-size:10px;letter-spacing:.2em;text-transform:uppercase;font-weight:500;color:#98857C">{{ chromeLabel }}</span>
     </div>
     <sc-if value="{{ notAgency }}" hint-placeholder-val="{{ false }}">
@@ -187,32 +187,32 @@
 <sc-if value="{{ isAgency }}" hint-placeholder-val="{{ true }}">
 <div>
   <section style="padding:52px 24px 34px;text-align:center;border-bottom:1px solid #DED2C8;background:radial-gradient(1100px 420px at 50% -210px,#F5E4DC,transparent 72%)">
-    <h1 style="font-family:'Bodoni Moda',serif;font-style:italic;font-weight:500;font-size:clamp(34px,5.6vw,54px);line-height:1.08;margin:0">Agency cabinet · {{ plannerName }}</h1>
-    <p style="margin:16px auto 0;max-width:62ch;font-size:15px;color:#6B5850">Every wedding the agency runs — each on its own board, built from your template.</p>
+    <h1 style="font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:clamp(34px,5.6vw,54px);line-height:1.08;margin:0">Кабинет агентства {{ plannerName }}</h1>
+    <p style="margin:16px auto 0;max-width:62ch;font-size:15px;color:#6B5850">Все свадьбы агентства — у каждой свой план, собранный из вашего шаблона.</p>
   </section>
 
   <main style="max-width:1180px;margin:0 auto;padding:26px 24px 0">
     <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px">
-      <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C">Weddings</div>
-      <div style="font-size:12.5px;color:#98857C">One board opens in this demo — Amélie &amp; Jonas</div>
+      <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C">Свадьбы агентства</div>
+      <div style="font-size:12.5px;color:#98857C">В демо открывается один план — Анна и Дмитрий</div>
     </div>
 
     <div id="tour-cabinet" style="background:#fff;border:1px solid #DED2C8;border-radius:20px;box-shadow:0 1px 2px rgba(35,40,35,.04),0 10px 30px -18px rgba(35,40,35,.18);overflow:hidden">
       <div class="wed-head" style="{{ headStyle }}">
-        <div>Couple</div>
-        <div>Date</div>
-        <div>Location</div>
-        <div>Status</div>
-        <div style="text-align:right">Budget committed</div>
-        <div style="text-align:right">RSVP outstanding</div>
-        <div>Invoices due</div>
+        <div>Пара</div>
+        <div>Дата</div>
+        <div>Локация</div>
+        <div>Статус</div>
+        <div style="text-align:right">Бюджет законтрактован</div>
+        <div style="text-align:right">RSVP без ответа</div>
+        <div>Счета к оплате</div>
       </div>
       <sc-for list="{{ weddings }}" as="w" hint-placeholder-count="7">
         <div class="wed-row" style="{{ w.rowStyle }}" onClick="{{ w.onClick }}">
           <div class="wed-c-pair">
             <b style="font-weight:500;font-size:14.5px;display:block">{{ w.pair }}</b>
             <sc-if value="{{ w.isLive }}">
-              <span style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:#C9302A">Open the board →</span>
+              <span style="font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:#C9302A">Открыть план →</span>
             </sc-if>
             <span class="wed-meta" style="font-size:12.5px;color:#6B5850">{{ w.date }} · {{ w.place }}</span>
           </div>
@@ -223,14 +223,14 @@
           <div class="wed-c-rsvp" style="{{ w.rsvpStyle }}">{{ w.rsvp }}</div>
           <div class="wed-c-inv"><span style="{{ w.invStyle }}">{{ w.inv }}</span></div>
           <sc-if value="{{ w.showHint }}">
-            <div style="grid-column:1 / -1;flex-basis:100%;font-size:12.5px;color:#A0453D;background:#F5E9E4;border:1px solid #EBD8D2;border-radius:12px;padding:8px 12px;margin-top:2px">One wedding opens in this demo — Amélie &amp; Jonas</div>
+            <div style="grid-column:1 / -1;flex-basis:100%;font-size:12.5px;color:#A0453D;background:#F5E9E4;border:1px solid #EBD8D2;border-radius:12px;padding:8px 12px;margin-top:2px">В демо открывается одна свадьба – Анна и Дмитрий</div>
           </sc-if>
         </div>
       </sc-for>
     </div>
 
     <div style="margin:30px 0 0">
-      <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C;margin-bottom:14px">How it works</div>
+      <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C;margin-bottom:14px">Как это устроено</div>
       <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(215px,100%),1fr));gap:14px">
         <sc-for list="{{ howSteps }}" as="h" hint-placeholder-count="4">
           <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:18px 20px;display:flex;gap:13px;align-items:flex-start">
@@ -243,7 +243,7 @@
   </main>
 
   <footer style="border-top:1px solid #DED2C8;margin-top:36px;padding:30px 24px 46px;text-align:center;color:#6B5850;font-size:13px">
-    Demo data. Custom code, no site builder.
+    Демо-данные. Собственный код, без конструкторов сайтов.
   </footer>
 </div>
 </sc-if>
@@ -252,39 +252,39 @@
 <sc-if value="{{ isBoard }}" hint-placeholder-val="{{ true }}">
 <div>
   <section style="padding:52px 24px 38px;text-align:center;border-bottom:1px solid #DED2C8;background:radial-gradient(1100px 420px at 50% -210px,#F5E4DC,transparent 72%)">
-    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#C9302A;margin-bottom:16px">The wedding of</div>
-    <h1 style="font-family:'Bodoni Moda',serif;font-style:italic;font-weight:500;font-size:clamp(42px,7vw,70px);line-height:1.05;margin:0">Amélie <span style="color:#B9635A;font-size:.55em;vertical-align:.12em;padding:0 .18em">&amp;</span> Jonas</h1>
-    <div style="margin-top:12px;font-size:15px;color:#6B5850">12 June 2027 <span style="color:#B9635A;padding:0 10px">·</span> Villa Regina, Lake Como <span style="color:#B9635A;padding:0 10px">·</span> 92 guests</div>
+    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#C9302A;margin-bottom:16px">Свадьба</div>
+    <h1 style="font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:clamp(42px,7vw,70px);line-height:1.05;margin:0">Анна <span style="color:#B9635A;font-size:.55em;vertical-align:.12em;padding:0 .18em">и</span> Дмитрий</h1>
+    <div style="margin-top:12px;font-size:15px;color:#6B5850">12 июня 2027 <span style="color:#B9635A;padding:0 10px">·</span> Villa Regina, озеро Комо <span style="color:#B9635A;padding:0 10px">·</span> 92 гостя</div>
     <div style="margin:28px auto 0;display:flex;gap:10px;justify-content:center;flex-wrap:wrap">
-      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#C9302A"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ daysLeft }}</b> days to go</div>
-      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#B9635A"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ committedPct }}%</b> of budget committed</div>
-      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#C48F84"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ outstandingLabel }}</b> invoices outstanding</div>
+      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#C9302A"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ daysLeft }}</b> дней до свадьбы</div>
+      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#B9635A"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ committedPct }}%</b> бюджета законтрактовано</div>
+      <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 18px;font-size:13px;color:#6B5850;display:flex;align-items:center;gap:8px;white-space:nowrap"><span style="width:8px;height:8px;border-radius:50%;background:#C48F84"></span><b style="font-weight:600;color:#33231F;font-size:15px">{{ outstandingLabel }}</b> счетов к оплате</div>
     </div>
   </section>
 
   <div style="max-width:1180px;margin:0 auto;padding:22px 24px 0;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
-    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C">Planning board · template</div>
+    <div style="font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:500;color:#98857C">Планирование · шаблон</div>
     <div style="display:flex;align-items:center;gap:12px">
       <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
-        <span style="font-size:12px;color:#6B5850">Drag a block to reorder · hide it · or add one from the library</span>
+        <span style="font-size:12px;color:#6B5850">Перетащите блок, чтобы поменять порядок · скройте его · или добавьте из библиотеки</span>
       </sc-if>
       <sc-if value="{{ editing }}">
-        <button onClick="{{ toggleEdit }}" style="display:flex;align-items:center;gap:10px;border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;white-space:nowrap">Editing layout <span style="width:30px;height:16px;border-radius:999px;background:rgba(255,255,255,.35);position:relative;display:block"><span style="position:absolute;top:2px;left:16px;width:12px;height:12px;border-radius:50%;background:#fff;display:block"></span></span></button>
+        <button onClick="{{ toggleEdit }}" style="display:flex;align-items:center;gap:10px;border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;white-space:nowrap">Редактирование <span style="width:30px;height:16px;border-radius:999px;background:rgba(255,255,255,.35);position:relative;display:block"><span style="position:absolute;top:2px;left:16px;width:12px;height:12px;border-radius:50%;background:#fff;display:block"></span></span></button>
       </sc-if>
       <sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}">
-        <button onClick="{{ toggleEdit }}" style="display:flex;align-items:center;gap:10px;border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;white-space:nowrap">Customise blocks <span style="width:30px;height:16px;border-radius:999px;background:#DED2C8;position:relative;display:block"><span style="position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;display:block"></span></span></button>
+        <button onClick="{{ toggleEdit }}" style="display:flex;align-items:center;gap:10px;border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:500;white-space:nowrap">Настроить блоки <span style="width:30px;height:16px;border-radius:999px;background:#DED2C8;position:relative;display:block"><span style="position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;background:#fff;display:block"></span></span></button>
       </sc-if>
     </div>
   </div>
 
   <sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
     <div style="max-width:1180px;margin:14px auto 0;padding:16px 20px;background:#F7E7E3;border:1px solid #E8D3CC;border-radius:20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
-      <span style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#C9302A">Block library</span>
+      <span style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#C9302A">Библиотека блоков</span>
       <sc-for list="{{ library }}" as="l" hint-placeholder-count="4">
         <button onClick="{{ l.onAdd }}" style="border:1px dashed #C9958B;background:#fff;color:#C9302A;border-radius:999px;padding:7px 15px;font-size:13px">+ {{ l.title }}</button>
       </sc-for>
       <sc-if value="{{ libraryEmpty }}">
-        <span style="font-size:13px;color:#6B5850">Every block is on the board. Hide one to put it back in the library.</span>
+        <span style="font-size:13px;color:#6B5850">Все блоки в плане. Скройте любой — он вернётся в библиотеку.</span>
       </sc-if>
     </div>
   </sc-if>
@@ -297,13 +297,13 @@
             <sc-if value="{{ b.editing }}" hint-placeholder-val="{{ false }}">
               <span style="color:#CDBCB1;font-size:13px;letter-spacing:-2px;line-height:1;cursor:grab">⋮⋮</span>
             </sc-if>
-            <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:23px;margin:0">{{ b.title }}</h2>
+            <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:23px;margin:0">{{ b.title }}</h2>
             <span style="margin-left:auto;font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:500;color:#C9302A;background:#F7E7E3;padding:4px 10px;border-radius:999px;white-space:nowrap" class="blk-tag">{{ b.tag }}</span>
             <sc-if value="{{ b.editing }}">
               <div style="display:flex;gap:5px">
-                <button onClick="{{ b.onUp }}" aria-label="Move up" class="blk-btn" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:12px">↑</button>
-                <button onClick="{{ b.onDown }}" aria-label="Move down" class="blk-btn" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:12px">↓</button>
-                <button onClick="{{ b.onHide }}" aria-label="Hide block" class="blk-btn" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:13px">×</button>
+                <button onClick="{{ b.onUp }}" aria-label="Переместить вверх" class="blk-btn" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:12px">↑</button>
+                <button onClick="{{ b.onDown }}" aria-label="Переместить вниз" class="blk-btn" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:12px">↓</button>
+                <button onClick="{{ b.onHide }}" aria-label="Скрыть блок" class="blk-btn" style="width:27px;height:27px;border-radius:10px;border:1px solid #DED2C8;background:#EFE7E0;color:#6B5850;font-size:13px">×</button>
               </div>
             </sc-if>
           </div>
@@ -333,19 +333,19 @@
               <i id="tour-invoices" style="display:block;height:0"></i>
               <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(150px,100%),1fr));gap:10px;margin-bottom:18px">
                 <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
-                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Paid</div>
-                  <div style="font-family:'Bodoni Moda',serif;font-size:26px;color:#6B5850">{{ paidLabel }}</div>
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Оплачено</div>
+                  <div style="font-family:'Playfair Display',serif;font-size:26px;color:#6B5850">{{ paidLabel }}</div>
                 </div>
                 <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
-                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Outstanding</div>
-                  <div style="font-family:'Bodoni Moda',serif;font-size:26px;color:#B9635A">{{ outstandingLabel }}</div>
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">К оплате</div>
+                  <div style="font-family:'Playfair Display',serif;font-size:26px;color:#B9635A">{{ outstandingLabel }}</div>
                 </div>
                 <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:13px 15px">
-                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Drafts</div>
-                  <div style="font-family:'Bodoni Moda',serif;font-size:26px;color:#6B5850">{{ draftLabel }}</div>
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#98857C">Черновики</div>
+                  <div style="font-family:'Playfair Display',serif;font-size:26px;color:#6B5850">{{ draftLabel }}</div>
                 </div>
                 <div style="background:#F5E9E4;border:1px solid #EBD8D2;border-radius:16px;padding:13px 15px">
-                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#A0453D">Rate today</div>
+                  <div style="font-size:10px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#A0453D">Курс сегодня</div>
                   <div style="font-size:14px;color:#A0453D;padding-top:5px">{{ rateLine }}</div>
                 </div>
               </div>
@@ -359,14 +359,14 @@
                   <div style="text-align:right;min-width:110px">
                     <b style="display:block;font-weight:500;font-variant-numeric:tabular-nums">{{ i.amount }}</b>
                     <sc-if value="{{ i.showBase }}">
-                      <span style="font-size:12px;color:#98857C">invoiced {{ i.base }}</span>
+                      <span style="font-size:12px;color:#98857C">выставлен {{ i.base }}</span>
                     </sc-if>
                   </div>
-                  <div style="min-width:96px;font-size:12.5px;color:#6B5850;text-align:right">due {{ i.due }}</div>
-                  <sc-if value="{{ i.isPaid }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#fff;border:1px solid #DED2C8;color:#6B5850;min-width:92px;text-align:center">✓ Paid</span></sc-if>
-                  <sc-if value="{{ i.isSent }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#F5E9E4;color:#A0453D;min-width:92px;text-align:center">Sent</span></sc-if>
-                  <sc-if value="{{ i.isOverdue }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#C9302A;color:#fff;min-width:92px;text-align:center">Overdue</span></sc-if>
-                  <sc-if value="{{ i.isDraft }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#F0EAE2;color:#98857C;min-width:92px;text-align:center">Draft</span></sc-if>
+                  <div style="min-width:96px;font-size:12.5px;color:#6B5850;text-align:right">до {{ i.due }}</div>
+                  <sc-if value="{{ i.isPaid }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#fff;border:1px solid #DED2C8;color:#6B5850;min-width:92px;text-align:center">✓ Оплачен</span></sc-if>
+                  <sc-if value="{{ i.isSent }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#F5E9E4;color:#A0453D;min-width:92px;text-align:center">Отправлен</span></sc-if>
+                  <sc-if value="{{ i.isOverdue }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#C9302A;color:#fff;min-width:92px;text-align:center">Просрочен</span></sc-if>
+                  <sc-if value="{{ i.isDraft }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;padding:4px 11px;border-radius:999px;background:#F0EAE2;color:#98857C;min-width:92px;text-align:center">Черновик</span></sc-if>
                   <sc-if value="{{ i.hasAct }}">
                     <button onClick="{{ i.onAct }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:6px 14px;font-size:12.5px">{{ i.actLabel }}</button>
                   </sc-if>
@@ -375,7 +375,7 @@
                   </sc-if>
                 </div>
               </sc-for>
-              <p style="font-size:13px;color:#6B5850;margin:14px 0 0">Every invoice is issued in <b style="font-weight:500;color:#33231F">EUR</b> — VAT line, IBAN and payment terms included — and mirrored in the couple's currency at the ECB rate on the issue date. Paid invoices post straight into the budget block.</p>
+              <p style="font-size:13px;color:#6B5850;margin:14px 0 0">Каждый счёт выставляется в <b style="font-weight:500;color:#33231F">EUR</b> — со строкой НДС, IBAN и условиями оплаты — и дублируется в валюте пары по курсу ЕЦБ на дату выставления. Оплаченные счета сразу попадают в блок бюджета.</p>
             </sc-if>
 
             <!-- vendors -->
@@ -389,9 +389,9 @@
                   </div>
                   <div style="margin-left:auto;text-align:right">
                     <div style="font-size:13.5px;font-variant-numeric:tabular-nums;color:#33231F">{{ v.fee }}</div>
-                    <sc-if value="{{ v.isBooked }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#6B5850">✓ Booked</span></sc-if>
-                    <sc-if value="{{ v.isWaiting }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#A0453D">Contract sent</span></sc-if>
-                    <sc-if value="{{ v.isOpen }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#C9302A">Not booked</span></sc-if>
+                    <sc-if value="{{ v.isBooked }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#6B5850">✓ Забронирован</span></sc-if>
+                    <sc-if value="{{ v.isWaiting }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#A0453D">Договор отправлен</span></sc-if>
+                    <sc-if value="{{ v.isOpen }}"><span style="font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:#C9302A">Не забронирован</span></sc-if>
                   </div>
                 </div>
               </sc-for>
@@ -400,8 +400,8 @@
             <!-- budget -->
             <sc-if value="{{ b.isBudget }}">
               <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:4px">
-                <span style="font-family:'Bodoni Moda',serif;font-size:33px;font-weight:500">{{ committedLabel }}</span>
-                <span style="color:#6B5850;font-size:14px">of {{ totalLabel }} committed</span>
+                <span style="font-family:'Playfair Display',serif;font-size:33px;font-weight:500">{{ committedLabel }}</span>
+                <span style="color:#6B5850;font-size:14px">из {{ totalLabel }} законтрактовано</span>
               </div>
               <div style="height:8px;border-radius:999px;background:#F7E7E3;overflow:hidden;margin:8px 0 18px">
                 <div style="{{ budgetBarStyle }}"></div>
@@ -415,7 +415,7 @@
                   <span style="color:#6B5850;font-variant-numeric:tabular-nums;min-width:80px;text-align:right">{{ c.amount }}</span>
                 </div>
               </sc-for>
-              <p style="font-size:12.5px;color:#98857C;margin:14px 0 0">Stored in EUR · displayed in {{ currencyCode }}</p>
+              <p style="font-size:12.5px;color:#98857C;margin:14px 0 0">Хранится в EUR · показано в {{ currencyCode }}</p>
             </sc-if>
 
             <!-- checklist -->
@@ -423,11 +423,11 @@
               <sc-for list="{{ tasks }}" as="t" hint-placeholder-count="5">
                 <div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid #DED2C8;font-size:14px">
                   <sc-if value="{{ t.done }}">
-                    <button onClick="{{ t.onToggle }}" aria-label="Mark undone" style="width:19px;height:19px;border:1.5px solid #C9302A;background:#C9302A;color:#fff;border-radius:6px;flex:none;display:grid;place-items:center;font-size:11px;padding:0">✓</button>
+                    <button onClick="{{ t.onToggle }}" aria-label="Снять отметку" style="width:19px;height:19px;border:1.5px solid #C9302A;background:#C9302A;color:#fff;border-radius:6px;flex:none;display:grid;place-items:center;font-size:11px;padding:0">✓</button>
                     <span style="color:#98857C;text-decoration:line-through;text-decoration-color:#D3C4B9">{{ t.label }}</span>
                   </sc-if>
                   <sc-if value="{{ t.open }}">
-                    <button onClick="{{ t.onToggle }}" aria-label="Mark done" style="width:19px;height:19px;border:1.5px solid #DED2C8;background:#fff;border-radius:6px;flex:none;padding:0"></button>
+                    <button onClick="{{ t.onToggle }}" aria-label="Отметить выполненным" style="width:19px;height:19px;border:1.5px solid #DED2C8;background:#fff;border-radius:6px;flex:none;padding:0"></button>
                     <span>{{ t.label }}</span>
                   </sc-if>
                   <span style="margin-left:auto;font-size:12px;color:#B9635A;white-space:nowrap">{{ t.due }}</span>
@@ -440,19 +440,19 @@
               <i id="tour-guests" style="display:block;height:0"></i>
               <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:14px">
                 <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
-                  <b style="display:block;font-family:'Bodoni Moda',serif;font-size:27px;font-weight:500">92</b>
-                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Invited</span>
+                  <b style="display:block;font-family:'Playfair Display',serif;font-size:27px;font-weight:500">92</b>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Приглашено</span>
                 </div>
                 <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
-                  <b style="display:block;font-family:'Bodoni Moda',serif;font-size:27px;font-weight:500;color:#C9302A">{{ confirmedCount }}</b>
-                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Confirmed</span>
+                  <b style="display:block;font-family:'Playfair Display',serif;font-size:27px;font-weight:500;color:#C9302A">{{ confirmedCount }}</b>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Подтвердили</span>
                 </div>
                 <div style="text-align:center;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 6px">
-                  <b style="display:block;font-family:'Bodoni Moda',serif;font-size:27px;font-weight:500;color:#B9635A">{{ awaitingCount }}</b>
-                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Awaiting</span>
+                  <b style="display:block;font-family:'Playfair Display',serif;font-size:27px;font-weight:500;color:#B9635A">{{ awaitingCount }}</b>
+                  <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#98857C;font-weight:500" class="stat-cap">Ждём ответа</span>
                 </div>
               </div>
-              <p style="font-size:13px;color:#6B5850;margin:0"><b style="font-weight:500;color:#33231F">7 guests</b> need the shuttle from Como station · <b style="font-weight:500;color:#33231F">{{ dietCount }}</b> dietary notes — every RSVP from the guest site lands here and syncs to the caterer.</p>
+              <p style="font-size:13px;color:#6B5850;margin:0"><b style="font-weight:500;color:#33231F">7 гостей</b> поедут трансфером от вокзала Комо · <b style="font-weight:500;color:#33231F">{{ dietCount }}</b> пожеланий по питанию — каждый ответ с сайта для гостей попадает сюда и уходит кейтерингу.</p>
             </sc-if>
 
             <!-- documents -->
@@ -473,17 +473,17 @@
               <i id="tour-guestsite" style="display:block;height:0"></i>
               <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:flex-start">
                 <div style="flex:1;min-width:240px">
-                  <p style="font-size:14px;color:#6B5850;margin:0 0 14px">The couple's public page and the digital invitation run off this same board — change a time here and the guest site updates.</p>
+                  <p style="font-size:14px;color:#6B5850;margin:0 0 14px">Публичная страница пары и цифровое приглашение работают с этим же планом — меняете время здесь, и сайт для гостей обновляется.</p>
                   <div style="display:flex;gap:10px;flex-wrap:wrap">
-                    <button onClick="{{ goGuest }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Open guest site</button>
-                    <button onClick="{{ goInvite }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Open invitation</button>
+                    <button onClick="{{ goGuest }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Открыть сайт гостей</button>
+                    <button onClick="{{ goInvite }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Открыть приглашение</button>
                   </div>
                 </div>
                 <div style="min-width:200px;background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 16px">
-                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Invitations delivered</span><b style="font-weight:500">92</b></div>
-                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Opened</span><b style="font-weight:500">71</b></div>
-                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Responded</span><b style="font-weight:500">{{ respondedCount }}</b></div>
-                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0;border-top:1px solid #DED2C8;margin-top:6px"><span style="color:#6B5850">Languages live</span><b style="font-weight:500">EN · IT · RU</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Приглашений доставлено</span><b style="font-weight:500">92</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Открыли</span><b style="font-weight:500">71</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0"><span style="color:#6B5850">Ответили</span><b style="font-weight:500">{{ respondedCount }}</b></div>
+                  <div style="display:flex;justify-content:space-between;gap:12px;font-size:13px;padding:4px 0;border-top:1px solid #DED2C8;margin-top:6px"><span style="color:#6B5850">Языки сайта</span><b style="font-weight:500">EN · IT · RU</b></div>
                 </div>
               </div>
             </sc-if>
@@ -505,9 +505,9 @@
   </main>
 
   <footer style="border-top:1px solid #DED2C8;padding:32px 24px 46px;text-align:center;color:#6B5850;font-size:13px">
-    <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-size:18px;color:#33231F;margin-bottom:6px">A planning template by <b style="font-weight:500;color:#C9302A;font-style:normal">{{ plannerName }}</b></div>
-    Each couple gets their own board from this template — blocks reordered, hidden or added per wedding.<br />
-    Demo data. Custom code, no site builder.
+    <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:18px;color:#33231F;margin-bottom:6px">Шаблон планирования — <b style="font-weight:500;color:#C9302A;font-style:normal">{{ plannerName }}</b></div>
+    Каждая пара получает свой план из этого шаблона — блоки переставляются, скрываются и добавляются под конкретную свадьбу.<br />
+    Демо-данные. Собственный код, без конструкторов сайтов.
   </footer>
 </div>
 </sc-if>
@@ -515,7 +515,7 @@
 <!-- ============ VIEW 2 · GUEST SITE ============ -->
 <sc-if value="{{ isGuest }}">
 <div>
-  <div style="background:#C9302A;color:#F7E7E3;text-align:center;font-size:12px;letter-spacing:.06em;padding:7px 24px">Guest-facing page · amelie-and-jonas.com — what your couple&#39;s invitees see</div>
+  <div style="background:#C9302A;color:#F7E7E3;text-align:center;font-size:12px;letter-spacing:.06em;padding:7px 24px">Страница для гостей · anna-i-dmitry.com — то, что видят приглашённые вашей пары</div>
 
   <section style="position:relative;padding:0 0 0;border-bottom:1px solid #DED2C8">
     <div class="anim-cover" style="height:clamp(220px,34vw,380px);background:linear-gradient(#E9DCD3,#F7E7E3 60%,#F5E9E4);border-bottom:1px solid #DED2C8;overflow:hidden">
@@ -523,8 +523,8 @@
     </div>
     <div class="gs-hero-copy" style="max-width:820px;margin:0 auto;padding:44px 24px 52px;text-align:center">
       <div class="anim-1" style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gEyebrowDate }}</div>
-      <h1 class="anim-2" style="font-family:'Bodoni Moda',serif;font-style:italic;font-weight:500;font-size:clamp(46px,9vw,88px);line-height:1;margin:16px 0 0">{{ gName1 }} <span style="color:#B9635A;font-size:.5em;vertical-align:.16em;padding:0 .16em">{{ gAmp }}</span> {{ gName2 }}</h1>
-      <p class="anim-3" style="font-family:'Bodoni Moda',serif;font-size:20px;color:#6B5850;margin:14px 0 0">{{ gVenue }}</p>
+      <h1 class="anim-2" style="font-family:'Playfair Display',serif;font-style:italic;font-weight:500;font-size:clamp(46px,9vw,88px);line-height:1;margin:16px 0 0">{{ gName1 }} <span style="color:#B9635A;font-size:.5em;vertical-align:.16em;padding:0 .16em">{{ gAmp }}</span> {{ gName2 }}</h1>
+      <p class="anim-3" style="font-family:'Playfair Display',serif;font-size:20px;color:#6B5850;margin:14px 0 0">{{ gVenue }}</p>
       <div class="anim-4" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:28px">
         <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap"><b style="font-weight:600;color:#33231F;font-size:15px">{{ daysLeft }}</b> {{ gDaysToGo }}</div>
         <div style="background:#fff;border:1px solid #DED2C8;border-radius:999px;padding:9px 20px;font-size:13px;color:#6B5850;white-space:nowrap">{{ gCeremony }} <b style="font-weight:600;color:#33231F;font-size:15px">15:30</b></div>
@@ -556,13 +556,13 @@
 
   <section class="sec-pad reveal" style="max-width:720px;margin:0 auto;padding:56px 24px;text-align:center">
     <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gStoryEyebrow }}</div>
-    <p style="font-family:'Bodoni Moda',serif;font-size:clamp(20px,2.6vw,26px);line-height:1.5;color:#4A342E;margin:18px 0 0">{{ gStoryText }}</p>
+    <p style="font-family:'Playfair Display',serif;font-size:clamp(20px,2.6vw,26px);line-height:1.5;color:#4A342E;margin:18px 0 0">{{ gStoryText }}</p>
   </section>
 
   <section id="gs-day" class="sec-pad reveal" style="max-width:1000px;margin:0 auto;padding:20px 24px 60px">
     <div style="text-align:center;margin-bottom:34px">
       <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gDayEyebrow }}</div>
-      <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 0">{{ gDayTitle }}</h2>
+      <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 0">{{ gDayTitle }}</h2>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:8px 44px">
       <sc-for list="{{ programmeCols }}" as="col" hint-placeholder-count="2">
@@ -572,7 +572,7 @@
             <div style="position:relative;padding:0 0 22px 18px">
               <div style="position:absolute;left:-21px;top:7px;width:9px;height:9px;border-radius:50%;background:#fff;border:2px solid #B9635A"></div>
               <div style="font-size:12px;letter-spacing:.14em;font-weight:500;color:#B9635A">{{ p.time }}</div>
-              <h3 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:20px;margin:2px 0 2px">{{ p.title }}</h3>
+              <h3 style="font-family:'Playfair Display',serif;font-weight:500;font-size:20px;margin:2px 0 2px">{{ p.title }}</h3>
               <p style="font-size:14px;color:#6B5850;margin:0;max-width:46ch">{{ p.text }}</p>
             </div>
           </sc-for>
@@ -585,7 +585,7 @@
     <div class="sec-pad" style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(280px,100%),1fr));gap:34px;align-items:center">
       <div>
         <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gTravelEyebrow }}</div>
-        <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:29px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">Villa Regina</h2>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:29px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">Villa Regina</h2>
         <p style="font-size:14.5px;color:#6B5850;margin:0 0 18px">{{ gAddress }}</p>
         <sc-for list="{{ travel }}" as="t" hint-placeholder-count="3">
           <div style="display:flex;gap:12px;padding:9px 0;border-top:1px solid #DED2C8;font-size:14px">
@@ -603,7 +603,7 @@
   <section class="sec-pad reveal" style="max-width:1000px;margin:0 auto;padding:56px 24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:28px">
     <div>
       <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gStayEyebrow }}</div>
-      <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">{{ gStayTitle }}</h2>
+      <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">{{ gStayTitle }}</h2>
       <sc-for list="{{ hotels }}" as="h" hint-placeholder-count="3">
         <div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid #DED2C8;font-size:14px">
           <div>
@@ -617,7 +617,7 @@
     </div>
     <div>
       <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gDressEyebrow }}</div>
-      <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">{{ gDressTitle }}</h2>
+      <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 14px">{{ gDressTitle }}</h2>
       <p style="font-size:14.5px;color:#6B5850;margin:0 0 16px">{{ gDressText }}</p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <sc-for list="{{ palette }}" as="s" hint-placeholder-count="5">
@@ -635,7 +635,7 @@
       <sc-if value="{{ rsvpOpen }}" hint-placeholder-val="{{ true }}">
         <div style="text-align:center;margin-bottom:26px">
           <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gRsvpEyebrow }}</div>
-          <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 6px">{{ gRsvpTitle }}</h2>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:30px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 6px">{{ gRsvpTitle }}</h2>
           <p style="font-size:14px;color:#6B5850;margin:0">{{ gRsvpLead }}</p>
         </div>
         <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:24px">
@@ -694,7 +694,7 @@
       <sc-if value="{{ rsvpSent }}">
         <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:34px 26px;text-align:center;animation:riseIn .4s ease both">
           <div style="width:46px;height:46px;border-radius:50%;background:#F7E7E3;color:#C9302A;display:grid;place-items:center;font-size:19px;margin:0 auto 16px">✓</div>
-          <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:30px;margin:0 0 8px">{{ gThanks }} {{ rsvpName }}</h2>
+          <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:30px;margin:0 0 8px">{{ gThanks }} {{ rsvpName }}</h2>
           <p style="font-size:14.5px;color:#6B5850;margin:0 0 18px">{{ rsvpSummary }}</p>
           <div style="background:#EFE7E0;border:1px solid #DED2C8;border-radius:16px;padding:14px 16px;font-size:13px;color:#6B5850;text-align:left">
             <div style="display:flex;justify-content:space-between;padding:3px 0"><span>{{ gReceipt0 }}</span><b style="font-weight:500;color:#C9302A">✓</b></div>
@@ -714,12 +714,12 @@
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr));gap:32px">
       <div>
         <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gGiftsEyebrow }}</div>
-        <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">{{ gGiftsTitle }}</h2>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">{{ gGiftsTitle }}</h2>
         <p style="font-size:14.5px;color:#6B5850;margin:0">{{ gGiftsText }}</p>
       </div>
       <div>
         <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">{{ gFaqEyebrow }}</div>
-        <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">{{ gFaqTitle }}</h2>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:25px;text-transform:uppercase;letter-spacing:.05em;margin:8px 0 12px">{{ gFaqTitle }}</h2>
         <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="4">
           <div style="border-bottom:1px solid #DED2C8">
             <button onClick="{{ f.onClick }}" style="width:100%;text-align:left;background:none;border:none;padding:12px 0;font-size:14.5px;display:flex;gap:12px;align-items:center">
@@ -736,7 +736,7 @@
   </section>
 
   <footer style="border-top:1px solid #DED2C8;padding:34px 24px 50px;text-align:center;color:#6B5850;font-size:13px">
-    <div style="font-family:'Bodoni Moda',serif;font-style:italic;font-size:19px;color:#33231F;margin-bottom:8px">{{ gName1 }} {{ gAmp }} {{ gName2 }} · 12.06.2027</div>
+    <div style="font-family:'Playfair Display',serif;font-style:italic;font-size:19px;color:#33231F;margin-bottom:8px">{{ gName1 }} {{ gAmp }} {{ gName2 }} · 12.06.2027</div>
     {{ gFooterAsk }} <b style="font-weight:500;color:#C9302A">{{ plannerName }}</b>{{ gFooterRole }} <a href="mailto:{{ plannerEmail }}">{{ plannerEmail }}</a>
   </footer>
 </div>
@@ -747,9 +747,9 @@
 <div style="min-height:calc(100vh - 60px);padding:44px 24px 60px">
   <div style="max-width:1040px;margin:0 auto">
     <div style="text-align:center;margin-bottom:30px">
-      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Digital invitation</div>
-      <h1 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:clamp(30px,4.4vw,40px);margin:8px 0 8px">One personal link per guest</h1>
-      <p style="font-size:14.5px;color:#6B5850;max-width:56ch;margin:0 auto">Each invitation opens with the guest&#39;s own name, their own arrival details, and a reply that lands on the planning board. Three finishes ship with the template.</p>
+      <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Цифровое приглашение</div>
+      <h1 style="font-family:'Playfair Display',serif;font-weight:500;font-size:clamp(30px,4.4vw,40px);margin:8px 0 8px">Персональная ссылка каждому гостю</h1>
+      <p style="font-size:14.5px;color:#6B5850;max-width:56ch;margin:0 auto">Каждое приглашение открывается именем самого гостя, его деталями приезда и ответом, который попадает прямо в план свадьбы. В шаблоне три варианта отделки.</p>
       <div style="display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap">
         <sc-for list="{{ designs }}" as="d" hint-placeholder-count="3">
           <sc-if value="{{ d.active }}" hint-placeholder-val="{{ true }}">
@@ -767,44 +767,44 @@
         <sc-if value="{{ envelopeClosed }}" hint-placeholder-val="{{ true }}">
           <button onClick="{{ onOpen }}" style="width:100%;max-width:420px;aspect-ratio:1.5;border:1px solid #DED2C8;border-radius:20px;background:linear-gradient(160deg,#FDF9F5,#F2E7DF);box-shadow:0 1px 2px rgba(35,40,35,.04),0 26px 50px -30px rgba(35,40,35,.3);position:relative;display:grid;place-items:center;overflow:hidden;padding:0">
             <div style="position:absolute;top:0;left:0;right:0;height:56%;background:linear-gradient(#F5EBE3,#EDE0D7);clip-path:polygon(0 0,100% 0,50% 100%);border-bottom:1px solid #DED2C8"></div>
-            <div style="position:relative;width:64px;height:64px;border-radius:50%;background:#C9302A;color:#fff;display:grid;place-items:center;font-family:'Bodoni Moda',serif;font-style:italic;font-size:22px;box-shadow:0 6px 14px -6px rgba(35,40,35,.5)">A&amp;J</div>
-            <div style="position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#98857C">Tap to open</div>
+            <div style="position:relative;width:64px;height:64px;border-radius:50%;background:#C9302A;color:#fff;display:grid;place-items:center;font-family:'Playfair Display',serif;font-style:italic;font-size:22px;box-shadow:0 6px 14px -6px rgba(35,40,35,.5)">А&amp;Д</div>
+            <div style="position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:#98857C">Нажмите, чтобы открыть</div>
           </button>
         </sc-if>
         <sc-if value="{{ envelopeOpen }}">
           <div style="{{ cardStyle }}">
-            <div style="{{ cardEyebrowStyle }}">Together with their families</div>
-            <h2 style="{{ cardNamesStyle }}">Amélie <span style="{{ cardAmpStyle }}">&amp;</span> Jonas</h2>
+            <div style="{{ cardEyebrowStyle }}">Вместе со своими семьями</div>
+            <h2 style="{{ cardNamesStyle }}">Анна <span style="{{ cardAmpStyle }}">и</span> Дмитрий</h2>
             <div style="{{ cardRuleStyle }}"></div>
-            <p style="{{ cardLineStyle }}">request the pleasure of the company of</p>
+            <p style="{{ cardLineStyle }}">с радостью приглашают</p>
             <p style="{{ cardGuestStyle }}">{{ rsvpName }}</p>
-            <p style="{{ cardLineStyle }}">at their marriage</p>
-            <p style="{{ cardDateStyle }}">Saturday 12 June 2027 · half past three</p>
-            <p style="{{ cardLineStyle }}">Villa Regina, Bellagio · Lake Como</p>
-            <p style="{{ cardSmallStyle }}">Garden formal · dinner and dancing to follow</p>
-            <button onClick="{{ goGuest }}" style="{{ cardBtnStyle }}">RSVP by {{ rsvpDeadline }}</button>
-            <button onClick="{{ onClose }}" style="{{ cardLinkStyle }}">Close the envelope</button>
+            <p style="{{ cardLineStyle }}">на свою свадьбу</p>
+            <p style="{{ cardDateStyle }}">Суббота, 12 июня 2027 · в половине четвёртого</p>
+            <p style="{{ cardLineStyle }}">Villa Regina, Белладжо · озеро Комо</p>
+            <p style="{{ cardSmallStyle }}">Садовый формальный · далее ужин и танцы</p>
+            <button onClick="{{ goGuest }}" style="{{ cardBtnStyle }}">Ответить до {{ rsvpDeadline }}</button>
+            <button onClick="{{ onClose }}" style="{{ cardLinkStyle }}">Закрыть конверт</button>
           </div>
         </sc-if>
       </div>
 
       <div style="display:grid;gap:16px">
         <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:22px">
-          <h3 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:22px;margin:0 0 12px">Sending</h3>
+          <h3 style="font-family:'Playfair Display',serif;font-weight:500;font-size:22px;margin:0 0 12px">Рассылка</h3>
           <sc-for list="{{ sending }}" as="s" hint-placeholder-count="4">
             <div style="display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid #DED2C8;font-size:14px">
               <b style="font-weight:500">{{ s.a }}</b>
               <span style="margin-left:auto;color:#6B5850;font-size:13px;text-align:right">{{ s.b }}</span>
             </div>
           </sc-for>
-          <p style="font-size:12.5px;color:#98857C;margin:12px 0 0">Print-ready PDF of the same card exports at 148 × 210 mm with 3 mm bleed.</p>
+          <p style="font-size:12.5px;color:#98857C;margin:12px 0 0">PDF той же карточки для печати выгружается в 148 × 210 мм с вылетами 3 мм.</p>
         </div>
         <div style="background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:22px">
-          <h3 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:22px;margin:0 0 10px">What the planner controls</h3>
-          <p style="font-size:14px;color:#6B5850;margin:0 0 14px">Wording, finish, languages and the reply deadline are fields on the board — no developer needed per wedding.</p>
+          <h3 style="font-family:'Playfair Display',serif;font-weight:500;font-size:22px;margin:0 0 10px">Что настраивает организатор</h3>
+          <p style="font-size:14px;color:#6B5850;margin:0 0 14px">Формулировки, отделка, языки и дедлайн ответа — это поля в плане: разработчик под каждую свадьбу не нужен.</p>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
-            <button onClick="{{ goBoard }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Back to the board</button>
-            <button onClick="{{ goGuest }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Guest site</button>
+            <button onClick="{{ goBoard }}" style="border:1px solid #C9302A;background:#C9302A;color:#fff;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Назад к плану</button>
+            <button onClick="{{ goGuest }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Сайт гостей</button>
           </div>
         </div>
       </div>
@@ -815,27 +815,27 @@
 
 <!-- Вне сюжета: контакт студии отделён от вымышленной свадьбы. -->
 <div style="background:#33231F;color:#CDBCB1;text-align:center;font-size:12px;letter-spacing:.04em;padding:11px 24px">
-  Demo prototype · built by Xenaja Studio — <a href="https://t.me/Xenaja" target="_blank" rel="noopener" style="color:#E0BFB6;text-decoration:underline">Telegram</a> · <a href="mailto:hello@xenaja.studio" style="color:#E0BFB6;text-decoration:underline">hello@xenaja.studio</a>
+  Демо-прототип · сделала студия Xenaja — <a href="https://t.me/Xenaja" target="_blank" rel="noopener" style="color:#E0BFB6;text-decoration:underline">Telegram</a> · <a href="mailto:hello@xenaja.studio" style="color:#E0BFB6;text-decoration:underline">hello@xenaja.studio</a>
 </div>
 
-<!-- ============ TOUR INVITATION ============ -->
+<!-- ============ ПРИГЛАШЕНИЕ НА ЭКСКУРСИЮ ============ -->
 <sc-if value="{{ invite }}" hint-placeholder-val="{{ false }}">
 <div>
   <div onClick="{{ inviteNo }}" style="position:fixed;inset:0;z-index:110;background:rgba(51,35,31,.38);backdrop-filter:blur(1.5px)"></div>
   <div style="position:fixed;inset:0;z-index:111;display:grid;place-items:center;padding:16px;pointer-events:none">
   <div style="position:relative;pointer-events:auto;width:min(440px,100%);background:#fff;border:1px solid #DED2C8;border-radius:20px;padding:30px 30px 26px;text-align:center;box-shadow:0 26px 60px -24px rgba(51,35,31,.6);animation:riseIn .4s ease both">
-    <button onClick="{{ inviteNo }}" aria-label="Close" style="position:absolute;top:12px;right:14px;border:none;background:none;color:#98857C;font-size:18px;line-height:1;padding:4px 6px">×</button>
-    <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Tour · one minute</div>
-    <h2 style="font-family:'Bodoni Moda',serif;font-weight:500;font-size:28px;margin:12px 0 10px">First time here?</h2>
-    <p style="font-size:14.5px;color:#6B5850;margin:0 0 22px">A demo of the cabinet a wedding agency works from. Give me a minute and I will show you where the money, the guests and the couple’s site are.</p>
-    <button onClick="{{ inviteYes }}" class="btn-lift" style="width:100%;border:none;background:#C9302A;color:#fff;border-radius:999px;padding:14px;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase">Show me around</button>
-    <button onClick="{{ inviteNo }}" style="margin-top:12px;border:none;background:none;color:#98857C;font-size:13.5px;text-decoration:underline">I’ll look around</button>
+    <button onClick="{{ inviteNo }}" aria-label="Закрыть" style="position:absolute;top:12px;right:14px;border:none;background:none;color:#98857C;font-size:18px;line-height:1;padding:4px 6px">×</button>
+    <div style="font-size:11px;letter-spacing:.24em;text-transform:uppercase;font-weight:500;color:#C9302A">Экскурсия · 1 минута</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:500;font-size:28px;margin:12px 0 10px">Первый раз здесь?</h2>
+    <p style="font-size:14.5px;color:#6B5850;margin:0 0 22px">Это демо кабинета свадебного агентства. Проведу по нему за минуту — покажу, где деньги, гости и сайт пары.</p>
+    <button onClick="{{ inviteYes }}" class="btn-lift" style="width:100%;border:none;background:#C9302A;color:#fff;border-radius:999px;padding:14px;font-size:11.5px;font-weight:500;letter-spacing:.16em;text-transform:uppercase">Показать за минуту</button>
+    <button onClick="{{ inviteNo }}" style="margin-top:12px;border:none;background:none;color:#98857C;font-size:13.5px;text-decoration:underline">Осмотрюсь сам</button>
   </div>
   </div>
 </div>
 </sc-if>
 
-<!-- ============ TOUR ============ -->
+<!-- ============ ЭКСКУРСИЯ ============ -->
 <sc-if value="{{ tourIdle }}" hint-placeholder-val="{{ false }}">
   <button onClick="{{ tourStart }}" class="btn-lift" style="position:fixed;right:18px;bottom:18px;z-index:90;border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;box-shadow:0 10px 30px -14px rgba(51,35,31,.5)">{{ chromeTourLabel }}</button>
 </sc-if>
@@ -851,20 +851,20 @@
 
   <div class="tour-card" style="{{ tourCardStyle }}">
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
-      <span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#C9302A">Tour</span>
+      <span style="font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;font-weight:500;color:#C9302A">Экскурсия</span>
       <span style="margin-left:auto;font-size:11.5px;color:#98857C;font-variant-numeric:tabular-nums">{{ tourProgress }}</span>
     </div>
     <p style="margin:0 0 16px;font-size:15px;line-height:1.5;color:#33231F">{{ tourText }}</p>
     <sc-if value="{{ tourNotFinal }}" hint-placeholder-val="{{ true }}">
       <div style="display:flex;align-items:center;gap:10px">
-        <button onClick="{{ tourNext }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Next</button>
-        <button onClick="{{ tourSkip }}" style="margin-left:auto;border:none;background:none;color:#98857C;font-size:13px;text-decoration:underline">Skip</button>
+        <button onClick="{{ tourNext }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Далее</button>
+        <button onClick="{{ tourSkip }}" style="margin-left:auto;border:none;background:none;color:#98857C;font-size:13px;text-decoration:underline">Пропустить</button>
       </div>
     </sc-if>
     <sc-if value="{{ tourFinal }}">
       <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-        <button onClick="{{ tourContact }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Talk to us</button>
-        <button onClick="{{ tourSkip }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Explore on my own</button>
+        <button onClick="{{ tourContact }}" class="btn-lift" style="border:none;background:#C9302A;color:#fff;border-radius:999px;padding:11px 22px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Написать нам</button>
+        <button onClick="{{ tourSkip }}" style="border:1px solid #DED2C8;background:#fff;color:#C9302A;border-radius:999px;padding:11px 20px;font-size:11px;font-weight:500;letter-spacing:.14em;text-transform:uppercase">Посмотреть демо самостоятельно</button>
       </div>
     </sc-if>
   </div>
@@ -874,7 +874,7 @@
 </div>
 
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;plannerName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Wedding Planner&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;EUR&quot;,&quot;GBP&quot;,&quot;USD&quot;],&quot;default&quot;:&quot;EUR&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;plannerEmail&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;hello@your-studio.com&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;rsvpDeadline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;15 May&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Guest site&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;plannerName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Свадебный организатор&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;currency&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;RUB&quot;,&quot;EUR&quot;,&quot;USD&quot;],&quot;default&quot;:&quot;RUB&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;plannerEmail&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;hello@your-studio.com&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Template&quot;},&quot;rsvpDeadline&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;15 мая&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Guest site&quot;}}">
 class Component extends DCLogic {
   state = {
     view: 'agency',
@@ -890,28 +890,28 @@ class Component extends DCLogic {
     done: { t1:true },
     invStatus: {},
     drag: null,
-    rsvp: { name:'Marta & Piotr Kowalski', going:'yes', seats:'2', menu:'Lake fish', shuttle:true, note:'' },
+    rsvp: { name:'Мария и Пётр Ковалёвы', going:'yes', seats:'2', menu:'Lake fish', shuttle:true, note:'' },
     sent: false,
     faq: 0,
-    lang: 'EN',
+    lang: 'RU',
     opened: false,
     design: 'sage'
   };
 
-  // The tour. Targets are addressed through static markers in the markup, so
-  // reordering or hiding a block cannot break the route.
-  TOUR_KEY = 'wedding-suite-en-tour';
+  // Экскурсия. Тексты финальные (см. ТЗ), цели адресуются статическими
+  // маркерами в разметке, чтобы не зависеть от порядка и видимости блоков.
+  TOUR_KEY = 'wedding-suite-ru-tour';
   TOUR = [
     { view:'agency', target:'tour-cabinet',
-      text:'This is your cabinet: every wedding the agency runs, in one place. Each has its own board, built from your template. Let us open one.' },
+      text:'Это ваш кабинет: все свадьбы агентства в одном месте. У каждой свой план, собранный из вашего шаблона. Откроем один.' },
     { view:'board', target:'tour-invoices',
-      text:'Payments, overdue invoices and the exchange rate live here, not in an inbox. An invoice is paid and the budget updates itself.' },
+      text:'Оплаты, просрочки и курс валют – здесь, а не в переписке. Счёт оплачен – бюджет обновился сам.' },
     { view:'board', target:'tour-guests',
-      text:'A guest replies on the site and the answer is already with you: the menu counted, the shuttle list updated, the caterer told.' },
+      text:'Гость ответил на сайте – ответ уже у вас: меню посчитано, трансфер обновлён, кейтеринг в курсе.' },
     { view:'board', target:'tour-guestsite',
-      text:'The couple site and the personal invitations run off this same board. Change a time here and the guests see it.' },
+      text:'Сайт пары и именные приглашения работают с этим же планом. Поменяли время здесь – у гостей всё обновилось.' },
     { view:null, target:null, final:true,
-      text:'That is one wedding. Want to see it on a real one? Fifteen minutes on a call.' }
+      text:'Так это выглядит для одной свадьбы. Хотите увидеть на вашей реальной – 15 минут созвона.' }
   ];
 
   componentDidMount() {
@@ -927,8 +927,8 @@ class Component extends DCLogic {
     this.setState({ vw: window.innerWidth });
     let seen = false;
     try { seen = !!localStorage.getItem(this.TOUR_KEY); } catch (e) {}
-    // Do not take the screen straight away: let people see where they have
-    // landed, and only then offer the tour.
+    // Не забираем экран сразу: дать увидеть, куда человек попал, и только
+    // потом предложить экскурсию.
     if (!seen) this.__inviteTimer = setTimeout(() => this.setState({ invite: true }), 1800);
   }
 
@@ -946,8 +946,8 @@ class Component extends DCLogic {
     this.setState({ invite: false });
   }
 
-  // Navigation and measurement are chained through the setState callback, so
-  // the card never shows before its screen has rendered.
+  // Смена экрана и замер связаны колбэком setState: плашка не показывается,
+  // пока целевой экран не отрисован.
   tourGo(i) {
     const step = this.TOUR[i];
     if (!step) return this.tourEnd();
@@ -1160,22 +1160,22 @@ class Component extends DCLogic {
     RU: { back:'← Кабинет агентства', currency:'валюта', tour:'Экскурсия',
           tabBoard:'План', tabGuest:'Сайт гостей', tabInvite:'Приглашение', chromeGuest:'сайт гостей' }
   };
-  // Имена пары — тоже часть гостевого перевода: без этого «Amélie & Jonas»
-  // оставались бы латиницей поверх страницы, переключённой на русский.
+  // Имена пары — тоже часть гостевого перевода: без этого «Анна и Дмитрий»
+  // оставались бы кириллицей поверх страницы, переключённой на английский.
   NAMES = {
-    EN: { first:'Amélie', amp:'&', second:'Jonas' },
-    IT: { first:'Amélie', amp:'e', second:'Jonas' },
-    RU: { first:'Амели', amp:'и', second:'Йонас' }
+    RU: { first:'Анна', amp:'и', second:'Дмитрий' },
+    EN: { first:'Anna', amp:'&', second:'Dmitry' },
+    IT: { first:'Anna', amp:'e', second:'Dmitry' }
   };
 
   // Демо-имя гостя в форме RSVP тоже подстраивается под язык, но только пока
   // его не тронули: свайп пилюли не должен затирать то, что человек уже
   // напечатал в поле.
-  DEMO_GUEST = { EN:'Marta & Piotr Kowalski', IT:'Marta e Piotr Kowalski', RU:'Марта и Пётр Ковальски' };
+  DEMO_GUEST = { RU:'Мария и Пётр Ковалёвы', EN:'Maria & Peter Kowalski', IT:'Maria e Peter Kowalski' };
 
   RATES = {
+    RUB: { code:'RUB', rate:98, pre:'', post:' ₽' },
     EUR: { code:'EUR', rate:1, pre:'€', post:'' },
-    GBP: { code:'GBP', rate:0.842, pre:'£', post:'' },
     USD: { code:'USD', rate:1.08, pre:'$', post:'' }
   };
 
@@ -1200,12 +1200,12 @@ class Component extends DCLogic {
     return v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ? v : null;
   }
 
-  cur() { return this.RATES[this.state.currency || this.props.currency || 'EUR'] || this.RATES.EUR; }
+  cur() { return this.RATES[this.state.currency || this.props.currency || 'RUB'] || this.RATES.RUB; }
 
   fmt(eur, c) {
     const cc = c || this.cur();
     const v = Math.round(eur * cc.rate);
-    return cc.pre + v.toLocaleString('en-GB') + cc.post;
+    return cc.pre + v.toLocaleString('ru-RU') + cc.post;
   }
 
   set(patch) { this.setState(patch); }
@@ -1230,64 +1230,64 @@ class Component extends DCLogic {
   }
 
   META = {
-    timeline:  { title:'Timeline', tag:'On track', wide:true, kind:'timeline' },
-    invoices:  { title:'Payments & invoices', tag:'2 to chase', wide:true, kind:'invoices' },
-    vendors:   { title:'Vendors', tag:'6 / 9 booked', kind:'vendors' },
-    budget:    { title:'Budget', tag:'58% committed', kind:'budget' },
-    checklist: { title:'Next steps', tag:'This month', kind:'checklist' },
-    guests:    { title:'Guests', tag:'RSVP open', kind:'guests' },
-    documents: { title:'Documents', tag:'All in one place', kind:'docs' },
-    guestsite: { title:'Guest site & invitations', tag:'Live', wide:true, kind:'guestsite' },
-    seating:   { title:'Seating plan', tag:'9 tables', kind:'generic', rows:[
-      { a:'Top table', b:'8 seats · confirmed' },
-      { a:'Tables 1–7', b:'8 per table · draft 3' },
-      { a:'Kids table', b:'4 seats · to confirm' }
+    timeline:  { title:'Таймлайн', tag:'В графике', wide:true, kind:'timeline' },
+    invoices:  { title:'Платежи и счета', tag:'2 напомнить', wide:true, kind:'invoices' },
+    vendors:   { title:'Подрядчики', tag:'6 / 9 забронировано', kind:'vendors' },
+    budget:    { title:'Бюджет', tag:'58% законтрактовано', kind:'budget' },
+    checklist: { title:'Ближайшие шаги', tag:'В этом месяце', kind:'checklist' },
+    guests:    { title:'Гости', tag:'Приём ответов', kind:'guests' },
+    documents: { title:'Документы', tag:'Всё в одном месте', kind:'docs' },
+    guestsite: { title:'Сайт гостей и приглашения', tag:'Опубликовано', wide:true, kind:'guestsite' },
+    seating:   { title:'Рассадка', tag:'9 столов', kind:'generic', rows:[
+      { a:'Стол молодых', b:'8 мест · подтверждён' },
+      { a:'Столы 1–7', b:'по 8 мест · черновик 3' },
+      { a:'Детский стол', b:'4 места · уточняется' }
     ]},
-    stay:      { title:'Accommodation', tag:'Rooms held', kind:'generic', rows:[
-      { a:'Hotel Belvedere', b:'22 rooms held to 1 May' },
-      { a:'Villa annexe', b:'6 rooms · immediate family' },
-      { a:'B&B La Riva', b:'8 rooms · on the shuttle route' }
+    stay:      { title:'Проживание', tag:'Номера в блоке', kind:'generic', rows:[
+      { a:'Hotel Belvedere', b:'22 номера держим до 1 мая' },
+      { a:'Флигель виллы', b:'6 номеров · ближайшие родственники' },
+      { a:'B&B La Riva', b:'8 номеров · на маршруте трансфера' }
     ]},
-    honeymoon: { title:'Honeymoon', tag:'Draft', kind:'generic', rows:[
-      { a:'Puglia · 14–24 June', b:'Flights on hold' },
-      { a:'Masseria Trulli', b:'Quote requested' },
-      { a:'Transfer Brindisi', b:'To book' }
+    honeymoon: { title:'Свадебное путешествие', tag:'Черновик', kind:'generic', rows:[
+      { a:'Апулия · 14–24 июня', b:'Билеты забронированы' },
+      { a:'Masseria Trulli', b:'Запросили смету' },
+      { a:'Трансфер Бриндизи', b:'Забронировать' }
     ]},
-    weather:   { title:'Weather & rain plan', tag:'Plan B ready', kind:'generic', rows:[
-      { a:'Ceremony', b:'Loggia if rain risk > 40%' },
-      { a:'Dinner', b:'Orangery · seats 100' },
-      { a:'Decision', b:'Called 24h before' }
+    weather:   { title:'Погода и план Б', tag:'План Б готов', kind:'generic', rows:[
+      { a:'Церемония', b:'Лоджия, если риск дождя > 40%' },
+      { a:'Ужин', b:'Оранжерея · 100 мест' },
+      { a:'Решение', b:'Принимаем за 24 часа' }
     ]}
   };
 
-  // The agency's book of work. Only the first wedding opens; the other rows
-  // exist so the demo reads as a cabinet, not as one couple's board.
+  // Портфель агентства. Открывается только первая свадьба — остальные строки
+  // существуют, чтобы демо читалось как кабинет, а не как план одной пары.
   WEDDINGS = [
-    { pair:'Amélie & Jonas',  date:'12.06.2027', place:'Lake Como',  status:'In progress', budget:'64%',  rsvp:'21', inv:'2 due',     live:true },
-    { pair:'Maria & Stefano', date:'03.10.2026', place:'Tuscany',    status:'Final week',  budget:'97%',  rsvp:'0',  inv:'1 overdue', alert:true },
-    { pair:'Sophie & Lucas',  date:'15.05.2027', place:'Santorini',  status:'In progress', budget:'41%',  rsvp:'38', inv:'—' },
-    { pair:'Klara & Marek',   date:'20.09.2026', place:'Prague',     status:'Final week',  budget:'100%', rsvp:'2',  inv:'settled' },
-    { pair:'Ines & Tomas',    date:'07.08.2027', place:'Montenegro', status:'Kick-off',    budget:'12%',  rsvp:'invitations not sent', inv:'—' },
-    { pair:'Layla & Omar',    date:'14.02.2027', place:'Dubai',      status:'In progress', budget:'55%',  rsvp:'9',  inv:'3 due' },
-    { pair:'Nina & Roman',    date:'30.05.2027', place:'Georgia',    status:'In progress', budget:'48%',  rsvp:'15', inv:'1 due' }
+    { pair:'Анна и Дмитрий',  date:'12.06.2027', place:'оз. Комо',   status:'В работе',         budget:'64%',  rsvp:'21', inv:'2 к оплате',  live:true },
+    { pair:'Мария и Стефано', date:'03.10.2026', place:'Тоскана',    status:'Финальная неделя', budget:'97%',  rsvp:'0',  inv:'1 просрочен', alert:true },
+    { pair:'Ольга и Павел',   date:'15.05.2027', place:'Санторини',  status:'В работе',         budget:'41%',  rsvp:'38', inv:'—' },
+    { pair:'Ксения и Марк',   date:'20.09.2026', place:'Прага',      status:'Финальная неделя', budget:'100%', rsvp:'2',  inv:'оплачено' },
+    { pair:'Дарья и Антон',   date:'07.08.2027', place:'Черногория', status:'Старт',            budget:'12%',  rsvp:'приглашения не разосланы', inv:'—' },
+    { pair:'Елена и Игорь',   date:'14.02.2027', place:'Дубай',      status:'В работе',         budget:'55%',  rsvp:'9',  inv:'3 к оплате' },
+    { pair:'Алиса и Роман',   date:'30.05.2027', place:'Грузия',     status:'В работе',         budget:'48%',  rsvp:'15', inv:'1 к оплате' }
   ];
 
   HOW_STEPS = [
-    'A wedding is created from your template',
-    'The couple get their own board',
-    'Guests reply on the couple site',
-    'Everything lands back in this cabinet'
+    'Создали свадьбу из вашего шаблона',
+    'У пары появился свой план',
+    'Гости отвечают на сайте пары',
+    'Всё стекается в этот кабинет'
   ];
 
-  // One line drives the columns for both the head row and the rows themselves.
+  // Одна строка задаёт колонки и шапке, и строкам — чтобы они не разъехались.
   WED_COLS = 'minmax(150px,1.5fr) 92px minmax(min(94px,100%),1fr) 130px 116px 120px 124px';
 
   INVOICES = [
-    { id:'INV-2041', to:'Villa Regina', what:'Venue — deposit 2 of 3', eur:8400, due:'15 Mar 2027', status:'paid' },
-    { id:'INV-2042', to:'Studio Lumen', what:'Photography & film — final balance', eur:2300, due:'1 Apr 2027', status:'sent' },
-    { id:'INV-2043', to:'Fiori di Lina', what:'Florals & styling — deposit', eur:1200, due:'28 Feb 2027', status:'overdue' },
-    { id:'INV-2044', to:'Trio Belvedere', what:'Ceremony music — in full', eur:950, due:'10 Feb 2027', status:'paid' },
-    { id:'INV-2045', to:'Amélie & Jonas', what:'Planning fee — stage 2 of 4', eur:1500, due:'1 Mar 2027', status:'draft' }
+    { id:'INV-2041', to:'Villa Regina', what:'Площадка — взнос 2 из 3', eur:8400, due:'15 мар 2027', status:'paid' },
+    { id:'INV-2042', to:'Studio Lumen', what:'Фото и видео — финальный платёж', eur:2300, due:'1 апр 2027', status:'sent' },
+    { id:'INV-2043', to:'Fiori di Lina', what:'Цветы и оформление — предоплата', eur:1200, due:'28 фев 2027', status:'overdue' },
+    { id:'INV-2044', to:'Trio Belvedere', what:'Музыка на церемонии — полностью', eur:950, due:'10 фев 2027', status:'paid' },
+    { id:'INV-2045', to:'Анна и Дмитрий', what:'Гонорар организатора — этап 2 из 4', eur:1500, due:'1 мар 2027', status:'draft' }
   ];
 
   invoiceStatus(inv) { return this.state.invStatus[inv.id] || inv.status; }
@@ -1302,14 +1302,14 @@ class Component extends DCLogic {
     const s = this.state;
     const c = this.cur();
     const f = (v) => this.fmt(v, c);
-    const plannerName = this.fromUrl('planner', 28) ?? this.props.plannerName ?? 'Wedding Planner';
+    const plannerName = this.fromUrl('planner', 28) ?? this.props.plannerName ?? 'Свадебный организатор';
     const plannerEmail = this.brandEmail() ?? this.props.plannerEmail ?? 'hello@your-studio.com';
-    const rsvpDeadline = this.props.rsvpDeadline ?? '15 May';
+    const rsvpDeadline = this.props.rsvpDeadline ?? '15 мая';
     const daysLeft = Math.max(0, Math.ceil((new Date('2027-06-12T00:00:00') - new Date()) / 86400000));
     const CH = this.CHROME[s.lang] || this.CHROME.EN;
     const useGuestChrome = s.view === 'guest';
 
-    // tour
+    // экскурсия
     const ti = s.tour, tourOn = ti != null, tStep = tourOn ? this.TOUR[ti] : null;
     const rect = s.tourRect, vw = s.vw || 1440, narrow = vw < 768, hasSpot = tourOn && !!rect;
     const cardBase = {
@@ -1321,16 +1321,16 @@ class Component extends DCLogic {
     if (!tourOn) {
       tourCardStyle = { display:'none' };
     } else if (narrow) {
-      // Narrow screens get a full-width bottom sheet, with no anchoring at all.
+      // На узком экране — нижняя карточка во всю ширину, без стрелок и привязки.
       tourCardStyle = { ...cardBase, left:'12px', right:'12px', bottom:'12px' };
     } else if (!rect) {
       tourCardStyle = { ...cardBase, left:'50%', top:'50%', transform:'translate(-50%,-50%)',
                         width:'min(420px, calc(100vw - 40px))',
                         animation:'riseInCentered .35s ease both' };
     } else {
-      // The card's height is not known in advance, so the side is chosen by the
-      // room actually available: below, above, or pinned to the bottom when the
-      // target fills the screen — otherwise the card gets clipped.
+      // Высота плашки заранее неизвестна, поэтому выбираем сторону по запасу
+      // места: снизу, сверху, а если цель занимает почти весь экран — прижимаем
+      // к низу окна, иначе плашка обрезается краем.
       const W = 380, gap = 14, H = 215, vh = window.innerHeight;
       const below = vh - (rect.top + rect.h) - gap, above = rect.top - gap;
       const left = Math.min(Math.max(12, rect.left + rect.w / 2 - W / 2), Math.max(12, vw - W - 12));
@@ -1347,13 +1347,13 @@ class Component extends DCLogic {
       background:bg, color:ink, border:'1px solid ' + (border || 'transparent')
     });
     const STATUS = {
-      'Kick-off':    pill('#F0EAE2', '#98857C'),
-      'In progress': pill('#F5E9E4', '#A0453D'),
-      'Final week':  pill('#F7E7E3', '#C9302A')
+      'Старт':            pill('#F0EAE2', '#98857C'),
+      'В работе':         pill('#F5E9E4', '#A0453D'),
+      'Финальная неделя': pill('#F7E7E3', '#C9302A')
     };
-    const invPill = (v) => v.indexOf('overdue') >= 0 ? pill('#C9302A', '#fff')
-      : v.indexOf('due') >= 0 ? pill('#F5E9E4', '#A0453D')
-      : v === 'settled' ? pill('#fff', '#6B5850', '#DED2C8')
+    const invPill = (v) => v.indexOf('просрочен') >= 0 ? pill('#C9302A', '#fff')
+      : v.indexOf('к оплате') >= 0 ? pill('#F5E9E4', '#A0453D')
+      : v === 'оплачено' ? pill('#fff', '#6B5850', '#DED2C8')
       : { fontSize:'13px', color:'#98857C' };
     const last = this.WEDDINGS.length - 1;
     const weddings = this.WEDDINGS.map((w, i) => ({
@@ -1382,7 +1382,7 @@ class Component extends DCLogic {
 
     const tabDefs = useGuestChrome
       ? [['board', CH.tabBoard], ['guest', CH.tabGuest], ['invite', CH.tabInvite]]
-      : [['board','Board'],['guest','Guest site'],['invite','Invitation']];
+      : [['board','План'],['guest','Сайт гостей'],['invite','Приглашение']];
     const tabs = tabDefs.map(([id, label]) => ({
       label, active: s.view === id, inactive: s.view !== id,
       onClick: () => this.set({ view: id })
@@ -1404,7 +1404,7 @@ class Component extends DCLogic {
         showBase: c.code !== 'EUR',
         isPaid: st === 'paid', isSent: st === 'sent', isOverdue: st === 'overdue', isDraft: st === 'draft',
         hasAct, noAct: !hasAct,
-        actLabel: st === 'draft' ? 'Send' : 'Mark paid',
+        actLabel: st === 'draft' ? 'Отправить' : 'Отметить оплату',
         onAct: () => this.advance(inv)
       };
     });
@@ -1415,11 +1415,11 @@ class Component extends DCLogic {
 
     // budget
     const cats = [
-      ['Venue & catering', 16800, 23000],
-      ['Photo & film', 4600, 4600],
-      ['Florals & décor', 2400, 6000],
-      ['Music', 1900, 2100],
-      ['Attire & rings', 1700, 5600]
+      ['Площадка и кейтеринг', 16800, 23000],
+      ['Фото и видео', 4600, 4600],
+      ['Цветы и декор', 2400, 6000],
+      ['Музыка', 1900, 2100],
+      ['Наряды и кольца', 1700, 5600]
     ];
     const committed = 27400, total = 47000;
     const categories = cats.map(([name, spent, cap]) => ({
@@ -1428,12 +1428,12 @@ class Component extends DCLogic {
     }));
 
     const milestones = [
-      ['October 2026','Venue confirmed','Villa Regina reserved, deposit paid, rain plan agreed with the estate.','done'],
-      ['December 2026','Photographer & celebrant booked','Contracts signed; engagement shoot scheduled for March.','done'],
-      ['Next · March 2027','Menu tasting in Como','Two caterers shortlisted — final choice after the tasting weekend.','next'],
-      ['April 2027','Invitations out & RSVPs open','Personal links per guest; replies close ' + rsvpDeadline + '.',''],
-      ['May 2027','Final numbers & seating plan','Guest count locked, floor plan sent to venue and caterer.',''],
-      ['11–12 June 2027','Rehearsal & the day itself','Run-through Friday evening; day-of schedule shared with all vendors.','']
+      ['Октябрь 2026','Площадка подтверждена','Villa Regina забронирована, предоплата внесена, план на случай дождя согласован с усадьбой.','done'],
+      ['Декабрь 2026','Фотограф и ведущий церемонии','Договоры подписаны; лавстори-съёмка назначена на март.','done'],
+      ['Сейчас · март 2027','Дегустация меню в Комо','В шорт-листе два кейтеринга — финальный выбор после дегустационных выходных.','next'],
+      ['Апрель 2027','Приглашения и приём ответов','Персональная ссылка каждому гостю; приём ответов до ' + rsvpDeadline + '.',''],
+      ['Май 2027','Финальные цифры и рассадка','Число гостей зафиксировано, схема зала отправлена площадке и кейтерингу.',''],
+      ['11–12 июня 2027','Репетиция и сам день','Прогон в пятницу вечером; тайминг дня разослан всем подрядчикам.','']
     ].map(([when, title, text, st]) => ({
       when, title, text,
       dotStyle: {
@@ -1443,38 +1443,38 @@ class Component extends DCLogic {
         boxShadow: st === 'next' ? '0 0 0 4px #F5E9E4' : 'none'
       },
       whenStyle: { fontSize:'11px', letterSpacing:'.16em', textTransform:'uppercase', fontWeight:500, color: st === 'next' ? '#B9635A' : '#98857C' },
-      titleStyle: { fontFamily:"'Bodoni Moda',serif", fontWeight:500, fontSize:'19px', margin:'2px 0', color: st === 'done' ? '#98857C' : '#33231F' }
+      titleStyle: { fontFamily:"'Playfair Display',serif", fontWeight:500, fontSize:'19px', margin:'2px 0', color: st === 'done' ? '#98857C' : '#33231F' }
     }));
     const timelineCols = [{ items: milestones.slice(0, 3) }, { items: milestones.slice(3) }];
 
     const vendors = [
-      ['🏛','Villa Regina','Venue · Bellagio',14200,'booked'],
-      ['📷','Studio Lumen','Photography & film',4600,'booked'],
-      ['🌸','Fiori di Lina','Florals & styling',3900,'waiting'],
-      ['🍽','Catering — tasting March','Two quotes in',9800,'open'],
-      ['🎻','Trio Belvedere','Ceremony music',950,'booked'],
-      ['🚐','Guest transfers','Como ↔ villa shuttles',1400,'open']
+      ['🏛','Villa Regina','Площадка · Белладжо',14200,'booked'],
+      ['📷','Studio Lumen','Фото и видео',4600,'booked'],
+      ['🌸','Fiori di Lina','Цветы и оформление',3900,'waiting'],
+      ['🍽','Кейтеринг — дегустация в марте','Две сметы получены',9800,'open'],
+      ['🎻','Trio Belvedere','Музыка на церемонии',950,'booked'],
+      ['🚐','Трансферы гостей','Комо ↔ вилла',1400,'open']
     ].map(([icon, name, role, fee, st]) => ({
       icon, name, role, fee: f(fee),
       isBooked: st === 'booked', isWaiting: st === 'waiting', isOpen: st === 'open'
     }));
 
     const tasks = [
-      ['t1','Confirm engagement shoot location','Done'],
-      ['t2','Sign florals contract & pay deposit','28 Feb'],
-      ['t3','Chase INV-2043 with Fiori di Lina','1 Mar'],
-      ['t4','Book flights to Como for the tasting','5 Mar'],
-      ['t5','Send invitation finish for approval','20 Mar']
+      ['t1','Согласовать локацию для лавстори-съёмки','Готово'],
+      ['t2','Подписать договор на цветы и внести предоплату','28 фев'],
+      ['t3','Напомнить Fiori di Lina про счёт INV-2043','1 мар'],
+      ['t4','Купить билеты в Комо на дегустацию','5 мар'],
+      ['t5','Отправить отделку приглашения на утверждение','20 мар']
     ].map(([id, label, due]) => ({
       label, due, done: !!s.done[id], open: !s.done[id],
       onToggle: () => this.setState({ done: { ...s.done, [id]: !s.done[id] } })
     }));
 
     const docs = [
-      ['📄','Venue contract — Villa Regina','Signed · 14 Oct 2026'],
-      ['📄','Photography agreement','Signed · 2 Dec 2026'],
-      ['✍️','Florals contract','Awaiting signature'],
-      ['🗓','Day-of schedule v2','Draft · updates live for all vendors']
+      ['📄','Договор с площадкой — Villa Regina','Подписан · 14 окт 2026'],
+      ['📄','Договор на фото и видео','Подписан · 2 дек 2026'],
+      ['✍️','Договор на цветы','Ждём подписи'],
+      ['🗓','Тайминг дня, версия 2','Черновик · обновления видны всем подрядчикам']
     ].map(([icon, name, meta]) => ({ icon, name, meta }));
 
     const blocks = s.order.filter(k => !s.hidden[k]).map(key => {
@@ -1512,6 +1512,12 @@ class Component extends DCLogic {
 
 
 
+    const plural = (n, one, few, many) => {
+      const m10 = n % 10, m100 = n % 100;
+      if (m10 === 1 && m100 !== 11) return one;
+      if (m10 >= 2 && m10 <= 4 && (m100 < 12 || m100 > 14)) return few;
+      return many;
+    };
 
     // guest site locale
     const L = this.GUEST[s.lang] || this.GUEST.EN;
@@ -1554,9 +1560,9 @@ class Component extends DCLogic {
     const N = this.NAMES[s.lang] || this.NAMES.EN;
     guestStrings.gName1 = N.first; guestStrings.gAmp = N.amp; guestStrings.gName2 = N.second;
     guestStrings.gStayNote = guestStrings.gStayNote.replace('%%N%%', N.first + ' ' + N.amp + ' ' + N.second);
-    const chromeBackLabel = useGuestChrome ? CH.back : '← Agency cabinet';
-    const chromeCurrencyLabel = useGuestChrome ? CH.currency : 'currency';
-    const chromeTourLabel = useGuestChrome ? CH.tour : 'Tour';
+    const chromeBackLabel = useGuestChrome ? CH.back : '← Кабинет агентства';
+    const chromeCurrencyLabel = useGuestChrome ? CH.currency : 'валюта';
+    const chromeTourLabel = useGuestChrome ? CH.tour : 'Экскурсия';
 
     // invitation finishes
     const D = {
@@ -1565,16 +1571,16 @@ class Component extends DCLogic {
       nocturne:{ bg:'linear-gradient(170deg,#2E2320,#1E1614)', ink:'#F5EEE8', soft:'#C2ADA4', rule:'#E0BFB6', btn:'#E0BFB6', btnInk:'#241A17' }
     };
     const d = D[s.design];
-    const designs = [['sage','Terracotta'],['ivory','Ivory'],['nocturne','Nocturne']].map(([id, name]) => ({
+    const designs = [['sage','Терракота'],['ivory','Айвори'],['nocturne','Ноктюрн']].map(([id, name]) => ({
       name, active: s.design === id, inactive: s.design !== id,
       onClick: () => this.setState({ design: id })
     }));
 
     const sending = [
-      ['Delivered','92 of 92 · WhatsApp & email'],
-      ['Opened','71 · reminder queued for the rest'],
-      ['Responded', (34 + (s.sent && s.rsvp.going === 'yes' ? seats : 0)) + ' guests'],
-      ['Languages','English · Italiano · Русский']
+      ['Доставлено','92 из 92 · WhatsApp и почта'],
+      ['Открыли','71 · остальным поставлено напоминание'],
+      ['Ответили', (34 + (s.sent && s.rsvp.going === 'yes' ? seats : 0)) + ' гостей'],
+      ['Языки','English · Italiano · Русский']
     ].map(([a, b]) => ({ a, b }));
 
     const confirmed = 34 + (s.sent && s.rsvp.going === 'yes' ? seats : 0);
@@ -1603,7 +1609,7 @@ class Component extends DCLogic {
       } : null,
       tourCardStyle,
       tourText: tStep ? tStep.text : '',
-      tourProgress: tourOn ? (ti + 1) + ' of ' + this.TOUR.length : '',
+      tourProgress: tourOn ? (ti + 1) + ' из ' + this.TOUR.length : '',
       tourFinal: tourOn && !!tStep.final, tourNotFinal: tourOn && !tStep.final,
       tourNext: () => this.tourGo(ti + 1),
       tourSkip: () => this.tourEnd(),
@@ -1613,9 +1619,9 @@ class Component extends DCLogic {
       },
       tourStart: () => this.tourGo(0),
       isAgency: s.view === 'agency', notAgency: s.view !== 'agency',
-      chromeLabel: s.view === 'agency' ? 'agency cabinet'
-        : s.view === 'board' ? 'wedding board'
-        : s.view === 'guest' ? CH.chromeGuest : 'invitation',
+      chromeLabel: s.view === 'agency' ? 'кабинет агентства'
+        : s.view === 'board' ? 'план свадьбы'
+        : s.view === 'guest' ? CH.chromeGuest : 'приглашение',
       goAgency: () => this.set({ view:'agency', hint:null }),
       isBoard: s.view === 'board', isGuest: s.view === 'guest', isInvite: s.view === 'invite',
       goBoard: () => this.set({ view:'board' }),
@@ -1629,7 +1635,7 @@ class Component extends DCLogic {
       committedPct: Math.round(committed / total * 100),
       budgetBarStyle: { display:'block', height:'100%', width: Math.round(committed / total * 100) + '%', borderRadius:'999px', background:'linear-gradient(90deg,#D9564C,#A0231E)' },
       paidLabel: f(paidEur), outstandingLabel: f(outEur), draftLabel: f(draftEur),
-      rateLine: c.code === 'EUR' ? 'Base currency · EUR' : '1 EUR = ' + c.rate + ' ' + c.code,
+      rateLine: c.code === 'EUR' ? 'Базовая валюта · EUR' : '1 EUR = ' + c.rate + ' ' + c.code,
       confirmedCount: confirmed, awaitingCount: 92 - confirmed, respondedCount: confirmed,
       dietCount: 4 + (s.sent && s.rsvp.note ? 1 : 0),
       programmeCols: [{ items: programme.slice(0, 3) }, { items: programme.slice(3) }],
@@ -1658,12 +1664,12 @@ class Component extends DCLogic {
       onClose: () => this.setState({ opened: false }),
       cardStyle: { width:'100%', maxWidth:'420px', background:d.bg, border:'1px solid rgba(35,40,35,.1)', borderRadius:'20px', padding:'44px 34px 34px', textAlign:'center', boxShadow:'0 1px 2px rgba(35,40,35,.04),0 26px 50px -30px rgba(35,40,35,.35)', animation:'riseIn .45s ease both' },
       cardEyebrowStyle: { fontSize:'10.5px', letterSpacing:'.24em', textTransform:'uppercase', fontWeight:500, color:d.soft },
-      cardNamesStyle: { fontFamily:"'Bodoni Moda',serif", fontStyle:'italic', fontWeight:500, fontSize:'44px', lineHeight:1.05, margin:'14px 0 0', color:d.ink },
+      cardNamesStyle: { fontFamily:"'Playfair Display',serif", fontStyle:'italic', fontWeight:500, fontSize:'44px', lineHeight:1.05, margin:'14px 0 0', color:d.ink },
       cardAmpStyle: { color:d.rule, fontSize:'.5em', verticalAlign:'.18em', padding:'0 .14em' },
       cardRuleStyle: { width:'44px', height:'1px', background:d.rule, margin:'18px auto' },
       cardLineStyle: { fontSize:'13.5px', color:d.soft, margin:'6px 0' },
-      cardGuestStyle: { fontFamily:"'Bodoni Moda',serif", fontSize:'23px', color:d.ink, margin:'4px 0' },
-      cardDateStyle: { fontFamily:"'Bodoni Moda',serif", fontSize:'19px', color:d.ink, margin:'10px 0 4px' },
+      cardGuestStyle: { fontFamily:"'Playfair Display',serif", fontSize:'23px', color:d.ink, margin:'4px 0' },
+      cardDateStyle: { fontFamily:"'Playfair Display',serif", fontSize:'19px', color:d.ink, margin:'10px 0 4px' },
       cardSmallStyle: { fontSize:'12.5px', color:d.soft, margin:'18px 0 22px', letterSpacing:'.04em' },
       cardBtnStyle: { border:'none', background:d.btn, color:d.btnInk, borderRadius:'999px', padding:'13px 24px', fontSize:'11px', fontWeight:500, letterSpacing:'.16em', textTransform:'uppercase', width:'100%' },
       cardLinkStyle: { border:'none', background:'none', color:d.soft, fontSize:'12.5px', marginTop:'12px', textDecoration:'underline' }

@@ -48,7 +48,7 @@ if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
 }
 
 // --- собираем страницу ---
-const baseName = ru ? 'index-ru.html' : 'index.html';
+const baseName = ru ? 'index.html' : 'en.html';
 const basePath = resolve(ROOT, baseName);
 if (!existsSync(basePath)) { console.error('Нет файла ' + baseName); process.exit(1); }
 let html = readFileSync(basePath, 'utf8');
